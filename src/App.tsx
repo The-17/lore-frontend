@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { LeftTubeNav } from './components/LeftTubeNav';
-import { CollectionTree } from './components/CollectionTree';
+import { LeftSidebarPane } from './components/LeftSidebarPane';
 import { ArtifactCanvas } from './components/ArtifactCanvas';
 import { GraphCanvas } from './components/GraphCanvas';
 import { SkillRegistryView } from './components/SkillRegistryView';
@@ -8,13 +8,11 @@ import { ApprovalsView } from './components/ApprovalsView';
 import { SettingsView } from './components/SettingsView';
 import { BYOBModal } from './components/BYOBModal';
 import { api } from './api/client';
-import type { Artifact, Collection, Relationship, ArtifactVersion } from './types';
+import type { Artifact, Relationship, ArtifactVersion } from './types';
 
 export function App() {
   const [activeTab, setActiveTab] = useState('workspace');
-  const [showCollectionsSidebar, setShowCollectionsSidebar] = useState(false);
   const [isBYOBOpen, setIsBYOBOpen] = useState(false);
-  const [collections, setCollections] = useState<Collection[]>([]);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [activeArtifact, setActiveArtifact] = useState<Artifact | null>(null);
   const [versions, setVersions] = useState<ArtifactVersion[]>([]);
@@ -24,11 +22,10 @@ export function App() {
   useEffect(() => {
     async function loadWorkspaceData() {
       try {
-        const [colsData, artsData] = await Promise.all([
+        const [, artsData] = await Promise.all([
           api.getCollections(),
           api.getArtifacts(),
         ]);
-        setCollections(colsData);
         setArtifacts(artsData);
         if (artsData.length > 0) {
           setActiveArtifact(artsData[0]);
@@ -98,22 +95,17 @@ export function App() {
         onOpenBYOBModal={() => setIsBYOBOpen(true)}
       />
 
-      {/* Main View Area */}
+      {/* Main View Area: Two Column Grid */}
       {activeTab === 'workspace' && (
         <div style={styles.workspaceSplit}>
-          {showCollectionsSidebar && (
-            <CollectionTree
-              collections={collections}
-              artifacts={artifacts}
-              activeArtifactId={activeArtifact?.id}
-              onSelectArtifact={handleSelectArtifact}
-            />
-          )}
+          {/* Left Sidebar Pane (Site Background #222222) */}
+          <LeftSidebarPane />
+
+          {/* Right Main Artifact Canvas Pane (#292929) */}
           <ArtifactCanvas
             artifact={activeArtifact}
             versions={versions}
             relationships={relationships}
-            onBack={() => setShowCollectionsSidebar(!showCollectionsSidebar)}
             onSelectWikiLink={handleWikiLinkClick}
             onApprove={handleApproveArtifact}
           />

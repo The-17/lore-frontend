@@ -88,8 +88,8 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
           <ChevronLeft size={20} />
         </button>
 
-        {/* Absolute Top-Right Floating Header Action Tube Pill */}
-        <div style={styles.headerActionTubeRight}>
+        {/* Absolute Top-Right Glassmorphic Floating Header Action Tube Pill */}
+        <div style={styles.glassHeaderActionTube}>
           {/* Subtle Muted Draft Badge */}
           <span style={styles.subtleDraftBadge}>Draft</span>
 
@@ -99,7 +99,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             style={styles.tubeDiffBtn}
             title="Toggle Line Diffs"
           >
-            <span style={{ color: '#a1a1aa', fontSize: '12px', fontWeight: '500' }}>v3</span>
+            <span style={{ color: '#a1a1aa', fontSize: '13px', fontWeight: '500' }}>v3</span>
             <span style={styles.addStatBadge}>+12</span>
             <span style={styles.delStatBadge}>-3</span>
           </button>
@@ -110,7 +110,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
           </button>
         </div>
 
-        {/* Centered Typography Reading Column (Scrolls Higher into Viewport Space) */}
+        {/* Centered Typography Reading Column (Starts lower initially, scrolls full height) */}
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             {showDiff ? (
@@ -235,7 +235,7 @@ const styles: Record<string, React.CSSProperties> = {
   backChevronBtn: {
     position: 'absolute',
     left: '48px',
-    top: '20px',
+    top: '28px',
     background: 'none',
     border: 'none',
     color: '#888888',
@@ -245,26 +245,29 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     zIndex: 10,
   },
-  headerActionTubeRight: {
+  glassHeaderActionTube: {
     position: 'absolute',
     right: '48px',
-    top: '16px',
-    backgroundColor: '#202020',
-    borderRadius: '24px',
-    padding: '4px 6px',
+    top: '20px',
+    backgroundColor: 'rgba(32, 32, 36, 0.75)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+    borderRadius: '28px',
+    padding: '6px 12px',
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
-    border: 'none',
+    gap: '12px',
     zIndex: 10,
   },
   subtleDraftBadge: {
-    fontSize: '12px',
+    fontSize: '13px',
     fontWeight: '500',
     color: '#a1a1aa',
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    padding: '4px 12px',
-    borderRadius: '14px',
+    padding: '6px 14px',
+    borderRadius: '16px',
     display: 'inline-flex',
     alignItems: 'center',
   },
@@ -275,13 +278,13 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    padding: '4px 8px',
-    borderRadius: '6px',
+    padding: '6px 10px',
+    borderRadius: '8px',
   },
   addStatBadge: {
     color: '#3fb950',
     backgroundColor: 'rgba(46, 160, 67, 0.15)',
-    padding: '2px 6px',
+    padding: '3px 7px',
     borderRadius: '4px',
     fontSize: '11px',
     fontWeight: '600',
@@ -289,7 +292,7 @@ const styles: Record<string, React.CSSProperties> = {
   delStatBadge: {
     color: '#f85149',
     backgroundColor: 'rgba(248, 81, 73, 0.15)',
-    padding: '2px 6px',
+    padding: '3px 7px',
     borderRadius: '4px',
     fontSize: '11px',
     fontWeight: '600',
@@ -298,9 +301,9 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#2563eb',
     border: 'none',
     color: '#ffffff',
-    padding: '6px 16px',
-    borderRadius: '16px',
-    fontSize: '12px',
+    padding: '8px 20px',
+    borderRadius: '18px',
+    fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
   },
@@ -325,7 +328,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '36px',
     fontWeight: '400',
     color: '#D4D4D4',
-    marginTop: '12px',
+    marginTop: '44px',
     marginBottom: '28px',
     letterSpacing: '-0.5px',
   },
@@ -418,7 +421,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '8px',
     border: '1px solid #30363d',
     padding: '16px',
-    marginTop: '20px',
+    marginTop: '44px',
     fontFamily: 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace',
     fontSize: '13px',
     lineHeight: '1.6',
