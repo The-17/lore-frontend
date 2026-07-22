@@ -308,7 +308,11 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                       return <MermaidRenderer chart={rawCode} />;
                     }
 
-                    if (inline) {
+                    // A code block has a language class OR multiline text. Single-line backticked words (e.g. inside tables) are inline code.
+                    const isMultiLine = rawCode.includes('\n');
+                    const isInlineCode = inline || (!match && !isMultiLine);
+
+                    if (isInlineCode) {
                       return <code style={styles.inlineCode}>{children}</code>;
                     }
 
@@ -345,7 +349,13 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                   ),
                   th: ({ children }) => <th style={styles.th}>{children}</th>,
                   tr: ({ children }) => <tr style={styles.tr}>{children}</tr>,
-                  td: ({ children }) => <td style={styles.td}>{children}</td>,
+                  td: ({ children }) => (
+                    <td style={styles.td}>
+                      {React.Children.map(children, (child) =>
+                        typeof child === 'string' ? parseRichInlineMarkdown(child) : child
+                      )}
+                    </td>
+                  ),
                 }}
               >
                 {sanitizedHtml}
@@ -510,7 +520,7 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '28px', // Slightly pushed content downward
+    paddingTop: '28px',
   },
   heading1: {
     fontSize: tokens.typography.h1.fontSize,
@@ -603,7 +613,8 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '2px 6px',
     borderRadius: tokens.radii.sm,
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
-    fontSize: '14px',
+    fontSize: '13px',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
   },
   codeContainer: {
     backgroundColor: '#18181c',
