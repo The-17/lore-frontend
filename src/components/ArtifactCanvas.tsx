@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, ShieldCheck, Sparkles, Bookmark } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -26,12 +26,19 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
 
-  // Comprehensive Demo Markdown Content covering ALL markdown features
+  // Comprehensive Lore Artifact Document with Semantic Block Callouts
   const markdownText = `# System Architecture & Lore Contracts
 
 Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas and [[Agent Token Security]] for auth headers.
 
+> [!PRINCIPLE]
 > Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, semantic search, and human-in-the-loop governance.
+
+> [!DECISION]
+> All artifact schema definitions must remain additive-first, preserving backwards compatibility across SDK versions.
+
+> [!INSIGHT]
+> Persistent memory graphs reduce agent hallucinations by 84% when coupled with explicit relationship lineage.
 
 ---
 
@@ -164,10 +171,18 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
           <ChevronLeft size={20} />
         </button>
 
-        {/* Absolute Top-Right Glassmorphic Floating Header Action Tube Pill */}
+        {/* Absolute Top-Right Glassmorphic Floating Header Action Tube Pill (Artifact Inspector Header) */}
         <div style={styles.glassHeaderActionTube}>
-          {/* Subtle Muted Draft Badge */}
-          <span style={styles.subtleDraftBadge}>Draft</span>
+          {/* Status Indicator */}
+          <div style={styles.statusIndicator}>
+            <span style={styles.statusDot} />
+            <span style={styles.statusText}>Approved</span>
+          </div>
+
+          {/* Activity Stat Badge */}
+          <div style={styles.activityBadge} title="26 Relationships • 8 References">
+            <span style={{ color: tokens.colors.textSecondary, fontSize: '12px' }}>Rel: 26</span>
+          </div>
 
           {/* Diff Stat Button inside Pill */}
           <button
@@ -175,7 +190,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             style={styles.tubeDiffBtn}
             title="Toggle Line Diffs"
           >
-            <span style={{ color: tokens.colors.textSecondary, fontSize: '13px', fontWeight: '500' }}>v3</span>
+            <span style={{ color: tokens.colors.textSecondary, fontSize: '12px', fontWeight: '500' }}>v3</span>
             <span style={styles.addStatBadge}>+12</span>
             <span style={styles.delStatBadge}>-3</span>
           </button>
@@ -251,9 +266,57 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                       )}
                     </p>
                   ),
-                  blockquote: ({ children }) => (
-                    <blockquote style={styles.blockquote}>{children}</blockquote>
-                  ),
+                  // Lore Custom Semantic Callout Renderer (Principle, Decision, Insight, Context)
+                  blockquote: ({ children }: any) => {
+                    const childArray = React.Children.toArray(children);
+                    const firstChild = childArray[0];
+                    let textContent = '';
+                    if (typeof firstChild === 'string') {
+                      textContent = firstChild;
+                    } else if (firstChild && typeof firstChild === 'object' && 'props' in firstChild) {
+                      const grandChild = (firstChild as any).props?.children;
+                      if (typeof grandChild === 'string') textContent = grandChild;
+                      else if (Array.isArray(grandChild)) textContent = grandChild.join('');
+                    }
+
+                    if (textContent.includes('[!PRINCIPLE]')) {
+                      return (
+                        <div style={styles.principleBlock}>
+                          <div style={styles.semanticHeader}>
+                            <ShieldCheck size={14} style={{ color: '#10b981', marginRight: '6px' }} />
+                            <span style={{ ...styles.semanticTitle, color: '#10b981' }}>PRINCIPLE</span>
+                          </div>
+                          <div>{children}</div>
+                        </div>
+                      );
+                    }
+
+                    if (textContent.includes('[!DECISION]')) {
+                      return (
+                        <div style={styles.decisionBlock}>
+                          <div style={styles.semanticHeader}>
+                            <Bookmark size={14} style={{ color: '#38bdf8', marginRight: '6px' }} />
+                            <span style={{ ...styles.semanticTitle, color: '#38bdf8' }}>DECISION</span>
+                          </div>
+                          <div>{children}</div>
+                        </div>
+                      );
+                    }
+
+                    if (textContent.includes('[!INSIGHT]')) {
+                      return (
+                        <div style={styles.insightBlock}>
+                          <div style={styles.semanticHeader}>
+                            <Sparkles size={14} style={{ color: '#f59e0b', marginRight: '6px' }} />
+                            <span style={{ ...styles.semanticTitle, color: '#f59e0b' }}>ARTIFACT INSIGHT</span>
+                          </div>
+                          <div>{children}</div>
+                        </div>
+                      );
+                    }
+
+                    return <blockquote style={styles.blockquote}>{children}</blockquote>;
+                  },
                   hr: () => <hr style={styles.hr} />,
                   ul: ({ children }) => <ul style={styles.ul}>{children}</ul>,
                   ol: ({ children }) => <ol style={styles.ol}>{children}</ol>,
@@ -321,19 +384,40 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
           </div>
         </div>
 
-        {/* Footer Provenance Row */}
-        <div style={styles.footerRow}>
-          {/* Centered: Derived from */}
-          <div style={styles.footerCenterItem}>
-            <span style={styles.footerLabel}>Derived from:</span>
-            <span style={styles.footerValue}>[PRD Lore v2]</span>
-          </div>
+        {/* Expanded Signature Provenance & Lineage Footer ("Unmistakably Lore") */}
+        <div style={styles.loreProvenanceFooter}>
+          <div style={styles.footerLineDivider} />
+          
+          <div style={styles.provenanceGrid}>
+            <div style={styles.provenanceItem}>
+              <span style={styles.provenanceLabel}>Collection</span>
+              <span style={styles.provenanceVal}>Projects / Lore</span>
+            </div>
 
-          {/* Far Right: References */}
-          <div style={styles.footerRightItem}>
-            <span style={styles.footerLabel}>References:</span>
-            <span style={styles.footerValue}>[Django Ninja Patterns]</span>
-            <span style={styles.countBadge}>+2</span>
+            <div style={styles.provenanceItem}>
+              <span style={styles.provenanceLabel}>Derived From</span>
+              <span style={styles.provenanceVal}>PRD Lore v2</span>
+            </div>
+
+            <div style={styles.provenanceItem}>
+              <span style={styles.provenanceLabel}>References</span>
+              <span style={styles.provenanceVal}>Artifact Schema • ADR-004</span>
+            </div>
+
+            <div style={styles.provenanceItem}>
+              <span style={styles.provenanceLabel}>Produced By</span>
+              <span style={styles.provenanceVal}>Architecture Agent</span>
+            </div>
+
+            <div style={styles.provenanceItem}>
+              <span style={styles.provenanceLabel}>Approved By</span>
+              <span style={{ ...styles.provenanceVal, color: '#3fb950' }}>Wisdom</span>
+            </div>
+
+            <div style={styles.provenanceItem}>
+              <span style={styles.provenanceLabel}>Version</span>
+              <span style={styles.provenanceBadge}>v3</span>
+            </div>
           </div>
         </div>
       </div>
@@ -391,20 +475,34 @@ const styles: Record<string, React.CSSProperties> = {
     border: `1px solid ${tokens.colors.borderGlass}`,
     boxShadow: tokens.shadows.glass,
     borderRadius: tokens.radii.pill,
-    padding: '6px 12px',
+    padding: '6px 14px',
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
     zIndex: 10,
   },
-  subtleDraftBadge: {
-    fontSize: '13px',
-    fontWeight: '500',
-    color: tokens.colors.textSecondary,
-    backgroundColor: tokens.colors.badgeDraftBg,
-    padding: '6px 14px',
-    borderRadius: tokens.radii.lg,
-    display: 'inline-flex',
+  statusIndicator: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  statusDot: {
+    width: '7px',
+    height: '7px',
+    borderRadius: '50%',
+    backgroundColor: '#10b981',
+    boxShadow: '0 0 6px #10b981',
+  },
+  statusText: {
+    fontSize: '12px',
+    fontWeight: '600',
+    color: '#ffffff',
+  },
+  activityBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    padding: '4px 10px',
+    borderRadius: tokens.radii.pill,
+    display: 'flex',
     alignItems: 'center',
   },
   tubeDiffBtn: {
@@ -414,7 +512,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    padding: '6px 10px',
+    padding: '4px 8px',
     borderRadius: '8px',
   },
   addStatBadge: {
@@ -437,7 +535,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: tokens.colors.accentPrimary,
     border: 'none',
     color: '#ffffff',
-    padding: '8px 20px',
+    padding: '8px 18px',
     borderRadius: '18px',
     fontSize: '13px',
     fontWeight: '600',
@@ -496,6 +594,44 @@ const styles: Record<string, React.CSSProperties> = {
     color: tokens.colors.textPrimary,
     fontSize: '15px',
     fontStyle: 'italic',
+    marginBottom: '28px',
+  },
+  semanticHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '6px',
+  },
+  semanticTitle: {
+    fontSize: '11px',
+    fontWeight: '700',
+    letterSpacing: '0.8px',
+    textTransform: 'uppercase',
+  },
+  principleBlock: {
+    borderLeft: '3px solid #10b981',
+    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+    padding: '14px 20px',
+    borderRadius: '0 8px 8px 0',
+    color: tokens.colors.textPrimary,
+    fontSize: '14px',
+    marginBottom: '28px',
+  },
+  decisionBlock: {
+    borderLeft: '3px solid #38bdf8',
+    backgroundColor: 'rgba(56, 189, 248, 0.08)',
+    padding: '14px 20px',
+    borderRadius: '0 8px 8px 0',
+    color: tokens.colors.textPrimary,
+    fontSize: '14px',
+    marginBottom: '28px',
+  },
+  insightBlock: {
+    borderLeft: '3px solid #f59e0b',
+    backgroundColor: 'rgba(245, 158, 11, 0.08)',
+    padding: '14px 20px',
+    borderRadius: '0 8px 8px 0',
+    color: tokens.colors.textPrimary,
+    fontSize: '14px',
     marginBottom: '28px',
   },
   hr: {
@@ -667,43 +803,51 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#58a6ff',
     fontStyle: 'italic',
   },
-  footerRow: {
+  loreProvenanceFooter: {
     display: 'flex',
-    alignItems: 'center',
-    fontSize: tokens.typography.caption.fontSize,
+    flexDirection: 'column',
     paddingTop: '16px',
-    paddingBottom: '4px',
-    position: 'relative',
+    paddingBottom: '8px',
     flexShrink: 0,
     width: '100%',
   },
-  footerCenterItem: {
-    position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
+  footerLineDivider: {
+    height: '1px',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    marginBottom: '16px',
+    width: '100%',
+  },
+  provenanceGrid: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    justifyContent: 'space-between',
+    fontSize: '12px',
+    color: tokens.colors.textSecondary,
+    gap: '12px',
+    flexWrap: 'wrap',
   },
-  footerRightItem: {
-    marginLeft: 'auto',
+  provenanceItem: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '6px',
   },
-  footerLabel: {
-    color: tokens.colors.textSecondary,
-  },
-  footerValue: {
-    color: tokens.colors.textPrimary,
-    fontWeight: '400',
-  },
-  countBadge: {
-    backgroundColor: '#383838',
-    color: tokens.colors.textSecondary,
+  provenanceLabel: {
+    color: '#888888',
     fontSize: '11px',
     fontWeight: '600',
-    padding: '3px 8px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+  },
+  provenanceVal: {
+    color: '#e4e4e7',
+    fontWeight: '500',
+  },
+  provenanceBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    color: '#ffffff',
+    fontSize: '11px',
+    fontWeight: '600',
+    padding: '2px 8px',
     borderRadius: '10px',
   },
 };

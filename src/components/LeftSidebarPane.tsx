@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { List, AlignLeft } from 'lucide-react';
+import { List, AlignLeft, GitFork, FileText, Layers, ShieldCheck } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 
 export interface TocItem {
@@ -14,6 +14,7 @@ interface LeftSidebarPaneProps {
   tocItems?: TocItem[];
   activeHeadingId?: string;
   onSelectHeading?: (id: string) => void;
+  onSelectRelatedArtifact?: (title: string) => void;
 }
 
 export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
@@ -29,6 +30,7 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
   ],
   activeHeadingId = 'some-header-text',
   onSelectHeading,
+  onSelectRelatedArtifact,
 }) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
 
@@ -69,24 +71,23 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
         width: `${width}px`,
       }}
     >
-      {/* Table of Contents Header */}
-      <div style={styles.header}>
-        <List size={16} style={{ color: tokens.colors.textSecondary, marginRight: '8px' }} />
-        <span style={styles.headerTitle}>Table of Contents</span>
+      {/* Upper Section: Table of Contents */}
+      <div style={styles.sectionHeader}>
+        <List size={15} style={{ color: tokens.colors.textSecondary, marginRight: '8px' }} />
+        <span style={styles.headerTitle}>Contents</span>
       </div>
 
-      {/* TOC Outline Tree */}
       <div style={styles.tocList}>
         {tocItems.map((item) => {
           const isActive = activeHeadingId === item.id;
-          const indent = (item.level - 1) * 14;
+          const indent = (item.level - 1) * 12;
           return (
             <div
               key={item.id}
               onClick={() => onSelectHeading && onSelectHeading(item.id)}
               style={{
                 ...styles.tocRow,
-                paddingLeft: `${12 + indent}px`,
+                paddingLeft: `${10 + indent}px`,
                 backgroundColor: isActive ? 'rgba(255, 255, 255, 0.06)' : 'transparent',
                 color: isActive ? '#ffffff' : tokens.colors.textSecondary,
                 fontWeight: isActive ? '600' : '400',
@@ -108,6 +109,76 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
         })}
       </div>
 
+      {/* Hairline Section Separator */}
+      <div style={styles.divider} />
+
+      {/* Lower Section: Related Artifacts & Graph Navigation */}
+      <div style={styles.sectionHeader}>
+        <GitFork size={15} style={{ color: '#38bdf8', marginRight: '8px' }} />
+        <span style={styles.headerTitle}>Related Artifacts</span>
+      </div>
+
+      <div style={styles.graphContainer}>
+        {/* Derived From */}
+        <div style={styles.graphGroup}>
+          <span style={styles.groupLabel}>▲ Derived From (2)</span>
+          <div
+            style={styles.graphRow}
+            onClick={() => onSelectRelatedArtifact?.('PRD Lore v2')}
+            title="PRD Lore v2"
+          >
+            <FileText size={12} style={{ color: '#60a5fa', marginRight: '8px', flexShrink: 0 }} />
+            <span style={styles.graphText}>PRD Lore v2</span>
+          </div>
+          <div
+            style={styles.graphRow}
+            onClick={() => onSelectRelatedArtifact?.('Research Phase')}
+            title="Research Phase"
+          >
+            <FileText size={12} style={{ color: '#60a5fa', marginRight: '8px', flexShrink: 0 }} />
+            <span style={styles.graphText}>Research Phase</span>
+          </div>
+        </div>
+
+        {/* Used In */}
+        <div style={styles.graphGroup}>
+          <span style={styles.groupLabel}>▼ Used In (3)</span>
+          <div
+            style={styles.graphRow}
+            onClick={() => onSelectRelatedArtifact?.('Lore Core SDK')}
+            title="Lore Core SDK"
+          >
+            <Layers size={12} style={{ color: '#3fb950', marginRight: '8px', flexShrink: 0 }} />
+            <span style={styles.graphText}>Lore Core SDK</span>
+          </div>
+          <div
+            style={styles.graphRow}
+            onClick={() => onSelectRelatedArtifact?.('Skill Registry')}
+            title="Skill Registry"
+          >
+            <Layers size={12} style={{ color: '#3fb950', marginRight: '8px', flexShrink: 0 }} />
+            <span style={styles.graphText}>Skill Registry</span>
+          </div>
+          <div
+            style={styles.graphRow}
+            onClick={() => onSelectRelatedArtifact?.('MCP Spec')}
+            title="MCP Spec"
+          >
+            <Layers size={12} style={{ color: '#3fb950', marginRight: '8px', flexShrink: 0 }} />
+            <span style={styles.graphText}>MCP Spec</span>
+          </div>
+        </div>
+
+        {/* Governed By */}
+        <div style={styles.graphGroup}>
+          <span style={styles.groupLabel}>● Policy & Governance</span>
+          <div style={styles.graphRowStatic}>
+            <ShieldCheck size={12} style={{ color: '#f59e0b', marginRight: '8px', flexShrink: 0 }} />
+            <span style={styles.graphText}>Zero-Trust Auth Policy</span>
+          </div>
+        </div>
+      </div>
+
       {/* Invisible Drag-to-Resize Right Border Handle */}
       <div
         onMouseDown={handleMouseDown}
@@ -125,35 +196,35 @@ const styles: Record<string, React.CSSProperties> = {
     borderRight: '1px solid rgba(255, 255, 255, 0.05)',
     display: 'flex',
     flexDirection: 'column',
-    padding: '32px 16px 24px 16px',
+    padding: '28px 16px 20px 16px',
     userSelect: 'none',
     flexShrink: 0,
     position: 'relative',
+    overflowY: 'auto',
   },
-  header: {
+  sectionHeader: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '14px',
     paddingLeft: '4px',
   },
   headerTitle: {
-    fontSize: '12px',
-    fontWeight: '600',
+    fontSize: '11px',
+    fontWeight: '700',
     color: tokens.colors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
   },
   tocList: {
-    flex: 1,
-    overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px',
+    gap: '3px',
+    marginBottom: '16px',
   },
   tocRow: {
-    paddingTop: '8px',
-    paddingBottom: '8px',
-    paddingRight: '12px',
+    paddingTop: '6px',
+    paddingBottom: '6px',
+    paddingRight: '10px',
     borderRadius: tokens.radii.sm,
     display: 'flex',
     alignItems: 'center',
@@ -166,14 +237,63 @@ const styles: Record<string, React.CSSProperties> = {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
   },
+  divider: {
+    height: '1px',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    margin: '12px 0 16px 0',
+  },
+  graphContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+  },
+  graphGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+  },
+  groupLabel: {
+    fontSize: '10px',
+    fontWeight: '600',
+    color: '#888888',
+    textTransform: 'uppercase',
+    letterSpacing: '0.6px',
+    paddingLeft: '4px',
+    marginBottom: '2px',
+  },
+  graphRow: {
+    padding: '6px 10px',
+    borderRadius: tokens.radii.sm,
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '12px',
+    color: tokens.colors.textSecondary,
+    cursor: 'pointer',
+    transition: 'all 0.15s ease',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+  },
+  graphRowStatic: {
+    padding: '6px 10px',
+    borderRadius: tokens.radii.sm,
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '12px',
+    color: tokens.colors.textSecondary,
+  },
+  graphText: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
   resizeHandle: {
     position: 'absolute',
     top: 0,
     right: '-5px',
-    width: '10px',
+    width: '100%',
     height: '100%',
     cursor: 'col-resize',
     zIndex: 30,
     backgroundColor: 'transparent',
+    pointerEvents: 'none',
   },
 };
