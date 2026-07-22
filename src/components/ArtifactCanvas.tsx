@@ -37,16 +37,33 @@ Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex
 
 ## 1. Core Architecture Flow
 
-Below is the execution flowchart for agent state persistence and verification:
+Below is the execution flowchart for agent state persistence, governance policy verification, and vector graph indexing:
 
 \`\`\`mermaid
 flowchart TD
-    A[Human / Agent Input] --> B[Lore Core Engine]
-    B --> C{Validation Check}
-    C -- Valid --> D[PostgreSQL Store]
-    C -- Needs Review --> E[Human Approvals Queue]
-    D --> F[Semantic Graph Index]
-    E -- Approved --> D
+    subgraph Clients ["1. Client & AI Agent Layer"]
+        User["Human Developer"] -->|GraphQL / REST| Gateway["Lore API Gateway"]
+        Agent["Autonomous AI Agent"] -->|MCP Protocol| Gateway
+    end
+
+    subgraph Core ["2. Lore Core Engine"]
+        Gateway --> Router["Router & Auth Middleware"]
+        Router --> Policy{"Governance Policy Check"}
+        Policy -- Auto-Pass --> MemoryEngine["Memory Extraction & Lineage Engine"]
+        Policy -- Needs Review --> Queue["Human Review Queue"]
+    end
+
+    subgraph Governance ["3. Human Governance"]
+        Queue --> ReviewUI["Approvals Dashboard"]
+        ReviewUI -- Approve --> MemoryEngine
+        ReviewUI -- Reject --> AuditLog["Audit Failure Log"]
+    end
+
+    subgraph Storage ["4. Persistent Storage & Indexing"]
+        MemoryEngine --> ORM[("PostgreSQL Database")]
+        MemoryEngine --> Vector[("Chroma Vector Store")]
+        MemoryEngine --> Graph[("Neo4j Relationship Graph")]
+    end
 \`\`\`
 
 ---

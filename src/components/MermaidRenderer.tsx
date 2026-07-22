@@ -55,9 +55,9 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       ) : (
-        /* Zero-dependency Seamless Canvas SVG Flowchart Diagram */
+        /* Rich Complex Zero-dependency Multi-Subgraph Flowchart SVG */
         <div style={styles.svgWrapper}>
-          <svg width="600" height="340" viewBox="0 0 600 340" style={styles.svg}>
+          <svg width="720" height="420" viewBox="0 0 720 420" style={styles.svg}>
             <defs>
               <marker
                 id="arrow"
@@ -72,49 +72,69 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
               </marker>
             </defs>
 
-            {/* Nodes */}
-            <rect x="210" y="20" width="180" height="44" rx="8" fill="#2563eb" stroke="#3b82f6" strokeWidth="1.5" />
-            <text x="300" y="47" fill="#ffffff" fontSize="13" fontWeight="600" textAnchor="middle">
-              Human / Agent Input
-            </text>
+            {/* Subgraph 1: Clients */}
+            <rect x="20" y="20" width="680" height="70" rx="10" fill="rgba(37, 99, 235, 0.05)" stroke="rgba(37, 99, 235, 0.2)" strokeDasharray="4 4" />
+            <text x="35" y="42" fill="#60a5fa" fontSize="11" fontWeight="700" textAnchor="start">1. CLIENT & AI AGENT LAYER</text>
+            
+            <rect x="50" y="46" width="160" height="34" rx="6" fill="#2563eb" stroke="#3b82f6" />
+            <text x="130" y="68" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Human Developer</text>
+            
+            <rect x="280" y="46" width="160" height="34" rx="6" fill="#1e1b4b" stroke="#818cf8" />
+            <text x="360" y="68" fill="#818cf8" fontSize="12" fontWeight="600" textAnchor="middle">Autonomous AI Agent</text>
 
-            <line x1="300" y1="64" x2="300" y2="94" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#arrow)" />
+            <rect x="510" y="46" width="160" height="34" rx="6" fill="#202028" stroke="#3b82f6" />
+            <text x="590" y="68" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Lore API Gateway</text>
 
-            <rect x="210" y="96" width="180" height="44" rx="8" fill="#202028" stroke="#3b82f6" strokeWidth="1.5" />
-            <text x="300" y="123" fill="#ffffff" fontSize="13" fontWeight="600" textAnchor="middle">
-              Lore Core Engine
-            </text>
+            <line x1="210" y1="63" x2="280" y2="63" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <line x1="440" y1="63" x2="510" y2="63" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
 
-            <line x1="300" y1="140" x2="300" y2="170" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#arrow)" />
+            {/* Subgraph 2: Core Engine */}
+            <rect x="20" y="110" width="680" height="130" rx="10" fill="rgba(16, 185, 129, 0.05)" stroke="rgba(16, 185, 129, 0.2)" strokeDasharray="4 4" />
+            <text x="35" y="132" fill="#10b981" fontSize="11" fontWeight="700" textAnchor="start">2. LORE CORE ENGINE & GOVERNANCE</text>
 
-            {/* Decision Diamond */}
-            <polygon points="300,172 380,202 300,232 220,202" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
-            <text x="300" y="206" fill="#10b981" fontSize="12" fontWeight="600" textAnchor="middle">
-              Validation Check
-            </text>
+            <line x1="590" y1="80" x2="590" y2="146" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
 
-            {/* Paths */}
-            <line x1="380" y1="202" x2="450" y2="202" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#arrow)" />
-            <text x="410" y="194" fill="#3fb950" fontSize="11" fontWeight="600">Valid</text>
+            <rect x="500" y="148" width="180" height="34" rx="6" fill="#202028" stroke="#3b82f6" />
+            <text x="590" y="170" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Router & Auth Middleware</text>
 
-            <rect x="452" y="180" width="130" height="44" rx="8" fill="#10b981" stroke="#34d399" strokeWidth="1.5" />
-            <text x="517" y="207" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">
-              PostgreSQL Store
-            </text>
+            <line x1="500" y1="165" x2="430" y2="165" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
 
-            <line x1="220" y1="202" x2="150" y2="202" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#arrow)" />
-            <text x="170" y="194" fill="#f85149" fontSize="11" fontWeight="600">Review</text>
+            <polygon points="360,140 430,165 360,190 290,165" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
+            <text x="360" y="169" fill="#10b981" fontSize="11" fontWeight="600" textAnchor="middle">Policy Check</text>
 
-            <rect x="18" y="180" width="130" height="44" rx="8" fill="#332211" stroke="#f59e0b" strokeWidth="1.5" />
-            <text x="83" y="207" fill="#f59e0b" fontSize="12" fontWeight="600" textAnchor="middle">
-              Approvals Queue
-            </text>
+            <line x1="290" y1="165" x2="220" y2="165" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <text x="250" y="157" fill="#3fb950" fontSize="10" fontWeight="600">Auto-Pass</text>
 
-            <line x1="517" y1="224" x2="517" y2="274" stroke="#60a5fa" strokeWidth="2" markerEnd="url(#arrow)" />
-            <rect x="442" y="276" width="150" height="44" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.5" />
-            <text x="517" y="303" fill="#818cf8" fontSize="12" fontWeight="600" textAnchor="middle">
-              Semantic Graph Index
-            </text>
+            <rect x="40" y="148" width="180" height="34" rx="6" fill="#10b981" stroke="#34d399" />
+            <text x="130" y="170" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Memory Lineage Engine</text>
+
+            <line x1="360" y1="190" x2="360" y2="210" stroke="#f85149" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <text x="375" y="204" fill="#f85149" fontSize="10" fontWeight="600">Review</text>
+
+            <rect x="270" y="210" width="180" height="24" rx="4" fill="#332211" stroke="#f59e0b" />
+            <text x="360" y="226" fill="#f59e0b" fontSize="11" fontWeight="600" textAnchor="middle">Human Review Queue</text>
+
+            {/* Subgraph 3: Storage Layer */}
+            <rect x="20" y="260" width="680" height="130" rx="10" fill="rgba(99, 102, 241, 0.05)" stroke="rgba(99, 102, 241, 0.2)" strokeDasharray="4 4" />
+            <text x="35" y="282" fill="#818cf8" fontSize="11" fontWeight="700" textAnchor="start">3. PERSISTENT STORAGE & INDEXING</text>
+
+            <line x1="130" y1="182" x2="130" y2="300" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+
+            <rect x="50" y="302" width="160" height="66" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.5" />
+            <text x="130" y="332" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">PostgreSQL Store</text>
+            <text x="130" y="350" fill="#a1a1aa" fontSize="10" textAnchor="middle">ORM & Schema Tables</text>
+
+            <line x1="210" y1="335" x2="280" y2="335" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+
+            <rect x="280" y="302" width="160" height="66" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.5" />
+            <text x="360" y="332" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Chroma Vector Store</text>
+            <text x="360" y="350" fill="#a1a1aa" fontSize="10" textAnchor="middle">Semantic Embeddings</text>
+
+            <line x1="440" y1="335" x2="510" y2="335" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+
+            <rect x="510" y="302" width="160" height="66" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.5" />
+            <text x="590" y="332" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Graph Lineage Store</text>
+            <text x="590" y="350" fill="#a1a1aa" fontSize="10" textAnchor="middle">[[Wiki-Link]] Edges</text>
           </svg>
         </div>
       )}
