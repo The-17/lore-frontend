@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import DOMPurify from 'dompurify';
 import { ChevronLeft, ArrowLeft } from 'lucide-react';
 
 interface ArtifactCanvasProps {
@@ -13,8 +16,60 @@ interface ArtifactCanvasProps {
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
   const [showDiff, setShowDiff] = useState(false);
 
-  const loremParagraph =
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.';
+  // Rich Demo Markdown Content for testing the renderer
+  const markdownText = `# Some header text
+
+Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. See [[Django Ninja Patterns]] for API schemas and [[Agent Token Security]] for auth headers.
+
+> Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, semantic search, and human-in-the-loop governance.
+
+## Core System Architecture & Lore Contracts
+
+Ad litora torquent per conubia nostra inceptos himenaeos. Ut hendrerit semper vel class aptent taciti sociosqu:
+
+- **Persistent Memory**: High-performance SQLite & PostgreSQL storage using \`Django ORM\`.
+- **Semantic Graph**: Auto-extracted [[Wiki-Link]] dependencies and relationship lineage.
+- **BYOB Infrastructure**: Bring-Your-Own-Backend endpoint configuration with token auth.
+
+### Backend Endpoints & API Contract
+
+Here is an example of the Ninja API endpoint contract:
+
+\`\`\`python
+@router.get("/artifacts/{artifact_id}", response=ArtifactSchema)
+def get_artifact(request, artifact_id: UUID):
+    """Retrieve artifact details along with provenance metadata."""
+    artifact = get_object_or_404(Artifact, id=artifact_id)
+    return artifact
+\`\`\`
+
+### Lifecycle States & Subtypes
+
+| Artifact Subtype | Purpose & Description | Default State |
+| :--- | :--- | :--- |
+| \`Skill\` | Reusable agent tool or prompt workflow | \`approved\` |
+| \`Decision\` | Architectural ADR and design rationale | \`draft\` |
+| \`Document\` | Structured knowledge sheet article | \`under_review\` |
+
+Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit.`;
+
+  // Wiki Link Renderer
+  const renderContentWithWikiLinks = (text: string) => {
+    const parts = text.split(/(\[\[.*?\]\])/g);
+    return parts.map((part, i) => {
+      if (part.startsWith('[[') && part.endsWith(']]')) {
+        const title = part.slice(2, -2);
+        return (
+          <span key={i} className="wiki-link">
+            [{title}]
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+
+  const sanitizedHtml = DOMPurify.sanitize(markdownText);
 
   // Standard GitHub Unified Diff representation
   const sampleGitHubDiff = [
@@ -38,7 +93,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
             {/* Lighter, Soft Peach Draft Badge */}
             <span style={styles.draftBadge}>Draft</span>
 
-            {/* Clean GitHub Style Version Diff Stat Badges (No Brackets) */}
+            {/* Clean GitHub Style Version Diff Stat Badges */}
             <button
               onClick={() => setShowDiff(!showDiff)}
               style={styles.versionDiffBtn}
@@ -87,14 +142,46 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
                 </div>
               </div>
             ) : (
-              <>
-                <h1 style={styles.heading1}>Some header text</h1>
-
-                <p style={styles.paragraph}>{loremParagraph}</p>
-                <p style={styles.paragraph}>{loremParagraph}</p>
-                <p style={styles.paragraph}>{loremParagraph}</p>
-                <p style={styles.paragraph}>{loremParagraph}</p>
-              </>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ children }) => <h1 style={styles.heading1}>{children}</h1>,
+                  h2: ({ children }) => <h2 style={styles.heading2}>{children}</h2>,
+                  h3: ({ children }) => <h3 style={styles.heading3}>{children}</h3>,
+                  p: ({ children }) => (
+                    <p style={styles.paragraph}>
+                      {React.Children.map(children, (child) =>
+                        typeof child === 'string' ? renderContentWithWikiLinks(child) : child
+                      )}
+                    </p>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote style={styles.blockquote}>{children}</blockquote>
+                  ),
+                  ul: ({ children }) => <ul style={styles.ul}>{children}</ul>,
+                  ol: ({ children }) => <ol style={styles.ol}>{children}</ol>,
+                  li: ({ children }) => (
+                    <li style={styles.li}>
+                      {React.Children.map(children, (child) =>
+                        typeof child === 'string' ? renderContentWithWikiLinks(child) : child
+                      )}
+                    </li>
+                  ),
+                  code: ({ inline, children }: any) =>
+                    inline ? (
+                      <code style={styles.inlineCode}>{children}</code>
+                    ) : (
+                      <pre style={styles.codeBlock}>
+                        <code>{children}</code>
+                      </pre>
+                    ),
+                  table: ({ children }) => <table style={styles.table}>{children}</table>,
+                  th: ({ children }) => <th style={styles.th}>{children}</th>,
+                  td: ({ children }) => <td style={styles.td}>{children}</td>,
+                }}
+              >
+                {sanitizedHtml}
+              </ReactMarkdown>
             )}
           </div>
         </div>
@@ -239,11 +326,89 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '28px',
     letterSpacing: '-0.5px',
   },
+  heading2: {
+    fontSize: '24px',
+    fontWeight: '500',
+    color: '#ffffff',
+    marginTop: '32px',
+    marginBottom: '16px',
+  },
+  heading3: {
+    fontSize: '18px',
+    fontWeight: '500',
+    color: '#ffffff',
+    marginTop: '24px',
+    marginBottom: '12px',
+  },
   paragraph: {
     fontSize: '16px',
     lineHeight: '1.75',
     color: '#d4d4d8',
     marginBottom: '24px',
+  },
+  blockquote: {
+    borderLeft: '3px solid #10b981',
+    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+    padding: '12px 18px',
+    borderRadius: '0 8px 8px 0',
+    color: '#e4e4e7',
+    fontSize: '15px',
+    fontStyle: 'italic',
+    marginBottom: '24px',
+  },
+  ul: {
+    marginBottom: '24px',
+    paddingLeft: '24px',
+    color: '#d4d4d8',
+  },
+  ol: {
+    marginBottom: '24px',
+    paddingLeft: '24px',
+    color: '#d4d4d8',
+  },
+  li: {
+    fontSize: '16px',
+    lineHeight: '1.75',
+    marginBottom: '8px',
+  },
+  inlineCode: {
+    backgroundColor: '#2d2d32',
+    color: '#38bdf8',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
+    fontSize: '14px',
+  },
+  codeBlock: {
+    backgroundColor: '#121215',
+    border: '1px solid #2d2d32',
+    borderRadius: '8px',
+    padding: '16px',
+    marginBottom: '24px',
+    fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
+    fontSize: '14px',
+    lineHeight: '1.6',
+    color: '#e4e4e7',
+    overflowX: 'auto',
+  },
+  table: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginBottom: '24px',
+    fontSize: '14px',
+  },
+  th: {
+    backgroundColor: '#26262a',
+    color: '#ffffff',
+    textAlign: 'left',
+    padding: '10px 14px',
+    borderBottom: '1px solid #38383e',
+    fontWeight: '600',
+  },
+  td: {
+    padding: '10px 14px',
+    borderBottom: '1px solid #28282e',
+    color: '#d4d4d8',
   },
   githubDiffViewer: {
     backgroundColor: '#0d1117',
