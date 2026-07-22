@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
+import { ArtifactInfoModal } from './ArtifactInfoModal';
 
 interface ArtifactCanvasProps {
   artifact?: any;
@@ -19,6 +20,7 @@ interface ArtifactCanvasProps {
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink }) => {
   const [showDiff, setShowDiff] = useState(false);
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   const handleCopyCode = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
@@ -180,6 +182,15 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             <span style={styles.delStatBadge}>-3</span>
           </button>
 
+          {/* Info Button inside Pill */}
+          <button
+            onClick={() => setIsInfoOpen(true)}
+            style={styles.infoPillBtn}
+            title="Inspect Artifact Object Details (Lineage, Governance, Metrics)"
+          >
+            <Info size={14} style={{ color: tokens.colors.textSecondary }} />
+          </button>
+
           {/* Primary Aprove changes Button inside Pill */}
           <button style={styles.tubeApproveBtn}>
             Aprove changes
@@ -337,6 +348,13 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
           </div>
         </div>
       </div>
+
+      {/* Artifact Info Modal */}
+      <ArtifactInfoModal
+        isOpen={isInfoOpen}
+        onClose={() => setIsInfoOpen(false)}
+        onSelectRelatedArtifact={onSelectWikiLink}
+      />
     </div>
   );
 };
@@ -394,7 +412,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '6px 12px',
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '10px',
     zIndex: 10,
   },
   subtleDraftBadge: {
@@ -416,6 +434,18 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '6px',
     padding: '6px 10px',
     borderRadius: '8px',
+  },
+  infoPillBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '6px',
+    borderRadius: '8px',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    transition: 'all 0.15s ease',
   },
   addStatBadge: {
     color: tokens.colors.diffAddText,
