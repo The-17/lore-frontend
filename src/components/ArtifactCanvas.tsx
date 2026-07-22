@@ -83,37 +83,34 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
     <div style={styles.container}>
       {/* Main Card (#292929) - Zero Radius, Zero Borders */}
       <div style={styles.card}>
-        {/* Top Header Bar */}
-        <div style={styles.header}>
-          {/* Far Left: Back Chevron */}
-          <button style={styles.backChevronBtn} title="Back">
-            <ChevronLeft size={20} />
+        {/* Absolute Top-Left Back Chevron */}
+        <button style={styles.backChevronBtn} title="Back">
+          <ChevronLeft size={20} />
+        </button>
+
+        {/* Absolute Top-Right Floating Header Action Tube Pill */}
+        <div style={styles.headerActionTubeRight}>
+          {/* Subtle Muted Draft Badge */}
+          <span style={styles.subtleDraftBadge}>Draft</span>
+
+          {/* Diff Stat Button inside Pill */}
+          <button
+            onClick={() => setShowDiff(!showDiff)}
+            style={styles.tubeDiffBtn}
+            title="Toggle Line Diffs"
+          >
+            <span style={{ color: '#a1a1aa', fontSize: '12px', fontWeight: '500' }}>v3</span>
+            <span style={styles.addStatBadge}>+12</span>
+            <span style={styles.delStatBadge}>-3</span>
           </button>
 
-          {/* Centered Floating Header Action Tube Pill */}
-          <div style={styles.headerActionTube}>
-            {/* Subtle Muted Draft Badge */}
-            <span style={styles.subtleDraftBadge}>Draft</span>
-
-            {/* Diff Stat Button inside Pill */}
-            <button
-              onClick={() => setShowDiff(!showDiff)}
-              style={styles.tubeDiffBtn}
-              title="Toggle Line Diffs"
-            >
-              <span style={{ color: '#a1a1aa', fontSize: '12px', fontWeight: '500' }}>v3</span>
-              <span style={styles.addStatBadge}>+12</span>
-              <span style={styles.delStatBadge}>-3</span>
-            </button>
-
-            {/* Primary Aprove changes Button inside Pill */}
-            <button style={styles.tubeApproveBtn}>
-              Aprove changes
-            </button>
-          </div>
+          {/* Primary Aprove changes Button inside Pill */}
+          <button style={styles.tubeApproveBtn}>
+            Aprove changes
+          </button>
         </div>
 
-        {/* Centered Typography Reading Column */}
+        {/* Centered Typography Reading Column (Scrolls Higher into Viewport Space) */}
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             {showDiff ? (
@@ -226,25 +223,19 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#292929',
     borderRadius: 0,
     border: 'none',
-    padding: '24px 56px 16px 56px',
+    padding: '20px 48px 16px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     boxShadow: 'none',
     overflow: 'hidden',
     margin: 0,
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px',
-    marginTop: '-4px',
-    width: '100%',
     position: 'relative',
-    flexShrink: 0,
   },
   backChevronBtn: {
+    position: 'absolute',
+    left: '48px',
+    top: '20px',
     background: 'none',
     border: 'none',
     color: '#888888',
@@ -252,11 +243,12 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '4px',
     display: 'flex',
     alignItems: 'center',
+    zIndex: 10,
   },
-  headerActionTube: {
+  headerActionTubeRight: {
     position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
+    right: '48px',
+    top: '16px',
     backgroundColor: '#202020',
     borderRadius: '24px',
     padding: '4px 6px',
@@ -264,6 +256,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '10px',
     border: 'none',
+    zIndex: 10,
   },
   subtleDraftBadge: {
     fontSize: '12px',
@@ -320,17 +313,19 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     justifyContent: 'space-between',
     overflow: 'hidden',
+    height: '100%',
   },
   body: {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
+    paddingTop: '8px',
   },
   heading1: {
     fontSize: '36px',
     fontWeight: '400',
     color: '#D4D4D4',
-    marginTop: '20px',
+    marginTop: '12px',
     marginBottom: '28px',
     letterSpacing: '-0.5px',
   },
