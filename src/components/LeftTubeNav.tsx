@@ -21,10 +21,10 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
 
   return (
     <div style={styles.container}>
-      {/* Brand Header */}
+      {/* Lore Title */}
       <div style={styles.brand}>Lore</div>
 
-      {/* Upper Floating Tube (Primary Views) */}
+      {/* Upper Floating Tube Pill */}
       <div style={styles.tube}>
         {mainNavItems.map((item) => {
           const Icon = item.icon;
@@ -35,12 +35,12 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
               onClick={() => setActiveTab(item.id)}
               style={{
                 ...styles.iconBtn,
-                backgroundColor: isActive ? '#38383e' : 'transparent',
-                color: isActive ? '#10b981' : '#a1a1aa',
+                backgroundColor: isActive ? '#3a3a3a' : 'transparent',
+                color: isActive ? '#ffffff' : '#888888',
               }}
               title={item.label}
             >
-              <Icon size={19} />
+              <Icon size={20} />
             </button>
           );
         })}
@@ -48,7 +48,7 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
 
       <div style={{ flex: 1 }} />
 
-      {/* Lower Floating Tube (Utilities & Config) */}
+      {/* Lower Floating Tube Pill */}
       <div style={styles.tube}>
         <button
           onClick={onOpenBYOBModal}
@@ -74,36 +74,37 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    width: '120px',
+    width: '140px',
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '32px 0',
-    backgroundColor: '#1c1c1f',
+    padding: '44px 0',
+    backgroundColor: '#1e1e1e',
     userSelect: 'none',
     flexShrink: 0,
   },
   brand: {
-    fontSize: '22px',
-    fontWeight: '700',
+    fontSize: '28px',
+    fontWeight: '600',
     color: '#ffffff',
     letterSpacing: '-0.5px',
-    marginBottom: '32px',
+    marginBottom: '48px',
   },
   tube: {
-    backgroundColor: '#26262a',
-    borderRadius: '28px',
-    padding: '8px 6px',
+    backgroundColor: '#2b2b2b',
+    borderRadius: '32px',
+    padding: '12px 8px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
-    border: '1px solid rgba(255, 255, 255, 0.05)',
+    gap: '12px',
+    width: '64px',
+    alignItems: 'center',
   },
   iconBtn: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '20px',
+    width: '44px',
+    height: '44px',
+    borderRadius: '22px',
     border: 'none',
     display: 'flex',
     alignItems: 'center',
