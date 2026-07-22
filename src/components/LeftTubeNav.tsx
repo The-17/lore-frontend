@@ -36,7 +36,7 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
               style={{
                 ...styles.iconBtn,
                 backgroundColor: isActive ? '#3a3a3a' : 'transparent',
-                color: isActive ? '#EBEBEB' : '#888888',
+                color: isActive ? '#D4D4D4' : '#888888',
               }}
               title={item.label}
             >
@@ -62,7 +62,7 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
           style={{
             ...styles.iconBtn,
             backgroundColor: activeTab === 'settings' ? '#3a3a3a' : 'transparent',
-            color: activeTab === 'settings' ? '#EBEBEB' : '#888888',
+            color: activeTab === 'settings' ? '#D4D4D4' : '#888888',
           }}
           title="Workspace Settings"
         >
@@ -91,7 +91,7 @@ const styles: Record<string, React.CSSProperties> = {
   brand: {
     fontSize: '28px',
     fontWeight: '600',
-    color: '#EBEBEB',
+    color: '#D4D4D4',
     letterSpacing: '-0.5px',
     marginBottom: '48px',
   },
