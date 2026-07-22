@@ -2,19 +2,25 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import type { Artifact, ArtifactVersion } from '../types';
-import { CheckCircle, Clock, Tag, History, FileText, ArrowLeft } from 'lucide-react';
+import type { Artifact, ArtifactVersion, Relationship } from '../types';
+import { ChevronLeft, ArrowLeft } from 'lucide-react';
 
 interface ArtifactCanvasProps {
   artifact: Artifact | null;
   versions?: ArtifactVersion[];
+  relationships?: Relationship[];
+  onBack?: () => void;
   onSelectWikiLink?: (title: string) => void;
+  onApprove?: (id: string) => void;
 }
 
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
   artifact,
   versions = [],
+  relationships = [],
+  onBack,
   onSelectWikiLink,
+  onApprove,
 }) => {
   const [showDiff, setShowDiff] = useState(false);
 
@@ -22,10 +28,9 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
     return (
       <div style={styles.emptyContainer}>
         <div style={styles.emptyCard}>
-          <FileText size={48} color="var(--text-dim)" />
-          <h3 style={{ marginTop: '16px', color: 'var(--text-muted)' }}>No Artifact Selected</h3>
+          <h3 style={{ color: 'var(--text-muted)' }}>No Artifact Selected</h3>
           <p style={{ fontSize: '13px', color: 'var(--text-dim)', marginTop: '8px' }}>
-            Select an artifact from the collection tree or click a [[Wiki-Link]] in the graph to view.
+            Select an artifact from the collection tree or click a [[Wiki-Link]] to view.
           </p>
         </div>
       </div>
@@ -34,7 +39,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 
   const rawContent = artifact.content || artifact.skill_md_content || artifact.decision_text || '';
 
-  // Custom wiki link renderer for [[Title]]
+  // Wiki Link Renderer
   const renderContentWithWikiLinks = (text: string) => {
     const parts = text.split(/(\[\[.*?\]\])/g);
     return parts.map((part, i) => {
@@ -56,48 +61,47 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 
   const sanitizedHtml = DOMPurify.sanitize(rawContent);
 
+  // Extract relations for footer
+  const outboundReferences = relationships.filter((r) => r.relation_type === 'references');
+  const derivedFrom = relationships.find((r) => r.relation_type === 'derived_from');
+
   return (
     <div style={styles.container}>
-      {/* Knowledge Sheet Card */}
+      {/* Knowledge Sheet Card Sheet (#242424) */}
       <div style={styles.card}>
-        {/* Header Bar */}
+        {/* Top Header Bar */}
         <div style={styles.header}>
-          <div style={styles.headerLeft}>
-            <span style={getTypeBadgeStyle(artifact.type)}>
-              <Tag size={12} style={{ marginRight: '4px' }} />
-              {artifact.type.toUpperCase()}
-            </span>
-            <span style={getStateBadgeStyle(artifact.lifecycle_state)}>
-              {artifact.lifecycle_state.replace('_', ' ')}
-            </span>
-          </div>
+          <button onClick={onBack} style={styles.backChevronBtn} title="Back">
+            <ChevronLeft size={20} />
+          </button>
 
-          <div style={styles.headerRight}>
+          <div style={styles.headerRightActions}>
+            {/* Draft / Lifecycle State Pill */}
+            <span style={getStateBadgeStyle(artifact.lifecycle_state)}>
+              {artifact.lifecycle_state === 'draft'
+                ? 'Draft'
+                : artifact.lifecycle_state.replace('_', ' ')}
+            </span>
+
+            {/* Version Diff Toggle */}
             <button
-              style={{ ...styles.actionBtn, backgroundColor: showDiff ? 'var(--bg-tube-hover)' : 'transparent' }}
               onClick={() => setShowDiff(!showDiff)}
+              style={styles.versionDiffBtn}
             >
-              <History size={14} style={{ marginRight: '6px' }} />
-              Version v{artifact.current_version_number || 1}
+              v{artifact.current_version_number || 1} (Diff)
             </button>
-            <button style={styles.approveBtn}>
-              <CheckCircle size={14} style={{ marginRight: '6px' }} />
-              Approve
+
+            {/* Primary Blue Approve Changes Button */}
+            <button
+              onClick={() => onApprove && onApprove(artifact.id)}
+              style={styles.approveChangesBtn}
+            >
+              Approve Changes
             </button>
           </div>
         </div>
 
-        {/* Title */}
-        <h1 style={styles.title}>{artifact.title}</h1>
-
-        {/* Decision / Rationale Metadata (if applicable) */}
-        {artifact.rationale && (
-          <div style={styles.rationaleBox}>
-            <strong>Rationale:</strong> {artifact.rationale}
-          </div>
-        )}
-
-        {/* Content Sheet Body */}
+        {/* Markdown Body Content */}
         <div style={styles.body}>
           {showDiff ? (
             <div style={styles.diffContainer}>
@@ -116,19 +120,17 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
+                h1: ({ children }) => <h1 style={styles.heading1}>{children}</h1>,
+                h2: ({ children }) => <h2 style={styles.heading2}>{children}</h2>,
                 p: ({ children }) => (
-                  <p style={{ lineHeight: '1.7', marginBottom: '16px', color: '#e4e4e7' }}>
+                  <p style={styles.paragraph}>
                     {React.Children.map(children, (child) =>
                       typeof child === 'string' ? renderContentWithWikiLinks(child) : child
                     )}
                   </p>
                 ),
-                h1: ({ children }) => <h1 style={{ marginBottom: '16px', color: '#ffffff' }}>{children}</h1>,
-                h2: ({ children }) => <h2 style={{ marginTop: '24px', marginBottom: '12px', color: '#ffffff' }}>{children}</h2>,
                 code: ({ children }) => (
-                  <code style={{ background: '#18181b', padding: '2px 6px', borderRadius: '4px', fontFamily: 'monospace' }}>
-                    {children}
-                  </code>
+                  <code style={styles.codeSnippet}>{children}</code>
                 ),
               }}
             >
@@ -137,55 +139,55 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
           )}
         </div>
 
-        {/* Footer Provenance Bar */}
-        <div style={styles.footer}>
-          <span style={styles.footerItem}>
-            <Clock size={12} style={{ marginRight: '4px' }} />
-            Updated {new Date(artifact.updated_at).toLocaleString()}
-          </span>
-          {artifact.usage_count !== undefined && (
-            <span style={styles.footerItem}>
-              ⚡ Skill Hydrations: {artifact.usage_count}
-            </span>
-          )}
+        {/* Footer Provenance Row */}
+        <div style={styles.footerRow}>
+          {/* Left: Derived from */}
+          <div style={styles.footerItem}>
+            <span>Derived from:</span>
+            <button
+              className="wiki-link"
+              onClick={() => onSelectWikiLink && onSelectWikiLink(derivedFrom?.target_title || 'PRD Lore v2')}
+            >
+              [{derivedFrom?.target_title || 'PRD Lore v2'}]
+            </button>
+          </div>
+
+          {/* Right: References */}
+          <div style={styles.footerItem}>
+            <span>References:</span>
+            <button
+              className="wiki-link"
+              onClick={() =>
+                onSelectWikiLink &&
+                onSelectWikiLink(outboundReferences[0]?.target_title || 'Django Ninja Patterns')
+              }
+            >
+              [{outboundReferences[0]?.target_title || 'Django Ninja Patterns'}]
+            </button>
+            {outboundReferences.length > 1 && (
+              <span style={styles.countBadge}>+{outboundReferences.length - 1}</span>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-const getTypeBadgeStyle = (type: string): React.CSSProperties => {
-  const colors: Record<string, string> = {
-    skill: 'var(--accent-emerald)',
-    decision: 'var(--accent-purple)',
-    document: 'var(--accent-blue)',
-    memory: 'var(--accent-amber)',
-  };
-  const color = colors[type] || 'var(--text-muted)';
+const getStateBadgeStyle = (state: string): React.CSSProperties => {
+  const isDraft = state === 'draft';
+  const isApproved = state === 'approved';
+  
   return {
-    fontSize: '11px',
-    fontWeight: '600',
-    color,
-    background: `${color}18`,
-    border: `1px solid ${color}40`,
-    padding: '3px 8px',
-    borderRadius: '6px',
+    fontSize: '13px',
+    fontWeight: '500',
+    color: isDraft ? '#f97316' : isApproved ? '#10b981' : '#eab308',
+    backgroundColor: isDraft ? 'rgba(249, 115, 22, 0.15)' : isApproved ? 'rgba(16, 185, 129, 0.15)' : 'rgba(234, 179, 8, 0.15)',
+    padding: '4px 14px',
+    borderRadius: '16px',
+    textTransform: 'capitalize',
     display: 'inline-flex',
     alignItems: 'center',
-  };
-};
-
-const getStateBadgeStyle = (state: string): React.CSSProperties => {
-  const isApproved = state === 'approved';
-  return {
-    fontSize: '11px',
-    fontWeight: '500',
-    color: isApproved ? 'var(--accent-emerald)' : 'var(--accent-amber)',
-    background: 'rgba(255, 255, 255, 0.04)',
-    border: '1px solid var(--border-card)',
-    padding: '3px 8px',
-    borderRadius: '6px',
-    textTransform: 'capitalize',
   };
 };
 
@@ -193,10 +195,11 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     flex: 1,
     height: '100%',
-    padding: '24px',
+    padding: '32px',
     display: 'flex',
     justifyContent: 'center',
     overflowY: 'auto',
+    backgroundColor: 'var(--bg-app)',
   },
   emptyContainer: {
     flex: 1,
@@ -207,81 +210,95 @@ const styles: Record<string, React.CSSProperties> = {
   emptyCard: {
     textAlign: 'center',
     padding: '40px',
-    maxWidth: '400px',
   },
   card: {
     width: '100%',
-    maxWidth: '840px',
-    backgroundColor: 'var(--bg-card)',
+    maxWidth: '900px',
+    backgroundColor: '#242424',
     borderRadius: '16px',
     border: '1px solid var(--border-card)',
-    padding: '32px',
+    padding: '36px 40px',
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 12px 32px rgba(0,0,0,0.35)',
+    justifyContent: 'space-between',
+    minHeight: '620px',
+    boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '40px',
   },
-  headerLeft: {
-    display: 'flex',
-    gap: '8px',
-    alignItems: 'center',
-  },
-  headerRight: {
-    display: 'flex',
-    gap: '8px',
-  },
-  actionBtn: {
-    background: 'transparent',
-    border: '1px solid var(--border-card)',
+  backChevronBtn: {
+    background: 'none',
+    border: 'none',
     color: 'var(--text-muted)',
-    padding: '6px 12px',
-    borderRadius: '8px',
     cursor: 'pointer',
-    fontSize: '12px',
+    padding: '4px',
     display: 'flex',
     alignItems: 'center',
   },
-  approveBtn: {
-    background: 'var(--accent-purple)',
+  headerRightActions: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+  },
+  versionDiffBtn: {
+    background: 'none',
+    border: 'none',
+    color: '#e4e4e7',
+    fontSize: '13px',
+    fontWeight: '500',
+    cursor: 'pointer',
+  },
+  approveChangesBtn: {
+    backgroundColor: '#2563eb',
     border: 'none',
     color: '#ffffff',
-    padding: '6px 14px',
+    padding: '8px 18px',
     borderRadius: '8px',
-    cursor: 'pointer',
-    fontSize: '12px',
-    fontWeight: '600',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: '26px',
-    fontWeight: '700',
-    letterSpacing: '-0.5px',
-    color: '#ffffff',
-    marginBottom: '16px',
-  },
-  rationaleBox: {
-    backgroundColor: 'rgba(168, 85, 247, 0.08)',
-    borderLeft: '3px solid var(--accent-purple)',
-    padding: '12px 16px',
-    borderRadius: '4px',
     fontSize: '13px',
-    color: '#e4e4e7',
-    marginBottom: '24px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease',
   },
   body: {
     flex: 1,
+    marginBottom: '40px',
+  },
+  heading1: {
+    fontSize: '28px',
+    fontWeight: '700',
+    color: '#ffffff',
+    marginBottom: '24px',
+    letterSpacing: '-0.5px',
+  },
+  heading2: {
+    fontSize: '20px',
+    fontWeight: '600',
+    color: '#ffffff',
+    marginTop: '28px',
+    marginBottom: '14px',
+  },
+  paragraph: {
     fontSize: '15px',
+    lineHeight: '1.75',
+    color: '#d4d4d8',
+    marginBottom: '20px',
+  },
+  codeSnippet: {
+    backgroundColor: '#18181b',
+    padding: '3px 8px',
+    borderRadius: '4px',
+    fontFamily: 'monospace',
+    fontSize: '13px',
+    color: '#e4e4e7',
   },
   diffContainer: {
     backgroundColor: '#18181b',
-    borderRadius: '8px',
-    padding: '16px',
+    borderRadius: '10px',
+    padding: '20px',
     fontFamily: 'monospace',
     fontSize: '13px',
   },
@@ -303,17 +320,26 @@ const styles: Record<string, React.CSSProperties> = {
     whiteSpace: 'pre-wrap',
     color: '#a1a1aa',
   },
-  footer: {
-    marginTop: '32px',
-    paddingTop: '16px',
-    borderTop: '1px solid var(--border-card)',
+  footerRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    fontSize: '12px',
-    color: 'var(--text-dim)',
+    alignItems: 'center',
+    fontSize: '13px',
+    color: 'var(--text-muted)',
+    paddingTop: '20px',
+    borderTop: '1px solid var(--border-card)',
   },
   footerItem: {
     display: 'flex',
     alignItems: 'center',
+    gap: '8px',
+  },
+  countBadge: {
+    backgroundColor: '#333333',
+    color: '#ffffff',
+    fontSize: '11px',
+    fontWeight: '600',
+    padding: '2px 8px',
+    borderRadius: '10px',
   },
 };
