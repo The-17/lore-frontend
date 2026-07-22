@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
+import { MermaidRenderer } from './MermaidRenderer';
 
 interface ArtifactCanvasProps {
   artifact?: any;
@@ -17,27 +18,50 @@ interface ArtifactCanvasProps {
 
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink }) => {
   const [showDiff, setShowDiff] = useState(false);
+  const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
 
-  // Rich Demo Markdown Content
-  const markdownText = `# Some header text
+  const handleCopyCode = (text: string, index: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedCodeIndex(index);
+    setTimeout(() => setCopiedCodeIndex(null), 2000);
+  };
 
-Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. See [[Django Ninja Patterns]] for API schemas and [[Agent Token Security]] for auth headers.
+  // Comprehensive Demo Markdown Content covering ALL markdown features
+  const markdownText = `# System Architecture & Lore Contracts
+
+Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas and [[Agent Token Security]] for auth headers.
 
 > Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, semantic search, and human-in-the-loop governance.
 
-## Core System Architecture & Lore Contracts
+---
 
-Ad litora torquent per conubia nostra inceptos himenaeos. Ut hendrerit semper vel class aptent taciti sociosqu:
+## 1. Core Architecture Flow
 
-- **Persistent Memory**: High-performance SQLite & PostgreSQL storage using \`Django ORM\`.
-- **Semantic Graph**: Auto-extracted [[Wiki-Link]] dependencies and relationship lineage.
-- **BYOB Infrastructure**: Bring-Your-Own-Backend endpoint configuration with token auth.
+Below is the execution flowchart for agent state persistence and verification:
 
-### Backend Endpoints & API Contract
+\`\`\`mermaid
+flowchart TD
+    A[Human / Agent Input] --> B[Lore Core Engine]
+    B --> C{Validation Check}
+    C -- Valid --> D[PostgreSQL Store]
+    C -- Needs Review --> E[Human Approvals Queue]
+    D --> F[Semantic Graph Index]
+    E -- Approved --> D
+\`\`\`
 
-Here is an example of the Ninja API endpoint contract:
+---
+
+## 2. Backend API Contracts & Endpoints
+
+Here is an example of the Django Ninja API endpoint contract with type hints and OpenAPI schemas:
 
 \`\`\`python
+from ninja import Router
+from uuid import UUID
+from .schemas import ArtifactSchema, ArtifactCreateSchema
+
+router = Router(tags=["Artifacts"])
+
 @router.get("/artifacts/{artifact_id}", response=ArtifactSchema)
 def get_artifact(request, artifact_id: UUID):
     """Retrieve artifact details along with provenance metadata."""
@@ -45,13 +69,34 @@ def get_artifact(request, artifact_id: UUID):
     return artifact
 \`\`\`
 
-### Lifecycle States & Subtypes
+---
 
-| Artifact Subtype | Purpose & Description | Default State |
-| :--- | :--- | :--- |
-| \`Skill\` | Reusable agent tool or prompt workflow | \`approved\` |
-| \`Decision\` | Architectural ADR and design rationale | \`draft\` |
-| \`Document\` | Structured knowledge sheet article | \`under_review\` |
+## 3. Subtype Matrix & Governance
+
+The table below outlines the core lifecycle states across artifact subtypes:
+
+| Artifact Subtype | Purpose & Description | Default State | Review Strategy |
+| :--- | :--- | :--- | :--- |
+| \`Skill\` | Reusable agent tool or prompt workflow | \`approved\` | Automatic CI Validation |
+| \`Decision\` | Architectural ADR and design rationale | \`draft\` | Human Peer Approval |
+| \`Document\` | Structured knowledge sheet article | \`under_review\` | Semantic Graph Check |
+
+---
+
+## 4. Key Roadmap Tasks & Checklists
+
+System implementation milestones:
+
+- [x] High-performance SQLite & PostgreSQL storage using \`Django ORM\`
+- [x] Auto-extracted [[Wiki-Link]] dependencies and relationship lineage
+- [ ] Bring-Your-Own-Backend endpoint configuration with token auth
+- [ ] Multi-agent collaborative memory graph
+
+---
+
+## 5. Architectural Diagram Asset
+
+![System Architecture Overview](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1000&q=80)
 
 Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit.`;
 
@@ -82,6 +127,8 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
     { type: 'addition', text: '+ Standardized API routes will reference [[Django Ninja Patterns]] for all error handling.' },
     { type: 'addition', text: '+ Authentication middleware will resolve both JWT Bearer tokens and [[Agent Token Security]] headers.' },
   ];
+
+  let codeBlockCounter = 0;
 
   return (
     <div style={styles.container}>
@@ -153,22 +200,25 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                       {children}
                     </h1>
                   ),
-                  h2: ({ children }) => (
-                    <h2 id="core-system-architecture--lore-contracts" style={styles.heading2}>
-                      {children}
-                    </h2>
-                  ),
-                  h3: ({ children }) => {
+                  h2: ({ children }) => {
                     const text = String(children);
-                    const id = text.toLowerCase().includes('backend')
-                      ? 'backend-endpoints--api-contract'
-                      : 'lifecycle-states--subtypes';
+                    let id = 'core-system-architecture--lore-contracts';
+                    if (text.includes('1')) id = '1-core-architecture-flow';
+                    else if (text.includes('2')) id = '2-backend-api-contracts--endpoints';
+                    else if (text.includes('3')) id = '3-subtype-matrix--governance';
+                    else if (text.includes('4')) id = '4-key-roadmap-tasks--checklists';
+                    else if (text.includes('5')) id = '5-architectural-diagram-asset';
                     return (
-                      <h3 id={id} style={styles.heading3}>
+                      <h2 id={id} style={styles.heading2}>
                         {children}
-                      </h3>
+                      </h2>
                     );
                   },
+                  h3: ({ children }) => (
+                    <h3 style={styles.heading3}>
+                      {children}
+                    </h3>
+                  ),
                   p: ({ children }) => (
                     <p style={styles.paragraph}>
                       {React.Children.map(children, (child) =>
@@ -179,6 +229,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                   blockquote: ({ children }) => (
                     <blockquote style={styles.blockquote}>{children}</blockquote>
                   ),
+                  hr: () => <hr style={styles.hr} />,
                   ul: ({ children }) => <ul style={styles.ul}>{children}</ul>,
                   ol: ({ children }) => <ol style={styles.ol}>{children}</ol>,
                   li: ({ children }) => (
@@ -188,14 +239,51 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                       )}
                     </li>
                   ),
-                  code: ({ inline, children }: any) =>
-                    inline ? (
-                      <code style={styles.inlineCode}>{children}</code>
-                    ) : (
-                      <pre style={styles.codeBlock}>
-                        <code>{children}</code>
-                      </pre>
-                    ),
+                  img: ({ src, alt }) => (
+                    <figure style={styles.figure}>
+                      <img src={src} alt={alt} style={styles.image} />
+                      {alt && <figcaption style={styles.figcaption}>{alt}</figcaption>}
+                    </figure>
+                  ),
+                  code: ({ inline, className, children }: any) => {
+                    const match = /language-(\w+)/.exec(className || '');
+                    const lang = match ? match[1] : '';
+                    const rawCode = String(children).replace(/\n$/, '');
+
+                    if (lang === 'mermaid') {
+                      return <MermaidRenderer chart={rawCode} />;
+                    }
+
+                    if (inline) {
+                      return <code style={styles.inlineCode}>{children}</code>;
+                    }
+
+                    const codeIndex = codeBlockCounter++;
+                    const isCopied = copiedCodeIndex === codeIndex;
+
+                    return (
+                      <div style={styles.codeContainer}>
+                        <div style={styles.codeHeader}>
+                          <span style={styles.codeLang}>{lang || 'code'}</span>
+                          <button
+                            onClick={() => handleCopyCode(rawCode, codeIndex)}
+                            style={styles.copyBtn}
+                            title="Copy code"
+                          >
+                            {isCopied ? (
+                              <Check size={13} style={{ color: '#10b981', marginRight: '4px' }} />
+                            ) : (
+                              <Copy size={13} style={{ marginRight: '4px' }} />
+                            )}
+                            <span>{isCopied ? 'Copied' : 'Copy'}</span>
+                          </button>
+                        </div>
+                        <pre style={styles.codeBlock}>
+                          <code>{rawCode}</code>
+                        </pre>
+                      </div>
+                    );
+                  },
                   table: ({ children }) => <table style={styles.table}>{children}</table>,
                   th: ({ children }) => <th style={styles.th}>{children}</th>,
                   td: ({ children }) => <td style={styles.td}>{children}</td>,
@@ -358,15 +446,15 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: tokens.typography.h2.fontSize,
     fontWeight: tokens.typography.h2.fontWeight,
     color: tokens.colors.textPrimary,
-    marginTop: '32px',
+    marginTop: '36px',
     marginBottom: '16px',
   },
   heading3: {
     fontSize: tokens.typography.h3.fontSize,
     fontWeight: tokens.typography.h3.fontWeight,
     color: tokens.colors.textPrimary,
-    marginTop: '24px',
-    marginBottom: '12px',
+    marginTop: '28px',
+    marginBottom: '14px',
   },
   paragraph: {
     fontSize: tokens.typography.body.fontSize,
@@ -377,12 +465,17 @@ const styles: Record<string, React.CSSProperties> = {
   blockquote: {
     borderLeft: '3px solid #10b981',
     backgroundColor: 'rgba(16, 185, 129, 0.08)',
-    padding: '12px 18px',
+    padding: '14px 20px',
     borderRadius: '0 8px 8px 0',
     color: tokens.colors.textPrimary,
     fontSize: '15px',
     fontStyle: 'italic',
-    marginBottom: '24px',
+    marginBottom: '28px',
+  },
+  hr: {
+    border: 'none',
+    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+    margin: '32px 0',
   },
   ul: {
     marginBottom: '24px',
@@ -399,6 +492,25 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: tokens.typography.body.lineHeight,
     marginBottom: '8px',
   },
+  figure: {
+    marginBottom: '28px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  image: {
+    width: '100%',
+    borderRadius: '10px',
+    objectFit: 'cover',
+    maxHeight: '380px',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+  },
+  figcaption: {
+    fontSize: '12px',
+    color: tokens.colors.textSecondary,
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
   inlineCode: {
     backgroundColor: '#202024',
     color: '#38bdf8',
@@ -407,22 +519,49 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '14px',
   },
-  codeBlock: {
+  codeContainer: {
     backgroundColor: '#18181c',
     border: '1px solid #333338',
     borderRadius: tokens.radii.sm,
+    marginBottom: '28px',
+    overflow: 'hidden',
+  },
+  codeHeader: {
+    backgroundColor: '#202024',
+    padding: '8px 16px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottom: '1px solid #333338',
+  },
+  codeLang: {
+    fontSize: '12px',
+    fontWeight: '600',
+    color: tokens.colors.textSecondary,
+    textTransform: 'uppercase',
+  },
+  copyBtn: {
+    background: 'none',
+    border: 'none',
+    color: tokens.colors.textSecondary,
+    fontSize: '12px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  codeBlock: {
     padding: '16px',
-    marginBottom: '24px',
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '14px',
     lineHeight: '1.6',
     color: tokens.colors.textPrimary,
     overflowX: 'auto',
+    margin: 0,
   },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    marginBottom: '24px',
+    marginBottom: '28px',
     fontSize: '14px',
   },
   th: {
