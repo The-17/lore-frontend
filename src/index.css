@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-app: #18181b;
+  --bg-sidebar: #202023;
+  --bg-card: #242428;
+  --bg-tube: #2c2c30;
+  --bg-tube-hover: #38383e;
+  
+  --border-card: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(16, 185, 129, 0.4);
+  
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-dim: #71717a;
+  
+  --accent-emerald: #10b981;
+  --accent-purple: #a855f7;
+  --accent-blue: #3b82f6;
+  --accent-amber: #f59e0b;
+  
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(36, 36, 40, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-card);
+}
+
+/* Wiki Link Pill Styling */
+.wiki-link {
+  color: var(--accent-emerald);
+  background: rgba(16, 185, 129, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.wiki-link:hover {
+  background: rgba(16, 185, 129, 0.25);
+  box-shadow: 0 0 8px var(--border-glow);
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tube);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-tube-hover);
+}
