@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { List, AlignLeft } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 
@@ -28,12 +28,10 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
   activeHeadingId = 'some-header-text',
   onSelectHeading,
 }) => {
-  const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsResizing(true);
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
 
@@ -51,7 +49,6 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
     };
 
     const handleMouseUp = () => {
-      setIsResizing(false);
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
       window.removeEventListener('mousemove', handleMouseMove);
@@ -109,13 +106,10 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
         })}
       </div>
 
-      {/* Drag-to-Resize Right Border Handle */}
+      {/* Invisible Drag-to-Resize Right Border Handle */}
       <div
         onMouseDown={handleMouseDown}
-        style={{
-          ...styles.resizeHandle,
-          backgroundColor: isResizing ? tokens.colors.accentPrimary : 'transparent',
-        }}
+        style={styles.resizeHandle}
         title="Drag right/left to resize sidebar width"
       />
     </div>
@@ -178,6 +172,6 @@ const styles: Record<string, React.CSSProperties> = {
     height: '100%',
     cursor: 'col-resize',
     zIndex: 30,
-    transition: 'background-color 0.15s ease',
+    backgroundColor: 'transparent',
   },
 };
