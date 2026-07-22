@@ -20,7 +20,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
     <div style={styles.container}>
       {/* Main Content Card (#282828) - Flush to Top, Bottom, Right */}
       <div style={styles.card}>
-        {/* Top Header Bar (Pushed UP) */}
+        {/* Top Header Bar (Pushed UP and Far Right) */}
         <div style={styles.header}>
           <button style={styles.backChevronBtn} title="Back">
             <ChevronLeft size={20} />
@@ -57,7 +57,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
           </div>
         </div>
 
-        {/* Footer Provenance Row (Lowered: Derived From Centered, References Far Right) */}
+        {/* Footer Provenance Row (Compact & Smaller: Derived From Centered, References Far Right) */}
         <div style={styles.footerRow}>
           {/* Centered: Derived from */}
           <div style={styles.footerCenterItem}>
@@ -95,7 +95,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#282828',
     borderRadius: '24px 0 0 24px',
     border: 'none',
-    padding: '28px 72px 24px 72px',
+    padding: '24px 56px 16px 56px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -107,8 +107,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '12px',
-    marginTop: '-8px',
+    marginBottom: '8px',
+    marginTop: '-4px',
+    width: '100%',
     flexShrink: 0,
   },
   backChevronBtn: {
@@ -123,15 +124,16 @@ const styles: Record<string, React.CSSProperties> = {
   headerRightActions: {
     display: 'flex',
     alignItems: 'center',
-    gap: '24px',
+    gap: '20px',
+    marginLeft: 'auto',
   },
   draftBadge: {
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: '500',
     color: '#5c3310',
     backgroundColor: '#ebd0b9',
-    padding: '6px 18px',
-    borderRadius: '18px',
+    padding: '5px 16px',
+    borderRadius: '16px',
     display: 'inline-flex',
     alignItems: 'center',
   },
@@ -139,7 +141,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'none',
     border: 'none',
     color: '#ffffff',
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: '400',
     cursor: 'pointer',
   },
@@ -147,9 +149,9 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#2563eb',
     border: 'none',
     color: '#ffffff',
-    padding: '10px 24px',
-    borderRadius: '10px',
-    fontSize: '14px',
+    padding: '8px 20px',
+    borderRadius: '8px',
+    fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
     transition: 'background-color 0.2s ease',
@@ -173,8 +175,8 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '36px',
     fontWeight: '400',
     color: '#ffffff',
-    marginTop: '28px',
-    marginBottom: '32px',
+    marginTop: '20px',
+    marginBottom: '28px',
     letterSpacing: '-0.5px',
   },
   paragraph: {
@@ -186,9 +188,9 @@ const styles: Record<string, React.CSSProperties> = {
   footerRow: {
     display: 'flex',
     alignItems: 'center',
-    fontSize: '14px',
-    paddingTop: '32px',
-    paddingBottom: '8px',
+    fontSize: '13px',
+    paddingTop: '16px',
+    paddingBottom: '4px',
     position: 'relative',
     flexShrink: 0,
     width: '100%',
@@ -199,13 +201,13 @@ const styles: Record<string, React.CSSProperties> = {
     transform: 'translateX(-50%)',
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '8px',
   },
   footerRightItem: {
     marginLeft: 'auto',
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '8px',
   },
   footerLabel: {
     color: '#a1a1aa',
@@ -217,9 +219,9 @@ const styles: Record<string, React.CSSProperties> = {
   countBadge: {
     backgroundColor: '#383838',
     color: '#a1a1aa',
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '600',
-    padding: '4px 10px',
-    borderRadius: '12px',
+    padding: '3px 8px',
+    borderRadius: '10px',
   },
 };
