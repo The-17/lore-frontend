@@ -1,25 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import mermaid from 'mermaid';
 
 interface MermaidRendererProps {
   chart: string;
 }
-
-mermaid.initialize({
-  startOnLoad: false,
-  theme: 'dark',
-  themeVariables: {
-    darkMode: true,
-    background: '#18181c',
-    primaryColor: '#2563eb',
-    primaryTextColor: '#ffffff',
-    primaryBorderColor: '#3b82f6',
-    lineColor: '#60a5fa',
-    secondaryColor: '#10b981',
-    tertiaryColor: '#202024',
-  },
-  fontFamily: 'Inter, system-ui, sans-serif',
-});
 
 export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -30,8 +13,27 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
     let isMounted = true;
     const uniqueId = `mermaid-svg-${Math.random().toString(36).substring(2, 9)}`;
 
-    mermaid
-      .render(uniqueId, chart)
+    // Dynamic import for seamless Vite HMR dev server resolution
+    import('mermaid')
+      .then((m) => {
+        const mermaidInstance = m.default || m;
+        mermaidInstance.initialize({
+          startOnLoad: false,
+          theme: 'dark',
+          themeVariables: {
+            darkMode: true,
+            background: '#18181c',
+            primaryColor: '#2563eb',
+            primaryTextColor: '#ffffff',
+            primaryBorderColor: '#3b82f6',
+            lineColor: '#60a5fa',
+            secondaryColor: '#10b981',
+            tertiaryColor: '#202024',
+          },
+          fontFamily: 'Inter, system-ui, sans-serif',
+        });
+        return mermaidInstance.render(uniqueId, chart);
+      })
       .then(({ svg }) => {
         if (isMounted) {
           setSvgContent(svg);
@@ -40,7 +42,7 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
       })
       .catch((err) => {
         if (isMounted) {
-          console.warn('Mermaid rendering warning:', err);
+          console.warn('Mermaid dynamic import warning:', err);
           setError('Failed to render diagram syntax');
         }
       });
