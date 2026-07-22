@@ -17,6 +17,62 @@ interface ArtifactCanvasProps {
   onApprove?: (id: string) => void;
 }
 
+// Lightweight Syntax Highlighter for code blocks
+const renderSyntaxHighlightedCode = (rawCode: string, lang: string) => {
+  const lines = rawCode.split('\n');
+
+  return lines.map((line, lineIdx) => {
+    let lineContent: React.ReactNode = line;
+
+    if (lang === 'python') {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('#') || trimmed.startsWith('"""')) {
+        lineContent = <span style={{ color: '#6b7280', fontStyle: 'italic' }}>{line}</span>;
+      } else {
+        // Simple Python tokenizer for syntax highlighting
+        const tokens = line.split(/(\s+|[(),:[\]"'])/);
+        lineContent = tokens.map((token, tokIdx) => {
+          if (['from', 'import', 'def', 'return', 'class', 'if', 'else', 'try', 'except', 'with', 'as', 'for', 'in'].includes(token)) {
+            return <span key={tokIdx} style={{ color: '#f472b6', fontWeight: '500' }}>{token}</span>;
+          }
+          if (['True', 'False', 'None', 'UUID', 'Router', 'ArtifactSchema', 'ArtifactCreateSchema'].includes(token)) {
+            return <span key={tokIdx} style={{ color: '#38bdf8', fontWeight: '500' }}>{token}</span>;
+          }
+          if (token.startsWith('@')) {
+            return <span key={tokIdx} style={{ color: '#a78bfa' }}>{token}</span>;
+          }
+          if (token.startsWith('"') || token.startsWith("'")) {
+            return <span key={tokIdx} style={{ color: '#a7f3d0' }}>{token}</span>;
+          }
+          if (['get_artifact', 'get_object_or_404'].includes(token)) {
+            return <span key={tokIdx} style={{ color: '#60a5fa' }}>{token}</span>;
+          }
+          return <span key={tokIdx}>{token}</span>;
+        });
+      }
+    }
+
+    return (
+      <div key={lineIdx} style={{ display: 'flex', minHeight: '22px' }}>
+        <span
+          style={{
+            userSelect: 'none',
+            width: '28px',
+            color: '#4b5563',
+            fontSize: '11px',
+            textAlign: 'right',
+            paddingRight: '12px',
+            flexShrink: 0,
+          }}
+        >
+          {lineIdx + 1}
+        </span>
+        <span style={{ flex: 1, whiteSpace: 'pre' }}>{lineContent}</span>
+      </div>
+    );
+  });
+};
+
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink }) => {
   const [showDiff, setShowDiff] = useState(false);
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
@@ -322,23 +378,26 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                     return (
                       <div style={styles.codeContainer}>
                         <div style={styles.codeHeader}>
-                          <span style={styles.codeLang}>{lang || 'code'}</span>
+                          <div style={styles.codeLangBadge}>
+                            <span style={styles.langDot} />
+                            <span>{lang || 'code'}</span>
+                          </div>
                           <button
                             onClick={() => handleCopyCode(rawCode, codeIndex)}
                             style={styles.copyBtn}
                             title="Copy code"
                           >
                             {isCopied ? (
-                              <Check size={13} style={{ color: '#10b981', marginRight: '4px' }} />
+                              <Check size={12} style={{ color: '#10b981', marginRight: '5px' }} />
                             ) : (
-                              <Copy size={13} style={{ marginRight: '4px' }} />
+                              <Copy size={12} style={{ marginRight: '5px' }} />
                             )}
                             <span>{isCopied ? 'Copied' : 'Copy'}</span>
                           </button>
                         </div>
-                        <pre style={styles.codeBlock}>
-                          <code>{rawCode}</code>
-                        </pre>
+                        <div style={styles.codeBlock}>
+                          {renderSyntaxHighlightedCode(rawCode, lang)}
+                        </div>
                       </div>
                     );
                   },
@@ -617,25 +676,36 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid rgba(255, 255, 255, 0.08)',
   },
   codeContainer: {
-    backgroundColor: '#18181c',
-    border: '1px solid #333338',
-    borderRadius: tokens.radii.sm,
+    backgroundColor: '#131316',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '10px',
     marginBottom: '28px',
     overflow: 'hidden',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
   },
   codeHeader: {
-    backgroundColor: '#202024',
-    padding: '8px 16px',
+    backgroundColor: '#161619',
+    padding: '9px 16px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid #333338',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.04)', // Hairline subtle divider
   },
-  codeLang: {
-    fontSize: '12px',
+  codeLangBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '11px',
     fontWeight: '600',
     color: tokens.colors.textSecondary,
     textTransform: 'uppercase',
+    letterSpacing: '0.8px',
+  },
+  langDot: {
+    width: '6px',
+    height: '6px',
+    borderRadius: '50%',
+    backgroundColor: '#3b82f6',
   },
   copyBtn: {
     background: 'none',
@@ -645,13 +715,16 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
+    padding: '4px 8px',
+    borderRadius: '4px',
+    transition: 'background-color 0.15s ease',
   },
   codeBlock: {
-    padding: '16px',
-    fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
-    fontSize: '14px',
-    lineHeight: '1.6',
-    color: tokens.colors.textPrimary,
+    padding: '16px 18px',
+    fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace",
+    fontSize: '13px',
+    lineHeight: '1.65',
+    color: '#e4e4e7',
     overflowX: 'auto',
     margin: 0,
   },
