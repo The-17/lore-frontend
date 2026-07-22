@@ -20,7 +20,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
     <div style={styles.container}>
       {/* Main Content Card (#282828) - Flush to Top, Bottom, Right */}
       <div style={styles.card}>
-        {/* Top Header Bar */}
+        {/* Top Header Bar (Pushed UP) */}
         <div style={styles.header}>
           <button style={styles.backChevronBtn} title="Back">
             <ChevronLeft size={20} />
@@ -55,21 +55,21 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
             <p style={styles.paragraph}>{loremParagraph}</p>
             <p style={styles.paragraph}>{loremParagraph}</p>
           </div>
+        </div>
 
-          {/* Footer Provenance Row */}
-          <div style={styles.footerRow}>
-            {/* Left: Derived from */}
-            <div style={styles.footerItem}>
-              <span style={styles.footerLabel}>Derived from:</span>
-              <span style={styles.footerValue}>[PRD Lore v2]</span>
-            </div>
+        {/* Footer Provenance Row (Lowered: Derived From Centered, References Far Right) */}
+        <div style={styles.footerRow}>
+          {/* Centered: Derived from */}
+          <div style={styles.footerCenterItem}>
+            <span style={styles.footerLabel}>Derived from:</span>
+            <span style={styles.footerValue}>[PRD Lore v2]</span>
+          </div>
 
-            {/* Right: References */}
-            <div style={styles.footerItem}>
-              <span style={styles.footerLabel}>References:</span>
-              <span style={styles.footerValue}>[Django Ninja Patterns]</span>
-              <span style={styles.countBadge}>+2</span>
-            </div>
+          {/* Far Right: References */}
+          <div style={styles.footerRightItem}>
+            <span style={styles.footerLabel}>References:</span>
+            <span style={styles.footerValue}>[Django Ninja Patterns]</span>
+            <span style={styles.countBadge}>+2</span>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#282828',
     borderRadius: '24px 0 0 24px',
     border: 'none',
-    padding: '48px 80px 36px 80px',
+    padding: '28px 72px 24px 72px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -107,7 +107,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '20px',
+    marginBottom: '12px',
+    marginTop: '-8px',
     flexShrink: 0,
   },
   backChevronBtn: {
@@ -166,13 +167,13 @@ const styles: Record<string, React.CSSProperties> = {
   body: {
     flex: 1,
     overflowY: 'auto',
-    paddingRight: '12px',
+    paddingRight: '4px',
   },
   heading1: {
     fontSize: '36px',
     fontWeight: '400',
     color: '#ffffff',
-    marginTop: '36px',
+    marginTop: '28px',
     marginBottom: '32px',
     letterSpacing: '-0.5px',
   },
@@ -184,13 +185,24 @@ const styles: Record<string, React.CSSProperties> = {
   },
   footerRow: {
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: '14px',
-    paddingTop: '24px',
+    paddingTop: '32px',
+    paddingBottom: '8px',
+    position: 'relative',
     flexShrink: 0,
+    width: '100%',
   },
-  footerItem: {
+  footerCenterItem: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  footerRightItem: {
+    marginLeft: 'auto',
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
