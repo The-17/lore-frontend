@@ -168,10 +168,19 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
 
         {/* Absolute Top-Right Glassmorphic Floating Header Action Tube Pill */}
         <div style={styles.glassHeaderActionTube}>
-          {/* Subtle Muted Draft Badge */}
+          {/* 1. Info Button First */}
+          <button
+            onClick={() => setIsInfoOpen(true)}
+            style={styles.infoPillBtn}
+            title="Inspect Artifact Object Details (Lineage, Governance, Metrics)"
+          >
+            <Info size={14} style={{ color: tokens.colors.textSecondary }} />
+          </button>
+
+          {/* 2. Status Second */}
           <span style={styles.subtleDraftBadge}>Draft</span>
 
-          {/* Diff Stat Button inside Pill */}
+          {/* 3. Diff Stat Button inside Pill */}
           <button
             onClick={() => setShowDiff(!showDiff)}
             style={styles.tubeDiffBtn}
@@ -182,16 +191,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             <span style={styles.delStatBadge}>-3</span>
           </button>
 
-          {/* Info Button inside Pill */}
-          <button
-            onClick={() => setIsInfoOpen(true)}
-            style={styles.infoPillBtn}
-            title="Inspect Artifact Object Details (Lineage, Governance, Metrics)"
-          >
-            <Info size={14} style={{ color: tokens.colors.textSecondary }} />
-          </button>
-
-          {/* Primary Aprove changes Button inside Pill */}
+          {/* 4. Primary Aprove changes Button inside Pill */}
           <button style={styles.tubeApproveBtn}>
             Aprove changes
           </button>
