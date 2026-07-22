@@ -9,17 +9,37 @@ interface WikiLinkProps {
 
 export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [coords, setCoords] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const pillRef = useRef<HTMLSpanElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (pillRef.current) {
+      const rect = pillRef.current.getBoundingClientRect();
+      // Calculate fixed viewport coordinates: position card above the pill, centered horizontally
+      const cardWidth = 280;
+      const cardHeight = 130;
+      
+      let left = rect.left + rect.width / 2 - cardWidth / 2;
+      // Keep within left/right viewport edges
+      left = Math.max(16, Math.min(window.innerWidth - cardWidth - 16, left));
+
+      // If text is too close to top edge, position card below the pill
+      let top = rect.top - cardHeight - 10;
+      if (top < 16) {
+        top = rect.bottom + 10;
+      }
+
+      setCoords({ top, left });
+    }
     setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
     timeoutRef.current = setTimeout(() => {
       setIsHovered(false);
-    }, 200);
+    }, 150);
   };
 
   // Mock database previews for linked wiki artifacts
@@ -41,6 +61,7 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
 
   return (
     <span
+      ref={pillRef}
       style={styles.wrapper}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -53,9 +74,17 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
         [{title}]
       </span>
 
-      {/* Glassmorphic Hover Preview Card */}
+      {/* Fixed Viewport Glassmorphic Hover Preview Card (Renders above all canvas & scroll layers) */}
       {isHovered && (
-        <div style={styles.hoverCard}>
+        <div
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            ...styles.hoverCard,
+            top: `${coords.top}px`,
+            left: `${coords.left}px`,
+          }}
+        >
           <div style={styles.cardHeader}>
             <span style={styles.typeBadge}>
               <Sparkles size={11} style={{ marginRight: '4px' }} />
@@ -67,7 +96,10 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
           <p style={styles.cardSnippet}>{info.snippet}</p>
 
           <button
-            onClick={() => onNavigate && onNavigate(title)}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onNavigate) onNavigate(title);
+            }}
             style={styles.goBtn}
           >
             <span>Go to artifact</span>
@@ -81,14 +113,13 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
 
 const styles: Record<string, React.CSSProperties> = {
   wrapper: {
-    position: 'relative',
     display: 'inline-block',
   },
   pill: {
-    color: '#38bdf8',
-    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+    color: tokens.colors.wikiLinkText,
+    backgroundColor: tokens.colors.wikiLinkBg,
     padding: '2px 7px',
-    borderRadius: '4px',
+    borderRadius: tokens.radii.sm,
     fontWeight: 500,
     cursor: 'pointer',
     textDecoration: 'none',
@@ -96,22 +127,21 @@ const styles: Record<string, React.CSSProperties> = {
     userSelect: 'none',
   },
   hoverCard: {
-    position: 'absolute',
-    bottom: 'calc(100% + 8px)',
-    left: '50%',
-    transform: 'translateX(-50%)',
+    position: 'fixed',
     width: '280px',
-    backgroundColor: 'rgba(28, 28, 32, 0.94)',
+    backgroundColor: tokens.colors.bgGlass,
     backdropFilter: 'blur(16px)',
     WebkitBackdropFilter: 'blur(16px)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '12px',
+    border: `1px solid ${tokens.colors.borderGlass}`,
+    borderRadius: tokens.radii.md,
     padding: '14px',
     boxShadow: tokens.shadows.glass,
-    zIndex: 100,
+    zIndex: 9999,
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
+    pointerEvents: 'auto',
+    fontFamily: tokens.typography.fontFamily,
   },
   cardHeader: {
     display: 'flex',
@@ -124,7 +154,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#10b981',
     backgroundColor: 'rgba(16, 185, 129, 0.12)',
     padding: '2px 8px',
-    borderRadius: '10px',
+    borderRadius: tokens.radii.pill,
     alignSelf: 'flex-start',
     display: 'inline-flex',
     alignItems: 'center',
@@ -134,11 +164,11 @@ const styles: Record<string, React.CSSProperties> = {
   cardTitle: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#ffffff',
+    color: tokens.colors.textPrimary,
   },
   cardSnippet: {
-    fontSize: '12px',
-    lineHeight: '1.5',
+    fontSize: tokens.typography.caption.fontSize,
+    lineHeight: tokens.typography.caption.lineHeight,
     color: tokens.colors.textSecondary,
     margin: 0,
   },
@@ -146,7 +176,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: tokens.colors.accentPrimary,
     border: 'none',
     color: '#ffffff',
-    padding: '6px 12px',
+    padding: '6px 14px',
     borderRadius: tokens.radii.sm,
     fontSize: '12px',
     fontWeight: '600',
