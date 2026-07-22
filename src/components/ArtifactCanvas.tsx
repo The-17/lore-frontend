@@ -90,7 +90,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 
   return (
     <div style={styles.container}>
-      {/* Full Experience Card Sheet (#242424) */}
+      {/* Full Width Edge-to-Edge Sheet (#242424 - No Drop Shadow, Full Height) */}
       <div style={styles.card}>
         {/* Top Header Bar */}
         <div style={styles.header}>
@@ -106,7 +106,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
                 : artifact.lifecycle_state.replace('_', ' ')}
             </span>
 
-            {/* Version Diff Badge with Green + and Red - stats */}
+            {/* Version Diff Badge showing line additions/deletions stats */}
             <button
               onClick={() => setShowDiff(!showDiff)}
               style={styles.versionDiffBtn}
@@ -217,10 +217,10 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     flex: 1,
     height: '100%',
-    padding: '36px 48px',
+    width: '100%',
+    padding: '24px 32px',
     display: 'flex',
-    justifyContent: 'center',
-    overflowY: 'auto',
+    overflow: 'hidden',
     backgroundColor: '#222222',
   },
   emptyContainer: {
@@ -235,22 +235,24 @@ const styles: Record<string, React.CSSProperties> = {
   },
   card: {
     width: '100%',
-    maxWidth: '920px',
     height: '100%',
+    maxWidth: '100%',
     backgroundColor: '#242424',
     borderRadius: '20px',
     border: 'none',
-    padding: '44px 56px',
+    padding: '40px 56px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     boxShadow: 'none',
+    overflow: 'hidden',
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '40px',
+    marginBottom: '28px',
+    flexShrink: 0,
   },
   backChevronBtn: {
     background: 'none',
@@ -287,14 +289,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
   body: {
     flex: 1,
-    marginBottom: '40px',
+    marginBottom: '24px',
     overflowY: 'auto',
+    paddingRight: '8px',
   },
   heading1: {
     fontSize: '32px',
     fontWeight: '700',
     color: '#ffffff',
-    marginTop: '20px',
+    marginTop: '12px',
     marginBottom: '28px',
     letterSpacing: '-0.5px',
   },
@@ -349,7 +352,8 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: '13px',
-    paddingTop: '24px',
+    paddingTop: '20px',
+    flexShrink: 0,
   },
   footerItem: {
     display: 'flex',
