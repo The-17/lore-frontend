@@ -36,9 +36,9 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
         label: `${a.title}\n[${a.type.toUpperCase()}]`,
         shape: 'box',
         color: {
-          background: '#242428',
+          background: '#242424',
           border: color,
-          highlight: { background: '#2c2c30', border: color },
+          highlight: { background: '#292929', border: color },
         },
         font: { color: '#ffffff', face: 'Inter', size: 14, bold: true },
         margin: 14,

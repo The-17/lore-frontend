@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-app: #18181b;
-  --bg-sidebar: #202023;
-  --bg-card: #242428;
-  --bg-tube: #2c2c30;
-  --bg-tube-hover: #38383e;
+  --bg-app: #222222;
+  --bg-sidebar: #262626;
+  --bg-card: #242424;
+  --bg-tube: #292929;
+  --bg-tube-hover: #333333;
   
   --border-card: rgba(255, 255, 255, 0.08);
   --border-glow: rgba(16, 185, 129, 0.4);
@@ -45,7 +45,7 @@ body {
 
 /* Glassmorphism utility */
 .glass-panel {
-  background: rgba(36, 36, 40, 0.85);
+  background: rgba(36, 36, 36, 0.85);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-card);
 }
@@ -60,6 +60,7 @@ body {
   text-decoration: none;
   font-weight: 500;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .wiki-link:hover {
