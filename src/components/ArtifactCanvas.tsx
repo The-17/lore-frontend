@@ -37,33 +37,41 @@ Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex
 
 ## 1. Core Architecture Flow
 
-Below is the execution flowchart for agent state persistence, governance policy verification, and vector graph indexing:
+Below is the interaction sequence diagram for human-agent collaboration, artifact creation, policy verification, and state transition:
 
 \`\`\`mermaid
-flowchart TD
-    subgraph Clients ["1. Client & AI Agent Layer"]
-        User["Human Developer"] -->|GraphQL / REST| Gateway["Lore API Gateway"]
-        Agent["Autonomous AI Agent"] -->|MCP Protocol| Gateway
+sequenceDiagram
+    autonumber
+    actor Human as Human Developer
+    participant Agent as AI Coding Agent
+    participant Gateway as Lore API Gateway
+    participant Engine as Policy & Lineage Engine
+    database DB as PostgreSQL Store
+
+    Human->>Agent: Propose task: "Implement zero-trust auth middleware"
+    Agent->>Gateway: POST /api/artifacts (Draft Skill)
+    Gateway->>Engine: Validate schema & security tokens
+    
+    alt Policy Pass
+        Engine->>DB: INSERT into artifacts (state='approved')
+        Engine-->>Gateway: 201 Created (Artifact UUID)
+        Gateway-->>Agent: Artifact saved successfully
+        Agent-->>Human: "Skill created & verified"
+    else Policy Review Required
+        Engine->>DB: INSERT into artifacts (state='draft')
+        Engine->>Engine: Enqueue Human Approval Event
+        Engine-->>Gateway: 202 Accepted (Pending Review)
+        Gateway-->>Agent: Artifact queued for human review
+        Agent-->>Human: "Draft created — approval required in dashboard"
     end
 
-    subgraph Core ["2. Lore Core Engine"]
-        Gateway --> Router["Router & Auth Middleware"]
-        Router --> Policy{"Governance Policy Check"}
-        Policy -- Auto-Pass --> MemoryEngine["Memory Extraction & Lineage Engine"]
-        Policy -- Needs Review --> Queue["Human Review Queue"]
-    end
-
-    subgraph Governance ["3. Human Governance"]
-        Queue --> ReviewUI["Approvals Dashboard"]
-        ReviewUI -- Approve --> MemoryEngine
-        ReviewUI -- Reject --> AuditLog["Audit Failure Log"]
-    end
-
-    subgraph Storage ["4. Persistent Storage & Indexing"]
-        MemoryEngine --> ORM[("PostgreSQL Database")]
-        MemoryEngine --> Vector[("Chroma Vector Store")]
-        MemoryEngine --> Graph[("Neo4j Relationship Graph")]
-    end
+    Note over Human,Gateway: Human approves changes via glass pill header
+    Human->>Gateway: POST /api/artifacts/{id}/approve
+    Gateway->>Engine: Transition state -> 'approved'
+    Engine->>DB: UPDATE artifacts SET state='approved'
+    DB-->>Engine: DB Row Updated
+    Engine-->>Gateway: 200 OK
+    Gateway-->>Human: UI Notification: "Artifact Approved"
 \`\`\`
 
 ---

@@ -26,6 +26,19 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
             lineColor: '#60a5fa',
             secondaryColor: '#10b981',
             tertiaryColor: '#292929',
+            actorBkg: '#1e1b4b',
+            actorBorder: '#818cf8',
+            actorTextColor: '#ffffff',
+            actorLineColor: '#60a5fa',
+            signalColor: '#60a5fa',
+            signalTextColor: '#e4e4e7',
+            labelBoxBkgColor: '#202028',
+            labelBoxBorderColor: '#3b82f6',
+            labelTextColor: '#ffffff',
+            loopTextColor: '#3fb950',
+            noteBkgColor: '#332211',
+            noteBorderColor: '#f59e0b',
+            noteTextColor: '#f59e0b',
           },
           fontFamily: 'Inter, system-ui, sans-serif',
         });
@@ -36,7 +49,8 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
           setSvgContent(svg);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.warn('Mermaid sequence diagram render error:', err);
         if (isMounted) {
           setSvgContent(null);
         }
@@ -55,9 +69,9 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       ) : (
-        /* Rich Complex Zero-dependency Multi-Subgraph Flowchart SVG */
+        /* Zero-dependency High Quality Canvas Sequence Diagram Fallback */
         <div style={styles.svgWrapper}>
-          <svg width="720" height="420" viewBox="0 0 720 420" style={styles.svg}>
+          <svg width="720" height="380" viewBox="0 0 720 380" style={styles.svg}>
             <defs>
               <marker
                 id="arrow"
@@ -72,69 +86,44 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
               </marker>
             </defs>
 
-            {/* Subgraph 1: Clients */}
-            <rect x="20" y="20" width="680" height="70" rx="10" fill="rgba(37, 99, 235, 0.05)" stroke="rgba(37, 99, 235, 0.2)" strokeDasharray="4 4" />
-            <text x="35" y="42" fill="#60a5fa" fontSize="11" fontWeight="700" textAnchor="start">1. CLIENT & AI AGENT LAYER</text>
-            
-            <rect x="50" y="46" width="160" height="34" rx="6" fill="#2563eb" stroke="#3b82f6" />
-            <text x="130" y="68" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Human Developer</text>
-            
-            <rect x="280" y="46" width="160" height="34" rx="6" fill="#1e1b4b" stroke="#818cf8" />
-            <text x="360" y="68" fill="#818cf8" fontSize="12" fontWeight="600" textAnchor="middle">Autonomous AI Agent</text>
+            {/* Lifelines */}
+            <line x1="100" y1="60" x2="100" y2="340" stroke="#333338" strokeWidth="1.5" strokeDasharray="4 4" />
+            <line x1="270" y1="60" x2="270" y2="340" stroke="#333338" strokeWidth="1.5" strokeDasharray="4 4" />
+            <line x1="450" y1="60" x2="450" y2="340" stroke="#333338" strokeWidth="1.5" strokeDasharray="4 4" />
+            <line x1="620" y1="60" x2="620" y2="340" stroke="#333338" strokeWidth="1.5" strokeDasharray="4 4" />
 
-            <rect x="510" y="46" width="160" height="34" rx="6" fill="#202028" stroke="#3b82f6" />
-            <text x="590" y="68" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Lore API Gateway</text>
+            {/* Participants */}
+            <rect x="40" y="20" width="120" height="36" rx="6" fill="#1e1b4b" stroke="#818cf8" />
+            <text x="100" y="43" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Human Dev</text>
 
-            <line x1="210" y1="63" x2="280" y2="63" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
-            <line x1="440" y1="63" x2="510" y2="63" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <rect x="210" y="20" width="120" height="36" rx="6" fill="#2563eb" stroke="#3b82f6" />
+            <text x="270" y="43" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">AI Agent</text>
 
-            {/* Subgraph 2: Core Engine */}
-            <rect x="20" y="110" width="680" height="130" rx="10" fill="rgba(16, 185, 129, 0.05)" stroke="rgba(16, 185, 129, 0.2)" strokeDasharray="4 4" />
-            <text x="35" y="132" fill="#10b981" fontSize="11" fontWeight="700" textAnchor="start">2. LORE CORE ENGINE & GOVERNANCE</text>
+            <rect x="390" y="20" width="120" height="36" rx="6" fill="#202028" stroke="#3b82f6" />
+            <text x="450" y="43" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Lore Gateway</text>
 
-            <line x1="590" y1="80" x2="590" y2="146" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <rect x="560" y="20" width="120" height="36" rx="6" fill="#10b981" stroke="#34d399" />
+            <text x="620" y="43" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">PostgreSQL</text>
 
-            <rect x="500" y="148" width="180" height="34" rx="6" fill="#202028" stroke="#3b82f6" />
-            <text x="590" y="170" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Router & Auth Middleware</text>
+            {/* Messages */}
+            <line x1="100" y1="90" x2="270" y2="90" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <text x="185" y="83" fill="#e4e4e7" fontSize="11" textAnchor="middle">1. Propose task request</text>
 
-            <line x1="500" y1="165" x2="430" y2="165" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <line x1="270" y1="130" x2="450" y2="130" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <text x="360" y="123" fill="#e4e4e7" fontSize="11" textAnchor="middle">2. POST /api/artifacts (Draft)</text>
 
-            <polygon points="360,140 430,165 360,190 290,165" fill="#1e293b" stroke="#10b981" strokeWidth="1.5" />
-            <text x="360" y="169" fill="#10b981" fontSize="11" fontWeight="600" textAnchor="middle">Policy Check</text>
+            <line x1="450" y1="170" x2="620" y2="170" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <text x="535" y="163" fill="#e4e4e7" fontSize="11" textAnchor="middle">3. INSERT into artifacts table</text>
 
-            <line x1="290" y1="165" x2="220" y2="165" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
-            <text x="250" y="157" fill="#3fb950" fontSize="10" fontWeight="600">Auto-Pass</text>
+            {/* Note box */}
+            <rect x="210" y="200" width="240" height="34" rx="6" fill="#332211" stroke="#f59e0b" />
+            <text x="330" y="222" fill="#f59e0b" fontSize="11" fontWeight="600" textAnchor="middle">Human Approval Required (Glass Pill)</text>
 
-            <rect x="40" y="148" width="180" height="34" rx="6" fill="#10b981" stroke="#34d399" />
-            <text x="130" y="170" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Memory Lineage Engine</text>
+            <line x1="100" y1="265" x2="450" y2="265" stroke="#10b981" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <text x="275" y="258" fill="#3fb950" fontSize="11" fontWeight="600" textAnchor="middle">4. Click "Aprove changes"</text>
 
-            <line x1="360" y1="190" x2="360" y2="210" stroke="#f85149" strokeWidth="1.5" markerEnd="url(#arrow)" />
-            <text x="375" y="204" fill="#f85149" fontSize="10" fontWeight="600">Review</text>
-
-            <rect x="270" y="210" width="180" height="24" rx="4" fill="#332211" stroke="#f59e0b" />
-            <text x="360" y="226" fill="#f59e0b" fontSize="11" fontWeight="600" textAnchor="middle">Human Review Queue</text>
-
-            {/* Subgraph 3: Storage Layer */}
-            <rect x="20" y="260" width="680" height="130" rx="10" fill="rgba(99, 102, 241, 0.05)" stroke="rgba(99, 102, 241, 0.2)" strokeDasharray="4 4" />
-            <text x="35" y="282" fill="#818cf8" fontSize="11" fontWeight="700" textAnchor="start">3. PERSISTENT STORAGE & INDEXING</text>
-
-            <line x1="130" y1="182" x2="130" y2="300" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
-
-            <rect x="50" y="302" width="160" height="66" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.5" />
-            <text x="130" y="332" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">PostgreSQL Store</text>
-            <text x="130" y="350" fill="#a1a1aa" fontSize="10" textAnchor="middle">ORM & Schema Tables</text>
-
-            <line x1="210" y1="335" x2="280" y2="335" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
-
-            <rect x="280" y="302" width="160" height="66" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.5" />
-            <text x="360" y="332" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Chroma Vector Store</text>
-            <text x="360" y="350" fill="#a1a1aa" fontSize="10" textAnchor="middle">Semantic Embeddings</text>
-
-            <line x1="440" y1="335" x2="510" y2="335" stroke="#60a5fa" strokeWidth="1.5" markerEnd="url(#arrow)" />
-
-            <rect x="510" y="302" width="160" height="66" rx="8" fill="#1e1b4b" stroke="#818cf8" strokeWidth="1.5" />
-            <text x="590" y="332" fill="#ffffff" fontSize="12" fontWeight="600" textAnchor="middle">Graph Lineage Store</text>
-            <text x="590" y="350" fill="#a1a1aa" fontSize="10" textAnchor="middle">[[Wiki-Link]] Edges</text>
+            <line x1="450" y1="305" x2="620" y2="305" stroke="#10b981" strokeWidth="1.5" markerEnd="url(#arrow)" />
+            <text x="535" y="298" fill="#3fb950" fontSize="11" fontWeight="600" textAnchor="middle">5. UPDATE status='approved'</text>
           </svg>
         </div>
       )}
