@@ -33,14 +33,14 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
 
       return {
         id: a.id,
-        label: `\n${a.title}\n[${a.type.toUpperCase()}]`,
+        label: `${a.title}\n[${a.type.toUpperCase()}]`,
         shape: 'box',
         color: {
           background: '#242428',
           border: color,
           highlight: { background: '#2c2c30', border: color },
         },
-        font: { color: '#ffffff', face: 'Inter', size: 13, bold: true },
+        font: { color: '#ffffff', face: 'Inter', size: 14, bold: true },
         margin: 14,
         shadow: true,
       };
@@ -59,7 +59,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
         label: r.relation_type,
         arrows: 'to',
         color: { color: '#a855f7', highlight: '#10b981' },
-        font: { color: '#a1a1aa', size: 10, align: 'middle' },
+        font: { color: '#a1a1aa', size: 11, align: 'middle' },
       });
     });
 
@@ -81,7 +81,7 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
               label: 'references',
               arrows: 'to',
               color: { color: '#10b981', highlight: '#10b981' },
-              font: { color: '#a1a1aa', size: 10, align: 'middle' },
+              font: { color: '#a1a1aa', size: 11, align: 'middle' },
               dashes: true,
             });
           }
@@ -89,21 +89,22 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
       });
     });
 
-    const nodesDataSet = new DataSet(nodesArray as any);
-    const edgesDataSet = new DataSet(Array.from(edgesMap.values()) as any);
-
     const data = {
-      nodes: nodesDataSet,
-      edges: edgesDataSet,
+      nodes: new DataSet(nodesArray as any),
+      edges: new DataSet(Array.from(edgesMap.values()) as any),
     };
 
     const options = {
+      autoResize: true,
+      height: '100%',
+      width: '100%',
       physics: {
+        enabled: true,
         solver: 'forceAtlas2Based',
         forceAtlas2Based: {
-          gravitationalConstant: -50,
-          centralGravity: 0.01,
-          springLength: 100,
+          gravitationalConstant: -100,
+          centralGravity: 0.02,
+          springLength: 140,
           springConstant: 0.08,
         },
       },
@@ -111,6 +112,11 @@ export const GraphCanvas: React.FC<GraphCanvasProps> = ({
     };
 
     const network = new Network(containerRef.current, data as any, options);
+
+    // Zoom and center after physics stabilizes
+    setTimeout(() => {
+      network.fit();
+    }, 200);
 
     network.on('click', (params) => {
       if (params.nodes && params.nodes.length > 0) {
@@ -203,6 +209,7 @@ const styles: Record<string, React.CSSProperties> = {
   wrapper: {
     flex: 1,
     height: '100%',
+    minHeight: '0',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: 'var(--bg-app)',
@@ -225,11 +232,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   canvasContainer: {
     flex: 1,
+    minHeight: '500px',
     position: 'relative',
     display: 'flex',
   },
   networkCanvas: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
+    minHeight: '500px',
     backgroundColor: 'var(--bg-card)',
     borderRadius: '16px',
     border: '1px solid var(--border-card)',
