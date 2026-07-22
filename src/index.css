@@ -1,12 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* Google Antigravity (AGY) Design System Tokens */
 :root {
-  --bg-app: #222222;
-  --bg-card: #292929;
-  --bg-tube: #292929;
-  
-  --text-main: #D4D4D4;
-  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --ag-bg-app: #222222;
+  --ag-bg-card: #292929;
+  --ag-bg-tube: #202020;
+  --ag-bg-glass: rgba(32, 32, 36, 0.75);
+  --ag-border-glass: rgba(255, 255, 255, 0.08);
+
+  --ag-text-primary: #D4D4D4;
+  --ag-text-secondary: #A1A1AA;
+  --ag-text-dim: #888888;
+
+  --ag-accent-blue: #2563eb;
+  --ag-diff-add-text: #3fb950;
+  --ag-diff-add-bg: rgba(46, 160, 67, 0.15);
+  --ag-diff-del-text: #f85149;
+  --ag-diff-del-bg: rgba(248, 81, 73, 0.15);
+
+  --ag-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --ag-shadow-glass: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 * {
@@ -24,9 +37,9 @@
 }
 
 body {
-  background-color: var(--bg-app);
-  color: #D4D4D4;
-  font-family: var(--font-family);
+  background-color: var(--ag-bg-app);
+  color: var(--ag-text-primary);
+  font-family: var(--ag-font-family);
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -36,4 +49,45 @@ body {
 #root {
   height: 100%;
   width: 100%;
+}
+
+/* Glassmorphic Tube Pill Utility */
+.ag-glass-pill {
+  background-color: var(--ag-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--ag-border-glass);
+  box-shadow: var(--ag-shadow-glass);
+  border-radius: 28px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Tube Capsule Utility */
+.ag-tube-capsule {
+  background-color: var(--ag-bg-tube);
+  border-radius: 32px;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 60px;
+  align-items: center;
+}
+
+/* Wiki Link Pill Utility */
+.wiki-link {
+  color: #38bdf8;
+  background-color: rgba(56, 189, 248, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.wiki-link:hover {
+  text-decoration: underline;
+  background-color: rgba(56, 189, 248, 0.2);
 }

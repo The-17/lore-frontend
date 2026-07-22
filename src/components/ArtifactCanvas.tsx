@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
 import { ChevronLeft, ArrowLeft } from 'lucide-react';
+import { agyTokens } from '../design-system/tokens';
 
 interface ArtifactCanvasProps {
   artifact?: any;
@@ -99,7 +100,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             style={styles.tubeDiffBtn}
             title="Toggle Line Diffs"
           >
-            <span style={{ color: '#a1a1aa', fontSize: '13px', fontWeight: '500' }}>v3</span>
+            <span style={{ color: agyTokens.colors.textSecondary, fontSize: '13px', fontWeight: '500' }}>v3</span>
             <span style={styles.addStatBadge}>+12</span>
             <span style={styles.delStatBadge}>-3</span>
           </button>
@@ -110,7 +111,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
           </button>
         </div>
 
-        {/* Centered Typography Reading Column (Starts lower initially, scrolls full height) */}
+        {/* Centered Typography Reading Column */}
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             {showDiff ? (
@@ -214,14 +215,14 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     display: 'flex',
     overflow: 'hidden',
-    backgroundColor: '#222222',
+    backgroundColor: agyTokens.colors.bgApp,
   },
   card: {
     width: '100%',
     height: '100vh',
     maxWidth: '100%',
-    backgroundColor: '#292929',
-    borderRadius: 0,
+    backgroundColor: agyTokens.colors.bgCard,
+    borderRadius: agyTokens.radii.none,
     border: 'none',
     padding: '20px 48px 16px 48px',
     display: 'flex',
@@ -238,7 +239,7 @@ const styles: Record<string, React.CSSProperties> = {
     top: '28px',
     background: 'none',
     border: 'none',
-    color: '#888888',
+    color: agyTokens.colors.textDim,
     cursor: 'pointer',
     padding: '4px',
     display: 'flex',
@@ -249,12 +250,12 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'absolute',
     right: '48px',
     top: '20px',
-    backgroundColor: 'rgba(32, 32, 36, 0.75)',
+    backgroundColor: agyTokens.colors.bgGlass,
     backdropFilter: 'blur(12px)',
     WebkitBackdropFilter: 'blur(12px)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
-    borderRadius: '28px',
+    border: `1px solid ${agyTokens.colors.borderGlass}`,
+    boxShadow: agyTokens.shadows.glass,
+    borderRadius: agyTokens.radii.pill,
     padding: '6px 12px',
     display: 'flex',
     alignItems: 'center',
@@ -264,10 +265,10 @@ const styles: Record<string, React.CSSProperties> = {
   subtleDraftBadge: {
     fontSize: '13px',
     fontWeight: '500',
-    color: '#a1a1aa',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    color: agyTokens.colors.textSecondary,
+    backgroundColor: agyTokens.colors.badgeDraftBg,
     padding: '6px 14px',
-    borderRadius: '16px',
+    borderRadius: agyTokens.radii.lg,
     display: 'inline-flex',
     alignItems: 'center',
   },
@@ -282,23 +283,23 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '8px',
   },
   addStatBadge: {
-    color: '#3fb950',
-    backgroundColor: 'rgba(46, 160, 67, 0.15)',
+    color: agyTokens.colors.diffAddText,
+    backgroundColor: agyTokens.colors.diffAddBg,
     padding: '3px 7px',
-    borderRadius: '4px',
-    fontSize: '11px',
+    borderRadius: agyTokens.radii.sm,
+    fontSize: '12px',
     fontWeight: '600',
   },
   delStatBadge: {
-    color: '#f85149',
-    backgroundColor: 'rgba(248, 81, 73, 0.15)',
+    color: agyTokens.colors.diffDelText,
+    backgroundColor: agyTokens.colors.diffDelBg,
     padding: '3px 7px',
-    borderRadius: '4px',
-    fontSize: '11px',
+    borderRadius: agyTokens.radii.sm,
+    fontSize: '12px',
     fontWeight: '600',
   },
   tubeApproveBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: agyTokens.colors.accentPrimary,
     border: 'none',
     color: '#ffffff',
     padding: '8px 20px',
@@ -309,7 +310,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   centerColumn: {
     flex: 1,
-    maxWidth: '740px',
+    maxWidth: agyTokens.layout.readingMeasureWidth,
     width: '100%',
     margin: '0 auto',
     display: 'flex',
@@ -325,31 +326,31 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '8px',
   },
   heading1: {
-    fontSize: '36px',
-    fontWeight: '400',
-    color: '#D4D4D4',
+    fontSize: agyTokens.typography.h1.fontSize,
+    fontWeight: agyTokens.typography.h1.fontWeight,
+    color: agyTokens.colors.textPrimary,
     marginTop: '44px',
     marginBottom: '28px',
-    letterSpacing: '-0.5px',
+    letterSpacing: agyTokens.typography.h1.letterSpacing,
   },
   heading2: {
-    fontSize: '24px',
-    fontWeight: '500',
-    color: '#D4D4D4',
+    fontSize: agyTokens.typography.h2.fontSize,
+    fontWeight: agyTokens.typography.h2.fontWeight,
+    color: agyTokens.colors.textPrimary,
     marginTop: '32px',
     marginBottom: '16px',
   },
   heading3: {
-    fontSize: '18px',
-    fontWeight: '500',
-    color: '#D4D4D4',
+    fontSize: agyTokens.typography.h3.fontSize,
+    fontWeight: agyTokens.typography.h3.fontWeight,
+    color: agyTokens.colors.textPrimary,
     marginTop: '24px',
     marginBottom: '12px',
   },
   paragraph: {
-    fontSize: '16px',
-    lineHeight: '1.75',
-    color: '#D4D4D4',
+    fontSize: agyTokens.typography.body.fontSize,
+    lineHeight: agyTokens.typography.body.lineHeight,
+    color: agyTokens.colors.textPrimary,
     marginBottom: '24px',
   },
   blockquote: {
@@ -357,7 +358,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'rgba(16, 185, 129, 0.08)',
     padding: '12px 18px',
     borderRadius: '0 8px 8px 0',
-    color: '#D4D4D4',
+    color: agyTokens.colors.textPrimary,
     fontSize: '15px',
     fontStyle: 'italic',
     marginBottom: '24px',
@@ -365,36 +366,36 @@ const styles: Record<string, React.CSSProperties> = {
   ul: {
     marginBottom: '24px',
     paddingLeft: '24px',
-    color: '#D4D4D4',
+    color: agyTokens.colors.textPrimary,
   },
   ol: {
     marginBottom: '24px',
     paddingLeft: '24px',
-    color: '#D4D4D4',
+    color: agyTokens.colors.textPrimary,
   },
   li: {
-    fontSize: '16px',
-    lineHeight: '1.75',
+    fontSize: agyTokens.typography.body.fontSize,
+    lineHeight: agyTokens.typography.body.lineHeight,
     marginBottom: '8px',
   },
   inlineCode: {
     backgroundColor: '#202024',
     color: '#38bdf8',
     padding: '2px 6px',
-    borderRadius: '4px',
+    borderRadius: agyTokens.radii.sm,
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '14px',
   },
   codeBlock: {
     backgroundColor: '#18181c',
     border: '1px solid #333338',
-    borderRadius: '8px',
+    borderRadius: agyTokens.radii.sm,
     padding: '16px',
     marginBottom: '24px',
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '14px',
     lineHeight: '1.6',
-    color: '#D4D4D4',
+    color: agyTokens.colors.textPrimary,
     overflowX: 'auto',
   },
   table: {
@@ -405,7 +406,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   th: {
     backgroundColor: '#202024',
-    color: '#D4D4D4',
+    color: agyTokens.colors.textPrimary,
     textAlign: 'left',
     padding: '10px 14px',
     borderBottom: '1px solid #38383e',
@@ -414,7 +415,7 @@ const styles: Record<string, React.CSSProperties> = {
   td: {
     padding: '10px 14px',
     borderBottom: '1px solid #202024',
-    color: '#D4D4D4',
+    color: agyTokens.colors.textPrimary,
   },
   githubDiffViewer: {
     backgroundColor: '#141417',
@@ -476,7 +477,7 @@ const styles: Record<string, React.CSSProperties> = {
   footerRow: {
     display: 'flex',
     alignItems: 'center',
-    fontSize: '13px',
+    fontSize: agyTokens.typography.caption.fontSize,
     paddingTop: '16px',
     paddingBottom: '4px',
     position: 'relative',
@@ -498,15 +499,15 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
   },
   footerLabel: {
-    color: '#a1a1aa',
+    color: agyTokens.colors.textSecondary,
   },
   footerValue: {
-    color: '#D4D4D4',
+    color: agyTokens.colors.textPrimary,
     fontWeight: '400',
   },
   countBadge: {
     backgroundColor: '#383838',
-    color: '#a1a1aa',
+    color: agyTokens.colors.textSecondary,
     fontSize: '11px',
     fontWeight: '600',
     padding: '3px 8px',
