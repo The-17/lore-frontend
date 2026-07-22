@@ -28,12 +28,12 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
 
-  // Comprehensive Demo Markdown Content covering ALL markdown features
+  // Comprehensive Demo Markdown Content covering ALL markdown features including ==highlight==
   const markdownText = `# System Architecture & Lore Contracts
 
-Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas and [[Agent Token Security]] for auth headers.
+Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas, ==zero-trust token authentication==, and [[Agent Token Security]] for auth headers.
 
-> Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, semantic search, and human-in-the-loop governance.
+> Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, ==semantic vector search==, and human-in-the-loop governance.
 
 ---
 
@@ -127,21 +127,36 @@ System implementation milestones:
 
 Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit.`;
 
-  // Wiki Link Renderer
-  const renderContentWithWikiLinks = (text: string) => {
-    const parts = text.split(/(\[\[.*?\]\])/g);
-    return parts.map((part, i) => {
+  // Parser for both WikiLinks [[Title]] and Highlighted Text ==Text==
+  const parseRichInlineMarkdown = (text: string) => {
+    // First split by WikiLinks
+    const wikiParts = text.split(/(\[\[.*?\]\])/g);
+    
+    return wikiParts.map((part, i) => {
       if (part.startsWith('[[') && part.endsWith(']]')) {
         const title = part.slice(2, -2);
         return (
           <WikiLink
-            key={i}
+            key={`wiki-${i}`}
             title={title}
             onNavigate={onSelectWikiLink}
           />
         );
       }
-      return part;
+      
+      // Next split non-wiki string by ==highlight==
+      const highlightParts = part.split(/(==.*?==)/g);
+      return highlightParts.map((subPart, j) => {
+        if (subPart.startsWith('==') && subPart.endsWith('==')) {
+          const highlightText = subPart.slice(2, -2);
+          return (
+            <mark key={`mark-${i}-${j}`} style={styles.markHighlight}>
+              {highlightText}
+            </mark>
+          );
+        }
+        return subPart;
+      });
     });
   };
 
@@ -258,12 +273,15 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                   p: ({ children }) => (
                     <p style={styles.paragraph}>
                       {React.Children.map(children, (child) =>
-                        typeof child === 'string' ? renderContentWithWikiLinks(child) : child
+                        typeof child === 'string' ? parseRichInlineMarkdown(child) : child
                       )}
                     </p>
                   ),
                   blockquote: ({ children }) => (
                     <blockquote style={styles.blockquote}>{children}</blockquote>
+                  ),
+                  mark: ({ children }) => (
+                    <mark style={styles.markHighlight}>{children}</mark>
                   ),
                   hr: () => <hr style={styles.hr} />,
                   ul: ({ children }) => <ul style={styles.ul}>{children}</ul>,
@@ -271,7 +289,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                   li: ({ children }) => (
                     <li style={styles.li}>
                       {React.Children.map(children, (child) =>
-                        typeof child === 'string' ? renderContentWithWikiLinks(child) : child
+                        typeof child === 'string' ? parseRichInlineMarkdown(child) : child
                       )}
                     </li>
                   ),
@@ -320,7 +338,11 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                       </div>
                     );
                   },
-                  table: ({ children }) => <table style={styles.table}>{children}</table>,
+                  table: ({ children }) => (
+                    <div style={styles.tableWrapper}>
+                      <table style={styles.table}>{children}</table>
+                    </div>
+                  ),
                   th: ({ children }) => <th style={styles.th}>{children}</th>,
                   tr: ({ children }) => <tr style={styles.tr}>{children}</tr>,
                   td: ({ children }) => <td style={styles.td}>{children}</td>,
@@ -389,7 +411,7 @@ const styles: Record<string, React.CSSProperties> = {
   backChevronBtn: {
     position: 'absolute',
     left: '48px',
-    top: '28px',
+    top: '32px',
     background: 'none',
     border: 'none',
     color: tokens.colors.textDim,
@@ -402,7 +424,7 @@ const styles: Record<string, React.CSSProperties> = {
   glassHeaderActionTube: {
     position: 'absolute',
     right: '48px',
-    top: '20px',
+    top: '24px',
     backgroundColor: tokens.colors.bgGlass,
     backdropFilter: 'blur(12px)',
     WebkitBackdropFilter: 'blur(12px)',
@@ -488,13 +510,13 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '8px',
+    paddingTop: '28px', // Slightly pushed content downward
   },
   heading1: {
     fontSize: tokens.typography.h1.fontSize,
     fontWeight: tokens.typography.h1.fontWeight,
     color: tokens.colors.textPrimary,
-    marginTop: '44px',
+    marginTop: '24px',
     marginBottom: '28px',
     letterSpacing: tokens.typography.h1.letterSpacing,
   },
@@ -527,6 +549,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '15px',
     fontStyle: 'italic',
     marginBottom: '28px',
+  },
+  markHighlight: {
+    backgroundColor: 'rgba(245, 158, 11, 0.22)',
+    color: '#fbbf24',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    border: '1px solid rgba(245, 158, 11, 0.35)',
+    fontWeight: '500',
   },
   hr: {
     border: 'none',
@@ -614,26 +644,32 @@ const styles: Record<string, React.CSSProperties> = {
     overflowX: 'auto',
     margin: 0,
   },
+  tableWrapper: {
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '10px',
+    overflow: 'hidden',
+    marginTop: '28px',
+    marginBottom: '32px',
+  },
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    marginTop: '24px',
-    marginBottom: '32px',
     fontSize: '14px',
   },
   th: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
     color: '#ffffff',
     textAlign: 'left',
     padding: '12px 16px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
     fontWeight: '600',
     fontSize: '12px',
     textTransform: 'uppercase',
     letterSpacing: '0.6px',
   },
   tr: {
-    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
   },
   td: {
     padding: '14px 16px',
