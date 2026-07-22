@@ -4,6 +4,7 @@ import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
 import { ChevronLeft, ArrowLeft } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
+import { WikiLink } from './WikiLink';
 
 interface ArtifactCanvasProps {
   artifact?: any;
@@ -14,7 +15,7 @@ interface ArtifactCanvasProps {
   onApprove?: (id: string) => void;
 }
 
-export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
+export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink }) => {
   const [showDiff, setShowDiff] = useState(false);
 
   // Rich Demo Markdown Content
@@ -61,9 +62,11 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
       if (part.startsWith('[[') && part.endsWith(']]')) {
         const title = part.slice(2, -2);
         return (
-          <span key={i} className="wiki-link">
-            [{title}]
-          </span>
+          <WikiLink
+            key={i}
+            title={title}
+            onNavigate={onSelectWikiLink}
+          />
         );
       }
       return part;
