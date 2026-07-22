@@ -18,9 +18,9 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
 
   return (
     <div style={styles.container}>
-      {/* Main Content Card (#282828) - Flush to Top, Bottom, Right */}
+      {/* Main Content Card (#282828) - Completely Square Borders (No Radius) */}
       <div style={styles.card}>
-        {/* Top Header Bar (Pushed UP and Far Right) */}
+        {/* Top Header Bar */}
         <div style={styles.header}>
           <button style={styles.backChevronBtn} title="Back">
             <ChevronLeft size={20} />
@@ -57,7 +57,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
           </div>
         </div>
 
-        {/* Footer Provenance Row (Compact & Smaller: Derived From Centered, References Far Right) */}
+        {/* Footer Provenance Row */}
         <div style={styles.footerRow}>
           {/* Centered: Derived from */}
           <div style={styles.footerCenterItem}>
@@ -93,7 +93,7 @@ const styles: Record<string, React.CSSProperties> = {
     height: '100vh',
     maxWidth: '100%',
     backgroundColor: '#282828',
-    borderRadius: '24px 0 0 24px',
+    borderRadius: 0,
     border: 'none',
     padding: '24px 56px 16px 56px',
     display: 'flex',
