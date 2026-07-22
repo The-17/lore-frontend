@@ -90,23 +90,24 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             <ChevronLeft size={20} />
           </button>
 
-          {/* Centered: Subtle Draft Badge */}
-          <span style={styles.draftBadgeCenter}>Draft</span>
+          {/* Centered Floating Header Action Tube Pill */}
+          <div style={styles.headerActionTube}>
+            {/* Subtle Muted Draft Badge */}
+            <span style={styles.subtleDraftBadge}>Draft</span>
 
-          {/* Far Right: Version Diff Badges and Aprove changes Button */}
-          <div style={styles.headerRightActions}>
+            {/* Diff Stat Button inside Pill */}
             <button
               onClick={() => setShowDiff(!showDiff)}
-              style={styles.versionDiffBtn}
+              style={styles.tubeDiffBtn}
               title="Toggle Line Diffs"
             >
-              <span style={{ color: '#a1a1aa', fontSize: '13px', fontWeight: '500' }}>v3</span>
+              <span style={{ color: '#a1a1aa', fontSize: '12px', fontWeight: '500' }}>v3</span>
               <span style={styles.addStatBadge}>+12</span>
               <span style={styles.delStatBadge}>-3</span>
             </button>
 
-            {/* Aprove changes Button */}
-            <button style={styles.approveChangesBtn}>
+            {/* Primary Aprove changes Button inside Pill */}
+            <button style={styles.tubeApproveBtn}>
               Aprove changes
             </button>
           </div>
@@ -252,27 +253,29 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
   },
-  draftBadgeCenter: {
+  headerActionTube: {
     position: 'absolute',
     left: '50%',
     transform: 'translateX(-50%)',
-    fontSize: '13px',
-    fontWeight: '500',
-    color: '#5c3310',
-    backgroundColor: '#ebd0b9',
+    backgroundColor: '#202020',
+    borderRadius: '24px',
+    padding: '4px 6px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
     border: 'none',
-    padding: '4px 16px',
-    borderRadius: '16px',
+  },
+  subtleDraftBadge: {
+    fontSize: '12px',
+    fontWeight: '500',
+    color: '#a1a1aa',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    padding: '4px 12px',
+    borderRadius: '14px',
     display: 'inline-flex',
     alignItems: 'center',
   },
-  headerRightActions: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    marginLeft: 'auto',
-  },
-  versionDiffBtn: {
+  tubeDiffBtn: {
     background: 'none',
     border: 'none',
     cursor: 'pointer',
@@ -287,7 +290,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'rgba(46, 160, 67, 0.15)',
     padding: '2px 6px',
     borderRadius: '4px',
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '600',
   },
   delStatBadge: {
@@ -295,16 +298,16 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'rgba(248, 81, 73, 0.15)',
     padding: '2px 6px',
     borderRadius: '4px',
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '600',
   },
-  approveChangesBtn: {
+  tubeApproveBtn: {
     backgroundColor: '#2563eb',
     border: 'none',
-    color: '#D4D4D4',
-    padding: '9px 22px',
-    borderRadius: '10px',
-    fontSize: '13px',
+    color: '#ffffff',
+    padding: '6px 16px',
+    borderRadius: '16px',
+    fontSize: '12px',
     fontWeight: '600',
     cursor: 'pointer',
   },
