@@ -12,6 +12,7 @@ import type { Artifact, Collection, Relationship, ArtifactVersion } from './type
 
 export function App() {
   const [activeTab, setActiveTab] = useState('workspace');
+  const [showCollectionsSidebar, setShowCollectionsSidebar] = useState(false);
   const [isBYOBOpen, setIsBYOBOpen] = useState(false);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
@@ -100,16 +101,21 @@ export function App() {
       {/* Main View Area */}
       {activeTab === 'workspace' && (
         <div style={styles.workspaceSplit}>
-          <CollectionTree
-            collections={collections}
-            artifacts={artifacts}
-            activeArtifactId={activeArtifact?.id}
-            onSelectArtifact={handleSelectArtifact}
-          />
+          {showCollectionsSidebar && (
+            <CollectionTree
+              collections={collections}
+              artifacts={artifacts}
+              activeArtifactId={activeArtifact?.id}
+              onSelectArtifact={handleSelectArtifact}
+            />
+          )}
           <ArtifactCanvas
             artifact={activeArtifact}
             versions={versions}
+            relationships={relationships}
+            onBack={() => setShowCollectionsSidebar(!showCollectionsSidebar)}
             onSelectWikiLink={handleWikiLinkClick}
+            onApprove={handleApproveArtifact}
           />
         </div>
       )}

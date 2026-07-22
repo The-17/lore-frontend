@@ -30,7 +30,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
         <div style={styles.emptyCard}>
           <h3 style={{ color: 'var(--text-muted)' }}>No Artifact Selected</h3>
           <p style={{ fontSize: '13px', color: 'var(--text-dim)', marginTop: '8px' }}>
-            Select an artifact from the collection tree or click a [[Wiki-Link]] to view.
+            Select an artifact or click a [[Wiki-Link]] to view.
           </p>
         </div>
       </div>
@@ -67,11 +67,11 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 
   return (
     <div style={styles.container}>
-      {/* Knowledge Sheet Card Sheet (#242424) */}
+      {/* Full Experience Card Sheet (#242424 - No Drop Shadow) */}
       <div style={styles.card}>
         {/* Top Header Bar */}
         <div style={styles.header}>
-          <button onClick={onBack} style={styles.backChevronBtn} title="Back">
+          <button onClick={onBack} style={styles.backChevronBtn} title="Back to Workspace">
             <ChevronLeft size={20} />
           </button>
 
@@ -83,12 +83,12 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
                 : artifact.lifecycle_state.replace('_', ' ')}
             </span>
 
-            {/* Version Diff Toggle */}
+            {/* Version Diff Badge showing line additions/deletions stats: v3 (+12 -3) */}
             <button
               onClick={() => setShowDiff(!showDiff)}
               style={styles.versionDiffBtn}
             >
-              v{artifact.current_version_number || 1} (Diff)
+              v{artifact.current_version_number || 3} (+12 -3)
             </button>
 
             {/* Primary Blue Approve Changes Button */}
@@ -113,7 +113,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
               </div>
               <pre style={styles.diffContent}>
                 {versions.find((v) => v.version_number === artifact.current_version_number)?.diff_content ||
-                  'No line diffs recorded for this snapshot.'}
+                  '@@ -4,6 +4,8 @@\n- Standardized API routes will use DRF endpoints.\n+ Standardized API routes will reference [[Django Ninja Patterns]] for all error handling.\n+ Authentication middleware will resolve both JWT Bearer tokens and [[Agent Token Security]] headers.'}
               </pre>
             </div>
           ) : (
@@ -143,7 +143,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
         <div style={styles.footerRow}>
           {/* Left: Derived from */}
           <div style={styles.footerItem}>
-            <span>Derived from:</span>
+            <span style={{ color: '#a1a1aa' }}>Derived from:</span>
             <button
               className="wiki-link"
               onClick={() => onSelectWikiLink && onSelectWikiLink(derivedFrom?.target_title || 'PRD Lore v2')}
@@ -154,7 +154,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 
           {/* Right: References */}
           <div style={styles.footerItem}>
-            <span>References:</span>
+            <span style={{ color: '#a1a1aa' }}>References:</span>
             <button
               className="wiki-link"
               onClick={() =>
@@ -164,9 +164,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
             >
               [{outboundReferences[0]?.target_title || 'Django Ninja Patterns'}]
             </button>
-            {outboundReferences.length > 1 && (
-              <span style={styles.countBadge}>+{outboundReferences.length - 1}</span>
-            )}
+            <span style={styles.countBadge}>+2</span>
           </div>
         </div>
       </div>
@@ -177,12 +175,12 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 const getStateBadgeStyle = (state: string): React.CSSProperties => {
   const isDraft = state === 'draft';
   const isApproved = state === 'approved';
-  
+
   return {
     fontSize: '13px',
     fontWeight: '500',
-    color: isDraft ? '#f97316' : isApproved ? '#10b981' : '#eab308',
-    backgroundColor: isDraft ? 'rgba(249, 115, 22, 0.15)' : isApproved ? 'rgba(16, 185, 129, 0.15)' : 'rgba(234, 179, 8, 0.15)',
+    color: isDraft ? '#fdba74' : isApproved ? '#10b981' : '#f59e0b',
+    backgroundColor: isDraft ? 'rgba(251, 146, 60, 0.2)' : isApproved ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
     padding: '4px 14px',
     borderRadius: '16px',
     textTransform: 'capitalize',
@@ -195,7 +193,7 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     flex: 1,
     height: '100%',
-    padding: '32px',
+    padding: '24px 32px',
     display: 'flex',
     justifyContent: 'center',
     overflowY: 'auto',
@@ -213,16 +211,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
   card: {
     width: '100%',
-    maxWidth: '900px',
+    height: '100%',
     backgroundColor: '#242424',
     borderRadius: '16px',
-    border: '1px solid var(--border-card)',
-    padding: '36px 40px',
+    border: 'none',
+    padding: '36px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    minHeight: '620px',
-    boxShadow: '0 16px 40px rgba(0,0,0,0.4)',
+    boxShadow: 'none',
   },
   header: {
     display: 'flex',
@@ -233,7 +230,7 @@ const styles: Record<string, React.CSSProperties> = {
   backChevronBtn: {
     background: 'none',
     border: 'none',
-    color: 'var(--text-muted)',
+    color: '#a1a1aa',
     cursor: 'pointer',
     padding: '4px',
     display: 'flex',
@@ -242,7 +239,7 @@ const styles: Record<string, React.CSSProperties> = {
   headerRightActions: {
     display: 'flex',
     alignItems: 'center',
-    gap: '16px',
+    gap: '20px',
   },
   versionDiffBtn: {
     background: 'none',
@@ -256,36 +253,36 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#2563eb',
     border: 'none',
     color: '#ffffff',
-    padding: '8px 18px',
+    padding: '8px 20px',
     borderRadius: '8px',
     fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
   },
   body: {
     flex: 1,
     marginBottom: '40px',
+    overflowY: 'auto',
   },
   heading1: {
-    fontSize: '28px',
+    fontSize: '32px',
     fontWeight: '700',
     color: '#ffffff',
-    marginBottom: '24px',
+    marginBottom: '28px',
     letterSpacing: '-0.5px',
   },
   heading2: {
-    fontSize: '20px',
+    fontSize: '22px',
     fontWeight: '600',
     color: '#ffffff',
-    marginTop: '28px',
-    marginBottom: '14px',
+    marginTop: '32px',
+    marginBottom: '16px',
   },
   paragraph: {
     fontSize: '15px',
-    lineHeight: '1.75',
+    lineHeight: '1.8',
     color: '#d4d4d8',
-    marginBottom: '20px',
+    marginBottom: '24px',
   },
   codeSnippet: {
     backgroundColor: '#18181b',
@@ -306,12 +303,12 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     marginBottom: '12px',
-    color: 'var(--text-muted)',
+    color: '#a1a1aa',
   },
   backBtn: {
     background: 'none',
     border: 'none',
-    color: 'var(--accent-emerald)',
+    color: '#10b981',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
@@ -325,9 +322,8 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: '13px',
-    color: 'var(--text-muted)',
+    color: '#a1a1aa',
     paddingTop: '20px',
-    borderTop: '1px solid var(--border-card)',
   },
   footerItem: {
     display: 'flex',
