@@ -79,7 +79,8 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState<'draft' | 'approved' | 'rejected'>('draft');
-  const [hoveredAction, setHoveredAction] = useState<'approve' | 'reject' | null>(null);
+  const [isRejectHovered, setIsRejectHovered] = useState(false);
+  const [isApproveHovered, setIsApproveHovered] = useState(false);
 
   const handleCopyCode = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
@@ -276,17 +277,17 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             <span style={styles.delStatBadge}>-3</span>
           </button>
 
-          {/* Bubbly Micro-Interaction Governance Action Buttons */}
+          {/* Independent Bubbly Micro-Interaction Governance Action Buttons */}
           {approvalStatus === 'draft' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               {/* Reject Icon-to-Text Smooth Expansion Button */}
               <button
                 onClick={() => setApprovalStatus('rejected')}
-                onMouseEnter={() => setHoveredAction('reject')}
-                onMouseLeave={() => setHoveredAction(null)}
+                onMouseEnter={() => setIsRejectHovered(true)}
+                onMouseLeave={() => setIsRejectHovered(false)}
                 style={{
                   ...styles.bubblyActionBtn,
-                  ...(hoveredAction === 'reject' ? styles.hoveredRejectBtn : styles.restActionBtn),
+                  ...(isRejectHovered ? styles.hoveredRejectBtn : styles.restActionBtn),
                 }}
                 title="Reject artifact changes"
               >
@@ -294,7 +295,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                 <span
                   style={{
                     ...styles.bubblyText,
-                    ...(hoveredAction === 'reject' ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                    ...(isRejectHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
                   }}
                 >
                   Reject
@@ -304,11 +305,11 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
               {/* Approve Icon-to-Text Smooth Expansion Button */}
               <button
                 onClick={() => setApprovalStatus('approved')}
-                onMouseEnter={() => setHoveredAction('approve')}
-                onMouseLeave={() => setHoveredAction(null)}
+                onMouseEnter={() => setIsApproveHovered(true)}
+                onMouseLeave={() => setIsApproveHovered(false)}
                 style={{
                   ...styles.bubblyActionBtn,
-                  ...(hoveredAction === 'approve' ? styles.hoveredApproveBtn : styles.restActionBtn),
+                  ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
                 }}
                 title="Approve artifact changes"
               >
@@ -316,7 +317,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                 <span
                   style={{
                     ...styles.bubblyText,
-                    ...(hoveredAction === 'approve' ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                    ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
                   }}
                 >
                   Approve changes
@@ -643,10 +644,10 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '16px',
     fontSize: '13px',
     fontWeight: '600',
-    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    boxShadow: 'none', // Removed white background blur completely
+    boxShadow: 'none',
   },
   restActionBtn: {
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
@@ -667,7 +668,7 @@ const styles: Record<string, React.CSSProperties> = {
   bubblyText: {
     fontSize: '13px',
     fontWeight: '600',
-    transition: 'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, margin-left 0.35s ease',
+    transition: 'max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, margin-left 0.25s ease',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     display: 'inline-block',
