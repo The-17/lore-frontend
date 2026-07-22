@@ -16,7 +16,7 @@ interface ArtifactCanvasProps {
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
   const [showDiff, setShowDiff] = useState(false);
 
-  // Rich Demo Markdown Content for testing the renderer
+  // Rich Demo Markdown Content
   const markdownText = `# Some header text
 
 Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. See [[Django Ninja Patterns]] for API schemas and [[Agent Token Security]] for auth headers.
@@ -81,7 +81,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
 
   return (
     <div style={styles.container}>
-      {/* Darker Main Card (#1e1e1e) - Zero Radius, Zero Borders */}
+      {/* Main Card (#292929) - Zero Radius, Zero Borders */}
       <div style={styles.card}>
         {/* Top Header Bar */}
         <div style={styles.header}>
@@ -215,13 +215,13 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     display: 'flex',
     overflow: 'hidden',
-    backgroundColor: '#121212',
+    backgroundColor: '#222222',
   },
   card: {
     width: '100%',
     height: '100vh',
     maxWidth: '100%',
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#292929',
     borderRadius: 0,
     border: 'none',
     padding: '24px 56px 16px 56px',
@@ -372,7 +372,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '8px',
   },
   inlineCode: {
-    backgroundColor: '#2d2d32',
+    backgroundColor: '#202024',
     color: '#38bdf8',
     padding: '2px 6px',
     borderRadius: '4px',
@@ -380,8 +380,8 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
   },
   codeBlock: {
-    backgroundColor: '#121215',
-    border: '1px solid #2d2d32',
+    backgroundColor: '#18181c',
+    border: '1px solid #333338',
     borderRadius: '8px',
     padding: '16px',
     marginBottom: '24px',
@@ -398,7 +398,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
   },
   th: {
-    backgroundColor: '#26262a',
+    backgroundColor: '#202024',
     color: '#ffffff',
     textAlign: 'left',
     padding: '10px 14px',
@@ -407,11 +407,11 @@ const styles: Record<string, React.CSSProperties> = {
   },
   td: {
     padding: '10px 14px',
-    borderBottom: '1px solid #28282e',
+    borderBottom: '1px solid #202024',
     color: '#d4d4d8',
   },
   githubDiffViewer: {
-    backgroundColor: '#0d1117',
+    backgroundColor: '#141417',
     borderRadius: '8px',
     border: '1px solid #30363d',
     padding: '16px',

@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-app: #121212;
-  --bg-card: #1e1e1e;
-  --bg-tube: #242424;
+  --bg-app: #222222;
+  --bg-card: #292929;
+  --bg-tube: #292929;
   
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }

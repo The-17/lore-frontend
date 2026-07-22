@@ -35,7 +35,7 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
               onClick={() => setActiveTab(item.id)}
               style={{
                 ...styles.iconBtn,
-                backgroundColor: isActive ? '#333333' : 'transparent',
+                backgroundColor: isActive ? '#3a3a3a' : 'transparent',
                 color: isActive ? '#ffffff' : '#888888',
               }}
               title={item.label}
@@ -61,7 +61,7 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
           onClick={() => setActiveTab('settings')}
           style={{
             ...styles.iconBtn,
-            backgroundColor: activeTab === 'settings' ? '#333333' : 'transparent',
+            backgroundColor: activeTab === 'settings' ? '#3a3a3a' : 'transparent',
             color: activeTab === 'settings' ? '#ffffff' : '#888888',
           }}
           title="Workspace Settings"
@@ -84,7 +84,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: '48px 0',
-    backgroundColor: '#121212',
+    backgroundColor: '#222222',
     userSelect: 'none',
     flexShrink: 0,
   },
@@ -96,7 +96,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '48px',
   },
   tube: {
-    backgroundColor: '#242424',
+    backgroundColor: '#292929',
     borderRadius: '32px',
     padding: '10px 6px',
     display: 'flex',
