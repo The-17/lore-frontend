@@ -8,6 +8,7 @@ interface WikiLinkProps {
 
 export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [isBtnHovered, setIsBtnHovered] = useState(false);
   const [coords, setCoords] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
   const pillRef = useRef<HTMLSpanElement>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -67,7 +68,7 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
         [{title}]
       </span>
 
-      {/* Fixed Viewport Glassmorphic Hover Preview Card (Matching Reference Mockup 1-to-1) */}
+      {/* Fixed Viewport Glassmorphic Hover Preview Card */}
       {isHovered && (
         <div
           onMouseEnter={handleMouseEnter}
@@ -84,13 +85,20 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
           {/* Snippet Paragraph */}
           <p style={styles.cardSnippet}>{info.snippet}</p>
 
-          {/* Full-width Solid White View artifact Button */}
+          {/* Outlined View artifact Button (Fills solid white on hover) */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               if (onNavigate) onNavigate(title);
             }}
-            style={styles.viewArtifactBtn}
+            onMouseEnter={() => setIsBtnHovered(true)}
+            onMouseLeave={() => setIsBtnHovered(false)}
+            style={{
+              ...styles.viewArtifactBtn,
+              backgroundColor: isBtnHovered ? '#ffffff' : 'transparent',
+              color: isBtnHovered ? '#000000' : '#ffffff',
+              borderColor: isBtnHovered ? '#ffffff' : 'rgba(255, 255, 255, 0.2)',
+            }}
           >
             View artifact
           </button>
@@ -144,9 +152,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   viewArtifactBtn: {
     width: '100%',
-    backgroundColor: '#ffffff',
-    color: '#000000',
-    border: 'none',
+    backgroundColor: 'transparent',
+    color: '#ffffff',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     borderRadius: '10px',
     padding: '10px 0',
     fontSize: '13px',
@@ -154,6 +162,6 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     textAlign: 'center',
     marginTop: '6px',
-    transition: 'opacity 0.15s ease',
+    transition: 'all 0.15s ease',
   },
 };
