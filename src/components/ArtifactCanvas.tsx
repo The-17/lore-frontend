@@ -90,7 +90,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 
   return (
     <div style={styles.container}>
-      {/* 100% Viewport-Flush Card Sheet (#242424) */}
+      {/* Flush Card Sheet (#222226) */}
       <div style={styles.card}>
         {/* Top Header Bar */}
         <div style={styles.header}>
@@ -124,7 +124,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
           </div>
         </div>
 
-        {/* Centered Typography Column */}
+        {/* Centered Reading Column */}
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             {showDiff ? (
@@ -203,9 +203,9 @@ const getStateBadgeStyle = (state: string): React.CSSProperties => {
   return {
     fontSize: '13px',
     fontWeight: '600',
-    color: isDraft ? '#4a2810' : isApproved ? '#064e3b' : '#713f12',
-    backgroundColor: isDraft ? '#e8be9e' : isApproved ? '#a7f3d0' : '#fef08a',
-    padding: '5px 16px',
+    color: isDraft ? '#4a2505' : isApproved ? '#064e3b' : '#713f12',
+    backgroundColor: isDraft ? '#f5d0b5' : isApproved ? '#a7f3d0' : '#fef08a',
+    padding: '4px 16px',
     borderRadius: '16px',
     textTransform: 'capitalize',
     display: 'inline-flex',
@@ -222,7 +222,7 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     display: 'flex',
     overflow: 'hidden',
-    backgroundColor: '#222222',
+    backgroundColor: '#1c1c1f',
   },
   emptyContainer: {
     flex: 1,
@@ -238,10 +238,11 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     height: '100vh',
     maxWidth: '100%',
-    backgroundColor: '#242424',
-    borderRadius: '24px 0 0 24px',
-    border: 'none',
-    padding: '48px 64px 32px 64px',
+    backgroundColor: '#222226',
+    borderRadius: '20px 0 0 20px',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+    borderRight: 'none',
+    padding: '40px 64px 28px 64px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -282,7 +283,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#2563eb',
     border: 'none',
     color: '#ffffff',
-    padding: '10px 24px',
+    padding: '10px 22px',
     borderRadius: '10px',
     fontSize: '14px',
     fontWeight: '600',
@@ -291,7 +292,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   centerColumn: {
     flex: 1,
-    maxWidth: '780px',
+    maxWidth: '820px',
     width: '100%',
     margin: '0 auto',
     display: 'flex',
@@ -305,32 +306,32 @@ const styles: Record<string, React.CSSProperties> = {
     paddingRight: '12px',
   },
   heading1: {
-    fontSize: '36px',
-    fontWeight: '600',
-    color: '#ffffff',
-    marginTop: '40px',
-    marginBottom: '32px',
-    letterSpacing: '-0.5px',
-  },
-  heading2: {
-    fontSize: '24px',
+    fontSize: '34px',
     fontWeight: '600',
     color: '#ffffff',
     marginTop: '36px',
-    marginBottom: '18px',
+    marginBottom: '28px',
+    letterSpacing: '-0.5px',
+  },
+  heading2: {
+    fontSize: '22px',
+    fontWeight: '600',
+    color: '#ffffff',
+    marginTop: '32px',
+    marginBottom: '16px',
   },
   paragraph: {
-    fontSize: '16px',
-    lineHeight: '1.8',
-    color: '#cccccc',
-    marginBottom: '28px',
+    fontSize: '15px',
+    lineHeight: '1.75',
+    color: '#d4d4d8',
+    marginBottom: '24px',
   },
   codeSnippet: {
     backgroundColor: '#18181b',
     padding: '3px 8px',
     borderRadius: '4px',
     fontFamily: 'monospace',
-    fontSize: '14px',
+    fontSize: '13px',
     color: '#e4e4e7',
   },
   diffContainer: {
@@ -363,7 +364,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     fontSize: '14px',
-    paddingTop: '24px',
+    paddingTop: '20px',
     flexShrink: 0,
   },
   footerItem: {

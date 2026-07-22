@@ -35,12 +35,12 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
               onClick={() => setActiveTab(item.id)}
               style={{
                 ...styles.iconBtn,
-                backgroundColor: isActive ? '#383838' : 'transparent',
-                color: isActive ? '#10b981' : '#888888',
+                backgroundColor: isActive ? '#38383e' : 'transparent',
+                color: isActive ? '#10b981' : '#a1a1aa',
               }}
               title={item.label}
             >
-              <Icon size={20} />
+              <Icon size={19} />
             </button>
           );
         })}
@@ -74,42 +74,41 @@ export const LeftTubeNav: React.FC<LeftTubeNavProps> = ({
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    width: '160px',
+    width: '120px',
     height: '100vh',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '40px 0',
-    backgroundColor: '#222222',
+    padding: '32px 0',
+    backgroundColor: '#1c1c1f',
     userSelect: 'none',
     flexShrink: 0,
   },
   brand: {
-    fontSize: '26px',
+    fontSize: '22px',
     fontWeight: '700',
     color: '#ffffff',
     letterSpacing: '-0.5px',
-    marginBottom: '40px',
+    marginBottom: '32px',
   },
   tube: {
-    backgroundColor: '#292929',
-    borderRadius: '32px',
-    padding: '10px 8px',
+    backgroundColor: '#26262a',
+    borderRadius: '28px',
+    padding: '8px 6px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
-    border: 'none',
-    boxShadow: 'none',
+    gap: '8px',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
   },
   iconBtn: {
-    width: '44px',
-    height: '44px',
-    borderRadius: '22px',
+    width: '40px',
+    height: '40px',
+    borderRadius: '20px',
     border: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    transition: 'all 0.2s ease',
+    transition: 'all 0.15s ease',
   },
 };
