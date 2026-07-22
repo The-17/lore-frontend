@@ -16,8 +16,9 @@ export const tokens = {
     textSecondary: '#A1A1AA', // Muted label text
     textDim: '#888888',       // Icon and subtle text color
 
-    // Status Badges & Accents
-    accentPrimary: '#2563eb', // Royal blue primary action buttons
+    // Status Badges & Accents (Monochromatic Monochrome System)
+    accentPrimary: '#ffffff', // Pure white primary action buttons
+    accentPrimaryText: '#000000', // Black text on white primary action button
     badgeDraftBg: 'rgba(255, 255, 255, 0.08)',
     badgeDraftText: '#A1A1AA',
     

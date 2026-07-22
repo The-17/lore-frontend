@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -15,6 +15,7 @@ interface ArtifactCanvasProps {
   onBack?: () => void;
   onSelectWikiLink?: (title: string) => void;
   onApprove?: (id: string) => void;
+  onReject?: (id: string) => void;
 }
 
 // Lightweight Syntax Highlighter for code blocks
@@ -77,6 +78,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
   const [showDiff, setShowDiff] = useState(false);
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [approvalStatus, setApprovalStatus] = useState<'draft' | 'approved' | 'rejected'>('draft');
 
   const handleCopyCode = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
@@ -248,8 +250,19 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             <Info size={14} style={{ color: tokens.colors.textSecondary }} />
           </button>
 
-          {/* 2. Status Second */}
-          <span style={styles.subtleDraftBadge}>Draft</span>
+          {/* 2. Status Badge */}
+          <span
+            style={{
+              ...styles.subtleDraftBadge,
+              ...(approvalStatus === 'approved'
+                ? styles.approvedBadge
+                : approvalStatus === 'rejected'
+                ? styles.rejectedBadge
+                : {}),
+            }}
+          >
+            {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
+          </span>
 
           {/* 3. Diff Stat Button inside Pill */}
           <button
@@ -262,10 +275,38 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             <span style={styles.delStatBadge}>-3</span>
           </button>
 
-          {/* 4. Primary Aprove changes Button inside Pill */}
-          <button style={styles.tubeApproveBtn}>
-            Aprove changes
-          </button>
+          {/* Governance Action Buttons: Reject & Approve */}
+          {approvalStatus === 'draft' && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <button
+                onClick={() => setApprovalStatus('rejected')}
+                style={styles.tubeRejectBtn}
+                title="Reject or Deny artifact changes"
+              >
+                <X size={13} style={{ marginRight: '4px' }} />
+                <span>Reject</span>
+              </button>
+
+              <button
+                onClick={() => setApprovalStatus('approved')}
+                style={styles.tubeApproveBtn}
+                title="Approve artifact changes"
+              >
+                <Check size={13} style={{ marginRight: '4px' }} />
+                <span>Approve changes</span>
+              </button>
+            </div>
+          )}
+
+          {approvalStatus !== 'draft' && (
+            <button
+              onClick={() => setApprovalStatus('draft')}
+              style={styles.tubeResetBtn}
+              title="Reset approval state back to Draft"
+            >
+              Reopen review
+            </button>
+          )}
         </div>
 
         {/* Centered Typography Reading Column */}
@@ -515,6 +556,17 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: tokens.radii.lg,
     display: 'inline-flex',
     alignItems: 'center',
+    transition: 'all 0.15s ease',
+  },
+  approvedBadge: {
+    color: '#3fb950',
+    backgroundColor: 'rgba(46, 160, 67, 0.15)',
+    border: '1px solid rgba(46, 160, 67, 0.25)',
+  },
+  rejectedBadge: {
+    color: '#f85149',
+    backgroundColor: 'rgba(248, 81, 73, 0.15)',
+    border: '1px solid rgba(248, 81, 73, 0.25)',
   },
   tubeDiffBtn: {
     background: 'none',
@@ -554,14 +606,40 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '12px',
     fontWeight: '600',
   },
+  tubeRejectBtn: {
+    backgroundColor: 'rgba(248, 81, 73, 0.1)',
+    border: '1px solid rgba(248, 81, 73, 0.25)',
+    color: '#f85149',
+    padding: '6px 14px',
+    borderRadius: '16px',
+    fontSize: '13px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    transition: 'all 0.15s ease',
+  },
   tubeApproveBtn: {
-    backgroundColor: tokens.colors.accentPrimary,
-    border: 'none',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
     color: '#ffffff',
-    padding: '8px 20px',
-    borderRadius: '18px',
+    padding: '6px 16px',
+    borderRadius: '16px',
     fontSize: '13px',
     fontWeight: '600',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    transition: 'all 0.15s ease',
+  },
+  tubeResetBtn: {
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    color: tokens.colors.textSecondary,
+    padding: '6px 14px',
+    borderRadius: '16px',
+    fontSize: '12px',
+    fontWeight: '500',
     cursor: 'pointer',
   },
   centerColumn: {
@@ -610,8 +688,8 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '24px',
   },
   blockquote: {
-    borderLeft: '3px solid #10b981',
-    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+    borderLeft: '3px solid #ffffff',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     padding: '14px 20px',
     borderRadius: '0 8px 8px 0',
     color: tokens.colors.textPrimary,
@@ -620,11 +698,11 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '28px',
   },
   markHighlight: {
-    backgroundColor: 'rgba(245, 158, 11, 0.22)',
-    color: '#fbbf24',
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    color: '#ffffff',
     padding: '2px 6px',
     borderRadius: '4px',
-    border: '1px solid rgba(245, 158, 11, 0.35)',
+    border: '1px solid rgba(255, 255, 255, 0.25)',
     fontWeight: '500',
   },
   hr: {
@@ -668,12 +746,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   inlineCode: {
     backgroundColor: '#202024',
-    color: '#38bdf8',
+    color: '#ffffff',
     padding: '2px 6px',
     borderRadius: tokens.radii.sm,
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '13px',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
   },
   codeContainer: {
     backgroundColor: '#131316',
@@ -689,7 +767,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.04)', // Hairline subtle divider
+    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
   },
   codeLangBadge: {
     display: 'flex',
@@ -705,7 +783,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '6px',
     height: '6px',
     borderRadius: '50%',
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#ffffff',
   },
   copyBtn: {
     background: 'none',
@@ -782,7 +860,7 @@ const styles: Record<string, React.CSSProperties> = {
   backToDocBtn: {
     background: 'none',
     border: 'none',
-    color: '#58a6ff',
+    color: '#ffffff',
     cursor: 'pointer',
     fontSize: '12px',
     fontWeight: '500',
@@ -814,8 +892,8 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#f85149',
   },
   headerLine: {
-    backgroundColor: 'rgba(56, 139, 253, 0.15)',
-    color: '#58a6ff',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    color: '#ffffff',
     fontStyle: 'italic',
   },
   footerRow: {
