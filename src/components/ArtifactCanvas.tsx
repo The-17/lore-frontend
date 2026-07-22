@@ -296,7 +296,7 @@ const styles: Record<string, React.CSSProperties> = {
   approveChangesBtn: {
     backgroundColor: '#2563eb',
     border: 'none',
-    color: '#ffffff',
+    color: '#EBEBEB',
     padding: '10px 24px',
     borderRadius: '10px',
     fontSize: '13px',
@@ -321,7 +321,7 @@ const styles: Record<string, React.CSSProperties> = {
   heading1: {
     fontSize: '36px',
     fontWeight: '400',
-    color: '#ffffff',
+    color: '#EBEBEB',
     marginTop: '20px',
     marginBottom: '28px',
     letterSpacing: '-0.5px',
@@ -329,21 +329,21 @@ const styles: Record<string, React.CSSProperties> = {
   heading2: {
     fontSize: '24px',
     fontWeight: '500',
-    color: '#ffffff',
+    color: '#EBEBEB',
     marginTop: '32px',
     marginBottom: '16px',
   },
   heading3: {
     fontSize: '18px',
     fontWeight: '500',
-    color: '#ffffff',
+    color: '#EBEBEB',
     marginTop: '24px',
     marginBottom: '12px',
   },
   paragraph: {
     fontSize: '16px',
     lineHeight: '1.75',
-    color: '#d4d4d8',
+    color: '#EBEBEB',
     marginBottom: '24px',
   },
   blockquote: {
@@ -351,7 +351,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: 'rgba(16, 185, 129, 0.08)',
     padding: '12px 18px',
     borderRadius: '0 8px 8px 0',
-    color: '#e4e4e7',
+    color: '#EBEBEB',
     fontSize: '15px',
     fontStyle: 'italic',
     marginBottom: '24px',
@@ -359,12 +359,12 @@ const styles: Record<string, React.CSSProperties> = {
   ul: {
     marginBottom: '24px',
     paddingLeft: '24px',
-    color: '#d4d4d8',
+    color: '#EBEBEB',
   },
   ol: {
     marginBottom: '24px',
     paddingLeft: '24px',
-    color: '#d4d4d8',
+    color: '#EBEBEB',
   },
   li: {
     fontSize: '16px',
@@ -388,7 +388,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '14px',
     lineHeight: '1.6',
-    color: '#e4e4e7',
+    color: '#EBEBEB',
     overflowX: 'auto',
   },
   table: {
@@ -399,7 +399,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   th: {
     backgroundColor: '#202024',
-    color: '#ffffff',
+    color: '#EBEBEB',
     textAlign: 'left',
     padding: '10px 14px',
     borderBottom: '1px solid #38383e',
@@ -408,7 +408,7 @@ const styles: Record<string, React.CSSProperties> = {
   td: {
     padding: '10px 14px',
     borderBottom: '1px solid #202024',
-    color: '#d4d4d8',
+    color: '#EBEBEB',
   },
   githubDiffViewer: {
     backgroundColor: '#141417',
@@ -495,7 +495,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#a1a1aa',
   },
   footerValue: {
-    color: '#ffffff',
+    color: '#EBEBEB',
     fontWeight: '400',
   },
   countBadge: {
