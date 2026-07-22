@@ -85,15 +85,16 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
       <div style={styles.card}>
         {/* Top Header Bar */}
         <div style={styles.header}>
+          {/* Far Left: Back Chevron */}
           <button style={styles.backChevronBtn} title="Back">
             <ChevronLeft size={20} />
           </button>
 
-          <div style={styles.headerRightActions}>
-            {/* Lighter, Soft Peach Draft Badge */}
-            <span style={styles.draftBadge}>Draft</span>
+          {/* Centered: Subtle Draft Badge */}
+          <span style={styles.draftBadgeCenter}>Draft</span>
 
-            {/* Clean GitHub Style Version Diff Stat Badges */}
+          {/* Far Right: Version Diff Badges and Aprove changes Button */}
+          <div style={styles.headerRightActions}>
             <button
               onClick={() => setShowDiff(!showDiff)}
               style={styles.versionDiffBtn}
@@ -104,9 +105,9 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
               <span style={styles.delStatBadge}>-3</span>
             </button>
 
-            {/* Flat Royal Blue Approve Changes Button */}
+            {/* Aprove changes Button */}
             <button style={styles.approveChangesBtn}>
-              Approve Changes
+              Aprove changes
             </button>
           </div>
         </div>
@@ -239,6 +240,7 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '8px',
     marginTop: '-4px',
     width: '100%',
+    position: 'relative',
     flexShrink: 0,
   },
   backChevronBtn: {
@@ -250,22 +252,25 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
   },
+  draftBadgeCenter: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    fontSize: '13px',
+    fontWeight: '500',
+    color: '#5c3310',
+    backgroundColor: '#ebd0b9',
+    border: 'none',
+    padding: '4px 16px',
+    borderRadius: '16px',
+    display: 'inline-flex',
+    alignItems: 'center',
+  },
   headerRightActions: {
     display: 'flex',
     alignItems: 'center',
     gap: '16px',
     marginLeft: 'auto',
-  },
-  draftBadge: {
-    fontSize: '13px',
-    fontWeight: '600',
-    color: '#5c3310',
-    backgroundColor: '#ebd0b9',
-    border: 'none',
-    padding: '6px 18px',
-    borderRadius: '18px',
-    display: 'inline-flex',
-    alignItems: 'center',
   },
   versionDiffBtn: {
     background: 'none',
@@ -297,7 +302,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#2563eb',
     border: 'none',
     color: '#D4D4D4',
-    padding: '10px 24px',
+    padding: '9px 22px',
     borderRadius: '10px',
     fontSize: '13px',
     fontWeight: '600',
