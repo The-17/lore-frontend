@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ArrowLeft } from 'lucide-react';
 
 interface ArtifactCanvasProps {
   artifact?: any;
@@ -16,9 +16,17 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
   const loremParagraph =
     'Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.';
 
+  // Standard GitHub Unified Diff representation
+  const sampleGitHubDiff = [
+    { type: 'header', text: '@@ -4,6 +4,8 @@' },
+    { type: 'deletion', text: '- Standardized API routes will use DRF endpoints.' },
+    { type: 'addition', text: '+ Standardized API routes will reference [[Django Ninja Patterns]] for all error handling.' },
+    { type: 'addition', text: '+ Authentication middleware will resolve both JWT Bearer tokens and [[Agent Token Security]] headers.' },
+  ];
+
   return (
     <div style={styles.container}>
-      {/* Main Content Card (#282828) - Flush to Top, Bottom, Right */}
+      {/* Darker Main Card (#1e1e1e) - Zero Radius, Zero Borders */}
       <div style={styles.card}>
         {/* Top Header Bar */}
         <div style={styles.header}>
@@ -27,21 +35,19 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
           </button>
 
           <div style={styles.headerRightActions}>
-            {/* Refined Amber/Peach Draft Pill Badge */}
-            <span style={styles.draftBadge}>
-              <span style={styles.draftDot}>●</span> Draft
-            </span>
+            {/* Lighter, Warm Soft Peach Draft Badge (NO Border, NO Dot) */}
+            <span style={styles.draftBadge}>Draft</span>
 
-            {/* v3 (+12 -3) Diff Stats Button */}
+            {/* GitHub Style Version Diff Stat Badge */}
             <button
               onClick={() => setShowDiff(!showDiff)}
               style={styles.versionDiffBtn}
             >
-              v3 (<span style={{ color: '#22c55e', fontWeight: '600' }}>+12</span>{' '}
-              <span style={{ color: '#ef4444', fontWeight: '600' }}>-3</span>)
+              v3 (<span style={{ color: '#3fb950', fontWeight: '600' }}>+12</span>{' '}
+              <span style={{ color: '#f85149', fontWeight: '600' }}>−3</span>)
             </button>
 
-            {/* Premium Primary Blue Approve Changes Button */}
+            {/* Flat Royal Blue Approve Changes Button (NO Border) */}
             <button style={styles.approveChangesBtn}>
               Approve Changes
             </button>
@@ -51,12 +57,43 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
         {/* Centered Typography Reading Column */}
         <div style={styles.centerColumn}>
           <div style={styles.body}>
-            <h1 style={styles.heading1}>Some header text</h1>
+            {showDiff ? (
+              <div style={styles.githubDiffViewer}>
+                <div style={styles.diffHeaderBar}>
+                  <button onClick={() => setShowDiff(false)} style={styles.backToDocBtn}>
+                    <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Return to Document
+                  </button>
+                  <span style={{ color: '#8b949e', fontSize: '12px' }}>Unified GitHub Diff View</span>
+                </div>
+                <div style={styles.diffLinesList}>
+                  {sampleGitHubDiff.map((line, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        ...styles.diffLineRow,
+                        ...(line.type === 'addition'
+                          ? styles.additionLine
+                          : line.type === 'deletion'
+                          ? styles.deletionLine
+                          : styles.headerLine),
+                      }}
+                    >
+                      <span style={styles.linePrefix}>{line.text.slice(0, 1)}</span>
+                      <span>{line.text.slice(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <h1 style={styles.heading1}>Some header text</h1>
 
-            <p style={styles.paragraph}>{loremParagraph}</p>
-            <p style={styles.paragraph}>{loremParagraph}</p>
-            <p style={styles.paragraph}>{loremParagraph}</p>
-            <p style={styles.paragraph}>{loremParagraph}</p>
+                <p style={styles.paragraph}>{loremParagraph}</p>
+                <p style={styles.paragraph}>{loremParagraph}</p>
+                <p style={styles.paragraph}>{loremParagraph}</p>
+                <p style={styles.paragraph}>{loremParagraph}</p>
+              </>
+            )}
           </div>
         </div>
 
@@ -89,13 +126,13 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     display: 'flex',
     overflow: 'hidden',
-    backgroundColor: '#1e1e1e',
+    backgroundColor: '#121212',
   },
   card: {
     width: '100%',
     height: '100vh',
     maxWidth: '100%',
-    backgroundColor: '#282828',
+    backgroundColor: '#1e1e1e',
     borderRadius: 0,
     border: 'none',
     padding: '24px 56px 16px 56px',
@@ -133,41 +170,31 @@ const styles: Record<string, React.CSSProperties> = {
   draftBadge: {
     fontSize: '13px',
     fontWeight: '600',
-    color: '#fb923c',
-    backgroundColor: 'rgba(249, 115, 22, 0.15)',
-    border: '1px solid rgba(249, 115, 22, 0.3)',
-    padding: '5px 14px',
-    borderRadius: '20px',
+    color: '#5c3310',
+    backgroundColor: '#ebd0b9',
+    border: 'none',
+    padding: '6px 18px',
+    borderRadius: '18px',
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '6px',
-    letterSpacing: '0.2px',
-  },
-  draftDot: {
-    fontSize: '8px',
-    color: '#f97316',
   },
   versionDiffBtn: {
     background: 'none',
     border: 'none',
-    color: '#e4e4e7',
+    color: '#ffffff',
     fontSize: '13px',
-    fontWeight: '500',
+    fontWeight: '400',
     cursor: 'pointer',
   },
   approveChangesBtn: {
     backgroundColor: '#2563eb',
-    backgroundImage: 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.08) 100%)',
-    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: 'none',
     color: '#ffffff',
-    padding: '9px 22px',
+    padding: '10px 24px',
     borderRadius: '10px',
     fontSize: '13px',
     fontWeight: '600',
-    letterSpacing: '-0.2px',
     cursor: 'pointer',
-    transition: 'all 0.2s ease',
   },
   centerColumn: {
     flex: 1,
@@ -197,6 +224,63 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: '1.75',
     color: '#d4d4d8',
     marginBottom: '24px',
+  },
+  githubDiffViewer: {
+    backgroundColor: '#0d1117',
+    borderRadius: '8px',
+    border: '1px solid #30363d',
+    padding: '16px',
+    marginTop: '20px',
+    fontFamily: 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace',
+    fontSize: '13px',
+    lineHeight: '1.6',
+  },
+  diffHeaderBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '12px',
+    paddingBottom: '8px',
+    borderBottom: '1px solid #30363d',
+  },
+  backToDocBtn: {
+    background: 'none',
+    border: 'none',
+    color: '#58a6ff',
+    cursor: 'pointer',
+    fontSize: '12px',
+    fontWeight: '500',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  diffLinesList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+  },
+  diffLineRow: {
+    padding: '4px 10px',
+    borderRadius: '4px',
+    display: 'flex',
+    gap: '8px',
+  },
+  linePrefix: {
+    userSelect: 'none',
+    fontWeight: '700',
+    width: '12px',
+  },
+  additionLine: {
+    backgroundColor: 'rgba(46, 160, 67, 0.15)',
+    color: '#3fb950',
+  },
+  deletionLine: {
+    backgroundColor: 'rgba(248, 81, 73, 0.15)',
+    color: '#f85149',
+  },
+  headerLine: {
+    backgroundColor: 'rgba(56, 139, 253, 0.15)',
+    color: '#58a6ff',
+    fontStyle: 'italic',
   },
   footerRow: {
     display: 'flex',
