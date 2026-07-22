@@ -3,6 +3,9 @@ import { LeftTubeNav } from './components/LeftTubeNav';
 import { CollectionTree } from './components/CollectionTree';
 import { ArtifactCanvas } from './components/ArtifactCanvas';
 import { GraphCanvas } from './components/GraphCanvas';
+import { SkillRegistryView } from './components/SkillRegistryView';
+import { ApprovalsView } from './components/ApprovalsView';
+import { SettingsView } from './components/SettingsView';
 import { BYOBModal } from './components/BYOBModal';
 import { api } from './api/client';
 import type { Artifact, Collection, Relationship, ArtifactVersion } from './types';
@@ -64,7 +67,26 @@ export function App() {
     } else {
       api.getSkillByTitle(title).then(setActiveArtifact).catch(console.error);
     }
+    setActiveTab('workspace');
   };
+
+  const handleApproveArtifact = (id: string) => {
+    setArtifacts((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, lifecycle_state: 'approved' } : a))
+    );
+  };
+
+  const handleRejectArtifact = (id: string) => {
+    setArtifacts((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, lifecycle_state: 'rejected' } : a))
+    );
+  };
+
+  const pendingArtifacts = artifacts.filter(
+    (a) => a.lifecycle_state === 'draft' || a.lifecycle_state === 'under_review'
+  );
+
+  const skills = artifacts.filter((a) => a.type === 'skill');
 
   return (
     <div style={styles.appShell}>
@@ -102,6 +124,30 @@ export function App() {
           }}
         />
       )}
+
+      {activeTab === 'skills' && (
+        <SkillRegistryView
+          skills={skills}
+          onSelectSkill={(id) => {
+            handleSelectArtifact(id);
+            setActiveTab('workspace');
+          }}
+        />
+      )}
+
+      {activeTab === 'approvals' && (
+        <ApprovalsView
+          pendingArtifacts={pendingArtifacts}
+          onApprove={handleApproveArtifact}
+          onReject={handleRejectArtifact}
+          onSelectArtifact={(id) => {
+            handleSelectArtifact(id);
+            setActiveTab('workspace');
+          }}
+        />
+      )}
+
+      {activeTab === 'settings' && <SettingsView />}
 
       {/* BYOB Configuration Modal */}
       <BYOBModal isOpen={isBYOBOpen} onClose={() => setIsBYOBOpen(false)} />
