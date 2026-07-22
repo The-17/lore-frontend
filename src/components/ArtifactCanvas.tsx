@@ -35,19 +35,21 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = () => {
           </button>
 
           <div style={styles.headerRightActions}>
-            {/* Lighter, Warm Soft Peach Draft Badge (NO Border, NO Dot) */}
+            {/* Lighter, Soft Peach Draft Badge */}
             <span style={styles.draftBadge}>Draft</span>
 
-            {/* GitHub Style Version Diff Stat Badge */}
+            {/* Clean GitHub Style Version Diff Stat Badges (No Brackets) */}
             <button
               onClick={() => setShowDiff(!showDiff)}
               style={styles.versionDiffBtn}
+              title="Toggle Line Diffs"
             >
-              v3 (<span style={{ color: '#3fb950', fontWeight: '600' }}>+12</span>{' '}
-              <span style={{ color: '#f85149', fontWeight: '600' }}>−3</span>)
+              <span style={{ color: '#a1a1aa', fontSize: '13px', fontWeight: '500' }}>v3</span>
+              <span style={styles.addStatBadge}>+12</span>
+              <span style={styles.delStatBadge}>-3</span>
             </button>
 
-            {/* Flat Royal Blue Approve Changes Button (NO Border) */}
+            {/* Flat Royal Blue Approve Changes Button */}
             <button style={styles.approveChangesBtn}>
               Approve Changes
             </button>
@@ -164,7 +166,7 @@ const styles: Record<string, React.CSSProperties> = {
   headerRightActions: {
     display: 'flex',
     alignItems: 'center',
-    gap: '20px',
+    gap: '16px',
     marginLeft: 'auto',
   },
   draftBadge: {
@@ -181,10 +183,28 @@ const styles: Record<string, React.CSSProperties> = {
   versionDiffBtn: {
     background: 'none',
     border: 'none',
-    color: '#ffffff',
-    fontSize: '13px',
-    fontWeight: '400',
     cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    padding: '4px 8px',
+    borderRadius: '6px',
+  },
+  addStatBadge: {
+    color: '#3fb950',
+    backgroundColor: 'rgba(46, 160, 67, 0.15)',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontSize: '12px',
+    fontWeight: '600',
+  },
+  delStatBadge: {
+    color: '#f85149',
+    backgroundColor: 'rgba(248, 81, 73, 0.15)',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontSize: '12px',
+    fontWeight: '600',
   },
   approveChangesBtn: {
     backgroundColor: '#2563eb',
