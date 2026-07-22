@@ -279,7 +279,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
           {/* Bubbly Micro-Interaction Governance Action Buttons */}
           {approvalStatus === 'draft' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              {/* Reject Icon-to-Text Expansion Button */}
+              {/* Reject Icon-to-Text Smooth Expansion Button */}
               <button
                 onClick={() => setApprovalStatus('rejected')}
                 onMouseEnter={() => setHoveredAction('reject')}
@@ -301,7 +301,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                 </span>
               </button>
 
-              {/* Approve Icon-to-Text Expansion Button */}
+              {/* Approve Icon-to-Text Smooth Expansion Button */}
               <button
                 onClick={() => setApprovalStatus('approved')}
                 onMouseEnter={() => setHoveredAction('approve')}
@@ -634,7 +634,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '600',
   },
   bubblyActionBtn: {
-    border: 'none',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
@@ -643,47 +643,44 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '16px',
     fontSize: '13px',
     fontWeight: '600',
-    transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    boxShadow: 'none', // Removed white background blur completely
   },
   restActionBtn: {
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
     color: tokens.colors.textSecondary,
-    border: '1px solid rgba(255, 255, 255, 0.08)',
   },
   hoveredRejectBtn: {
     backgroundColor: '#f85149',
     color: '#ffffff',
-    border: '1px solid #f85149',
+    borderColor: '#f85149',
     padding: '6px 14px',
-    boxShadow: '0 4px 14px rgba(248, 81, 73, 0.4)',
-    transform: 'scale(1.05)',
   },
   hoveredApproveBtn: {
     backgroundColor: '#ffffff',
     color: '#000000',
-    border: '1px solid #ffffff',
+    borderColor: '#ffffff',
     padding: '6px 16px',
-    boxShadow: '0 4px 14px rgba(255, 255, 255, 0.3)',
-    transform: 'scale(1.05)',
   },
   bubblyText: {
     fontSize: '13px',
     fontWeight: '600',
-    transition: 'all 0.2s ease',
+    transition: 'max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease, margin-left 0.35s ease',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    display: 'inline-block',
   },
   bubblyTextHidden: {
-    maxWidth: 0,
+    maxWidth: '0px',
     opacity: 0,
-    marginLeft: 0,
-    display: 'none',
+    marginLeft: '0px',
   },
   bubblyTextVisible: {
-    maxWidth: '120px',
+    maxWidth: '140px',
     opacity: 1,
     marginLeft: '6px',
-    display: 'inline-block',
   },
   tubeResetBtn: {
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
