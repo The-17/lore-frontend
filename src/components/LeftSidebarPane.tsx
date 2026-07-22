@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { List, AlignLeft } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 
@@ -31,20 +31,16 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  const startResizing = useCallback((mouseDownEvent: React.MouseEvent) => {
-    mouseDownEvent.preventDefault();
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
     setIsResizing(true);
-  }, []);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
 
-  const stopResizing = useCallback(() => {
-    setIsResizing(false);
-  }, []);
-
-  const resize = useCallback(
-    (mouseMoveEvent: MouseEvent) => {
-      if (isResizing && sidebarRef.current) {
-        // Calculate new width relative to the left sidebar offset (after 140px rail)
-        const newWidth = mouseMoveEvent.clientX - 140;
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      if (sidebarRef.current) {
+        const rect = sidebarRef.current.getBoundingClientRect();
+        const newWidth = moveEvent.clientX - rect.left;
         if (
           newWidth >= tokens.layout.minSidebarWidth &&
           newWidth <= tokens.layout.maxSidebarWidth
@@ -52,23 +48,19 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
           onWidthChange(newWidth);
         }
       }
-    },
-    [isResizing, onWidthChange]
-  );
-
-  useEffect(() => {
-    if (isResizing) {
-      window.addEventListener('mousemove', resize);
-      window.addEventListener('mouseup', stopResizing);
-    } else {
-      window.removeEventListener('mousemove', resize);
-      window.removeEventListener('mouseup', stopResizing);
-    }
-    return () => {
-      window.removeEventListener('mousemove', resize);
-      window.removeEventListener('mouseup', stopResizing);
     };
-  }, [isResizing, resize, stopResizing]);
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  };
 
   return (
     <div
@@ -119,12 +111,12 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
 
       {/* Drag-to-Resize Right Border Handle */}
       <div
-        onMouseDown={startResizing}
+        onMouseDown={handleMouseDown}
         style={{
           ...styles.resizeHandle,
           backgroundColor: isResizing ? tokens.colors.accentPrimary : 'transparent',
         }}
-        title="Drag to resize sidebar width"
+        title="Drag right/left to resize sidebar width"
       />
     </div>
   );
@@ -141,7 +133,6 @@ const styles: Record<string, React.CSSProperties> = {
     userSelect: 'none',
     flexShrink: 0,
     position: 'relative',
-    transition: 'background-color 0.15s ease',
   },
   header: {
     display: 'flex',
@@ -182,11 +173,11 @@ const styles: Record<string, React.CSSProperties> = {
   resizeHandle: {
     position: 'absolute',
     top: 0,
-    right: '-3px',
-    width: '6px',
+    right: '-5px',
+    width: '10px',
     height: '100%',
     cursor: 'col-resize',
-    zIndex: 20,
-    transition: 'background-color 0.2s ease',
+    zIndex: 30,
+    transition: 'background-color 0.15s ease',
   },
 };
