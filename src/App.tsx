@@ -5,7 +5,7 @@ import { ArtifactCanvas } from './components/ArtifactCanvas';
 import { GraphCanvas } from './components/GraphCanvas';
 import { BYOBModal } from './components/BYOBModal';
 import { api } from './api/client';
-import type { Artifact, Collection, Relationship } from './types';
+import type { Artifact, Collection, Relationship, ArtifactVersion } from './types';
 
 export function App() {
   const [activeTab, setActiveTab] = useState('workspace');
@@ -13,15 +13,16 @@ export function App() {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
   const [activeArtifact, setActiveArtifact] = useState<Artifact | null>(null);
+  const [versions, setVersions] = useState<ArtifactVersion[]>([]);
   const [relationships, setRelationships] = useState<Relationship[]>([]);
 
-  // Initial Load from Self-Hosted Backend
+  // Initial Load from Self-Hosted Backend or Mock Fallback
   useEffect(() => {
     async function loadWorkspaceData() {
       try {
         const [colsData, artsData] = await Promise.all([
-          api.getCollections().catch(() => []),
-          api.getArtifacts().catch(() => []),
+          api.getCollections(),
+          api.getArtifacts(),
         ]);
         setCollections(colsData);
         setArtifacts(artsData);
@@ -29,19 +30,22 @@ export function App() {
           setActiveArtifact(artsData[0]);
         }
       } catch (err) {
-        console.warn('Backend connection failed:', err);
+        console.warn('Backend offline, rendered mock data:', err);
       }
     }
     loadWorkspaceData();
   }, []);
 
-  // Fetch relationships when active artifact changes
+  // Fetch relationships and versions when active artifact changes
   useEffect(() => {
     if (!activeArtifact) return;
-    api
-      .getRelationships(activeArtifact.id)
-      .then(setRelationships)
-      .catch(() => setRelationships([]));
+    Promise.all([
+      api.getRelationships(activeArtifact.id).catch(() => []),
+      api.getArtifactVersions(activeArtifact.id).catch(() => []),
+    ]).then(([rels, vers]) => {
+      setRelationships(rels);
+      setVersions(vers);
+    });
   }, [activeArtifact]);
 
   const handleSelectArtifact = (id: string) => {
@@ -82,6 +86,7 @@ export function App() {
           />
           <ArtifactCanvas
             artifact={activeArtifact}
+            versions={versions}
             onSelectWikiLink={handleWikiLinkClick}
           />
         </div>
