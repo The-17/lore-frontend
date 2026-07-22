@@ -642,21 +642,22 @@ const styles: Record<string, React.CSSProperties> = {
   },
   githubDiffViewer: {
     backgroundColor: '#141417',
-    borderRadius: '8px',
-    border: '1px solid #30363d',
-    padding: '16px',
+    borderRadius: '10px',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    padding: '20px',
     marginTop: '44px',
     fontFamily: 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace',
     fontSize: '13px',
     lineHeight: '1.6',
+    color: '#e4e4e7',
   },
   diffHeaderBar: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '12px',
-    paddingBottom: '8px',
-    borderBottom: '1px solid #30363d',
+    marginBottom: '16px',
+    paddingBottom: '10px',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
   },
   backToDocBtn: {
     background: 'none',
@@ -671,11 +672,11 @@ const styles: Record<string, React.CSSProperties> = {
   diffLinesList: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '2px',
+    gap: '4px',
   },
   diffLineRow: {
-    padding: '4px 10px',
-    borderRadius: '4px',
+    padding: '6px 12px',
+    borderRadius: '6px',
     display: 'flex',
     gap: '8px',
   },
@@ -685,11 +686,11 @@ const styles: Record<string, React.CSSProperties> = {
     width: '12px',
   },
   additionLine: {
-    backgroundColor: 'rgba(46, 160, 67, 0.15)',
+    backgroundColor: 'rgba(46, 160, 67, 0.18)',
     color: '#3fb950',
   },
   deletionLine: {
-    backgroundColor: 'rgba(248, 81, 73, 0.15)',
+    backgroundColor: 'rgba(248, 81, 73, 0.18)',
     color: '#f85149',
   },
   headerLine: {
