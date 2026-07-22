@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react';
-import { ExternalLink, Sparkles } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 
 interface WikiLinkProps {
@@ -17,15 +16,12 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (pillRef.current) {
       const rect = pillRef.current.getBoundingClientRect();
-      // Calculate fixed viewport coordinates: position card above the pill, centered horizontally
-      const cardWidth = 280;
-      const cardHeight = 130;
+      const cardWidth = 320;
+      const cardHeight = 150;
       
       let left = rect.left + rect.width / 2 - cardWidth / 2;
-      // Keep within left/right viewport edges
       left = Math.max(16, Math.min(window.innerWidth - cardWidth - 16, left));
 
-      // If text is too close to top edge, position card below the pill
       let top = rect.top - cardHeight - 10;
       if (top < 16) {
         top = rect.bottom + 10;
@@ -43,19 +39,16 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
   };
 
   // Mock database previews for linked wiki artifacts
-  const mockPreviews: Record<string, { type: string; snippet: string }> = {
+  const mockPreviews: Record<string, { snippet: string }> = {
     'Django Ninja Patterns': {
-      type: 'Skill',
       snippet: 'Standardized API schemas, Ninja router decorators, and error handling contracts for fast REST endpoints.',
     },
     'Agent Token Security': {
-      type: 'Memory',
       snippet: 'Auth middleware resolving both JWT Bearer tokens and custom agent execution keys safely.',
     },
   };
 
   const info = mockPreviews[title] || {
-    type: 'Document',
     snippet: `Linked architectural artifact containing details on [[${title}]].`,
   };
 
@@ -74,7 +67,7 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
         [{title}]
       </span>
 
-      {/* Fixed Viewport Glassmorphic Hover Preview Card (Renders above all canvas & scroll layers) */}
+      {/* Fixed Viewport Glassmorphic Hover Preview Card (Matching Reference Mockup 1-to-1) */}
       {isHovered && (
         <div
           onMouseEnter={handleMouseEnter}
@@ -85,25 +78,21 @@ export const WikiLink: React.FC<WikiLinkProps> = ({ title, onNavigate }) => {
             left: `${coords.left}px`,
           }}
         >
-          <div style={styles.cardHeader}>
-            <span style={styles.typeBadge}>
-              <Sparkles size={11} style={{ marginRight: '4px' }} />
-              {info.type}
-            </span>
-            <span style={styles.cardTitle}>[{title}]</span>
-          </div>
+          {/* Artifact Title */}
+          <div style={styles.cardTitle}>{title}</div>
 
+          {/* Snippet Paragraph */}
           <p style={styles.cardSnippet}>{info.snippet}</p>
 
+          {/* Full-width Solid White View artifact Button */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               if (onNavigate) onNavigate(title);
             }}
-            style={styles.goBtn}
+            style={styles.viewArtifactBtn}
           >
-            <span>Go to artifact</span>
-            <ExternalLink size={12} style={{ marginLeft: '4px' }} />
+            View artifact
           </button>
         </div>
       )}
@@ -128,63 +117,43 @@ const styles: Record<string, React.CSSProperties> = {
   },
   hoverCard: {
     position: 'fixed',
-    width: '280px',
-    backgroundColor: tokens.colors.bgGlass,
-    backdropFilter: 'blur(16px)',
-    WebkitBackdropFilter: 'blur(16px)',
-    border: `1px solid ${tokens.colors.borderGlass}`,
-    borderRadius: tokens.radii.md,
-    padding: '14px',
-    boxShadow: tokens.shadows.glass,
+    width: '320px',
+    backgroundColor: '#202022',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '16px',
+    padding: '20px',
+    boxShadow: '0 12px 32px rgba(0, 0, 0, 0.4)',
     zIndex: 9999,
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '12px',
     pointerEvents: 'auto',
     fontFamily: tokens.typography.fontFamily,
   },
-  cardHeader: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  typeBadge: {
-    fontSize: '11px',
-    fontWeight: '600',
-    color: '#10b981',
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    padding: '2px 8px',
-    borderRadius: tokens.radii.pill,
-    alignSelf: 'flex-start',
-    display: 'inline-flex',
-    alignItems: 'center',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
   cardTitle: {
-    fontSize: '14px',
+    fontSize: '15px',
     fontWeight: '600',
-    color: tokens.colors.textPrimary,
+    color: '#ffffff',
+    letterSpacing: '-0.2px',
   },
   cardSnippet: {
-    fontSize: tokens.typography.caption.fontSize,
-    lineHeight: tokens.typography.caption.lineHeight,
-    color: tokens.colors.textSecondary,
+    fontSize: '13px',
+    lineHeight: '1.55',
+    color: '#a1a1aa',
     margin: 0,
   },
-  goBtn: {
-    backgroundColor: tokens.colors.accentPrimary,
+  viewArtifactBtn: {
+    width: '100%',
+    backgroundColor: '#ffffff',
+    color: '#000000',
     border: 'none',
-    color: '#ffffff',
-    padding: '6px 14px',
-    borderRadius: tokens.radii.sm,
-    fontSize: '12px',
+    borderRadius: '10px',
+    padding: '10px 0',
+    fontSize: '13px',
     fontWeight: '600',
     cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'flex-end',
-    marginTop: '4px',
+    textAlign: 'center',
+    marginTop: '6px',
+    transition: 'opacity 0.15s ease',
   },
 };
