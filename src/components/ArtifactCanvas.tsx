@@ -79,6 +79,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState<'draft' | 'approved' | 'rejected'>('draft');
+  const [hoveredAction, setHoveredAction] = useState<'approve' | 'reject' | null>(null);
 
   const handleCopyCode = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
@@ -275,25 +276,51 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
             <span style={styles.delStatBadge}>-3</span>
           </button>
 
-          {/* Governance Action Buttons: Reject & Approve */}
+          {/* Bubbly Micro-Interaction Governance Action Buttons */}
           {approvalStatus === 'draft' && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {/* Reject Icon-to-Text Expansion Button */}
               <button
                 onClick={() => setApprovalStatus('rejected')}
-                style={styles.tubeRejectBtn}
-                title="Reject or Deny artifact changes"
+                onMouseEnter={() => setHoveredAction('reject')}
+                onMouseLeave={() => setHoveredAction(null)}
+                style={{
+                  ...styles.bubblyActionBtn,
+                  ...(hoveredAction === 'reject' ? styles.hoveredRejectBtn : styles.restActionBtn),
+                }}
+                title="Reject artifact changes"
               >
-                <X size={13} style={{ marginRight: '4px' }} />
-                <span>Reject</span>
+                <X size={14} style={{ flexShrink: 0 }} />
+                <span
+                  style={{
+                    ...styles.bubblyText,
+                    ...(hoveredAction === 'reject' ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                  }}
+                >
+                  Reject
+                </span>
               </button>
 
+              {/* Approve Icon-to-Text Expansion Button */}
               <button
                 onClick={() => setApprovalStatus('approved')}
-                style={styles.tubeApproveBtn}
+                onMouseEnter={() => setHoveredAction('approve')}
+                onMouseLeave={() => setHoveredAction(null)}
+                style={{
+                  ...styles.bubblyActionBtn,
+                  ...(hoveredAction === 'approve' ? styles.hoveredApproveBtn : styles.restActionBtn),
+                }}
                 title="Approve artifact changes"
               >
-                <Check size={13} style={{ marginRight: '4px' }} />
-                <span>Approve changes</span>
+                <Check size={14} style={{ flexShrink: 0 }} />
+                <span
+                  style={{
+                    ...styles.bubblyText,
+                    ...(hoveredAction === 'approve' ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                  }}
+                >
+                  Approve changes
+                </span>
               </button>
             </div>
           )}
@@ -556,7 +583,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: tokens.radii.lg,
     display: 'inline-flex',
     alignItems: 'center',
-    transition: 'all 0.15s ease',
+    transition: 'all 0.2s ease',
   },
   approvedBadge: {
     color: '#3fb950',
@@ -606,31 +633,57 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '12px',
     fontWeight: '600',
   },
-  tubeRejectBtn: {
-    backgroundColor: 'rgba(248, 81, 73, 0.1)',
-    border: '1px solid rgba(248, 81, 73, 0.25)',
-    color: '#f85149',
-    padding: '6px 14px',
-    borderRadius: '16px',
-    fontSize: '13px',
-    fontWeight: '500',
+  bubblyActionBtn: {
+    border: 'none',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
-    transition: 'all 0.15s ease',
-  },
-  tubeApproveBtn: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    color: '#ffffff',
-    padding: '6px 16px',
+    justifyContent: 'center',
+    padding: '6px 9px',
     borderRadius: '16px',
     fontSize: '13px',
     fontWeight: '600',
-    cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    transition: 'all 0.15s ease',
+    transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+  },
+  restActionBtn: {
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    color: tokens.colors.textSecondary,
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+  },
+  hoveredRejectBtn: {
+    backgroundColor: '#f85149',
+    color: '#ffffff',
+    border: '1px solid #f85149',
+    padding: '6px 14px',
+    boxShadow: '0 4px 14px rgba(248, 81, 73, 0.4)',
+    transform: 'scale(1.05)',
+  },
+  hoveredApproveBtn: {
+    backgroundColor: '#ffffff',
+    color: '#000000',
+    border: '1px solid #ffffff',
+    padding: '6px 16px',
+    boxShadow: '0 4px 14px rgba(255, 255, 255, 0.3)',
+    transform: 'scale(1.05)',
+  },
+  bubblyText: {
+    fontSize: '13px',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+  },
+  bubblyTextHidden: {
+    maxWidth: 0,
+    opacity: 0,
+    marginLeft: 0,
+    display: 'none',
+  },
+  bubblyTextVisible: {
+    maxWidth: '120px',
+    opacity: 1,
+    marginLeft: '6px',
+    display: 'inline-block',
   },
   tubeResetBtn: {
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
