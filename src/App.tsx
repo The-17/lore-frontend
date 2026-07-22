@@ -8,6 +8,7 @@ import { ApprovalsView } from './components/ApprovalsView';
 import { SettingsView } from './components/SettingsView';
 import { BYOBModal } from './components/BYOBModal';
 import { api } from './api/client';
+import { tokens } from './design-system/tokens';
 import type { Artifact, Relationship, ArtifactVersion } from './types';
 
 export function App() {
@@ -17,6 +18,8 @@ export function App() {
   const [activeArtifact, setActiveArtifact] = useState<Artifact | null>(null);
   const [versions, setVersions] = useState<ArtifactVersion[]>([]);
   const [relationships, setRelationships] = useState<Relationship[]>([]);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(tokens.layout.defaultSidebarWidth);
+  const [activeHeadingId, setActiveHeadingId] = useState<string>('some-header-text');
 
   // Initial Load from Self-Hosted Backend or Mock Fallback
   useEffect(() => {
@@ -80,6 +83,14 @@ export function App() {
     );
   };
 
+  const handleSelectHeading = (headingId: string) => {
+    setActiveHeadingId(headingId);
+    const element = document.getElementById(headingId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const pendingArtifacts = artifacts.filter(
     (a) => a.lifecycle_state === 'draft' || a.lifecycle_state === 'under_review'
   );
@@ -95,13 +106,18 @@ export function App() {
         onOpenBYOBModal={() => setIsBYOBOpen(true)}
       />
 
-      {/* Main View Area: Two Column Grid */}
+      {/* Main View Area: Two Column Resizable Grid */}
       {activeTab === 'workspace' && (
         <div style={styles.workspaceSplit}>
-          {/* Left Sidebar Pane (Site Background #222222) */}
-          <LeftSidebarPane />
+          {/* Left Sidebar Pane with TOC and Resizable Handle */}
+          <LeftSidebarPane
+            width={sidebarWidth}
+            onWidthChange={setSidebarWidth}
+            activeHeadingId={activeHeadingId}
+            onSelectHeading={handleSelectHeading}
+          />
 
-          {/* Right Main Artifact Canvas Pane (#292929) */}
+          {/* Right Main Artifact Canvas Pane (Responsive Flex) */}
           <ArtifactCanvas
             artifact={activeArtifact}
             versions={versions}
@@ -158,7 +174,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     height: '100vh',
     width: '100vw',
-    backgroundColor: 'var(--bg-app)',
+    backgroundColor: tokens.colors.bgApp,
     overflow: 'hidden',
   },
   workspaceSplit: {

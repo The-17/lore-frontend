@@ -1,8 +1,8 @@
 /**
- * Google Antigravity (AGY) Design System Tokens
+ * Antigravity Design System Tokens
  */
 
-export const agyTokens = {
+export const tokens = {
   colors: {
     // Canvas & Surfacing
     bgApp: '#222222',        // Outer workspace app shell canvas background
@@ -48,7 +48,9 @@ export const agyTokens = {
 
   layout: {
     railWidth: '140px',
-    sidebarWidth: '280px',
+    minSidebarWidth: 180,
+    defaultSidebarWidth: 280,
+    maxSidebarWidth: 480,
     readingMeasureWidth: '740px',
   },
 
