@@ -11,7 +11,6 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
     let isMounted = true;
     const uniqueId = `mermaid-svg-${Math.random().toString(36).substring(2, 9)}`;
 
-    // Try dynamic import of mermaid; fallback to robust inline SVG diagram if dev server cache is stale
     import('mermaid')
       .then((m) => {
         const mermaidInstance = m.default || m;
@@ -20,13 +19,13 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
           theme: 'dark',
           themeVariables: {
             darkMode: true,
-            background: '#18181c',
+            background: 'transparent',
             primaryColor: '#2563eb',
             primaryTextColor: '#ffffff',
             primaryBorderColor: '#3b82f6',
             lineColor: '#60a5fa',
             secondaryColor: '#10b981',
-            tertiaryColor: '#202024',
+            tertiaryColor: '#292929',
           },
           fontFamily: 'Inter, system-ui, sans-serif',
         });
@@ -38,7 +37,6 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
         }
       })
       .catch(() => {
-        // Fallback: render SVG flowchart directly
         if (isMounted) {
           setSvgContent(null);
         }
@@ -51,17 +49,13 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.headerBar}>
-        <span style={styles.headerTitle}>Mermaid Architecture Diagram</span>
-      </div>
-
       {svgContent ? (
         <div
           style={styles.svgWrapper}
           dangerouslySetInnerHTML={{ __html: svgContent }}
         />
       ) : (
-        /* Zero-dependency High Quality Dark Mode Flowchart SVG Fallback */
+        /* Zero-dependency Seamless Canvas SVG Flowchart Diagram */
         <div style={styles.svgWrapper}>
           <svg width="600" height="340" viewBox="0 0 600 340" style={styles.svg}>
             <defs>
@@ -130,35 +124,20 @@ export const MermaidRenderer: React.FC<MermaidRendererProps> = ({ chart }) => {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#18181c',
-    border: '1px solid #333338',
-    borderRadius: '10px',
-    padding: '16px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    padding: '16px 0',
     marginBottom: '28px',
     display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
-    overflowX: 'auto',
-  },
-  headerBar: {
-    display: 'flex',
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: '8px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-  },
-  headerTitle: {
-    fontSize: '12px',
-    fontWeight: 600,
-    color: '#888888',
-    textTransform: 'uppercase',
-    letterSpacing: '0.6px',
+    overflowX: 'auto',
   },
   svgWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '12px 0',
+    width: '100%',
     overflowX: 'auto',
   },
   svg: {

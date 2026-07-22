@@ -286,6 +286,7 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                   },
                   table: ({ children }) => <table style={styles.table}>{children}</table>,
                   th: ({ children }) => <th style={styles.th}>{children}</th>,
+                  tr: ({ children }) => <tr style={styles.tr}>{children}</tr>,
                   td: ({ children }) => <td style={styles.td}>{children}</td>,
                 }}
               >
@@ -561,21 +562,28 @@ const styles: Record<string, React.CSSProperties> = {
   table: {
     width: '100%',
     borderCollapse: 'collapse',
-    marginBottom: '28px',
+    marginTop: '24px',
+    marginBottom: '32px',
     fontSize: '14px',
   },
   th: {
-    backgroundColor: '#202024',
-    color: tokens.colors.textPrimary,
+    backgroundColor: 'transparent',
+    color: '#ffffff',
     textAlign: 'left',
-    padding: '10px 14px',
-    borderBottom: '1px solid #38383e',
+    padding: '12px 16px',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
     fontWeight: '600',
+    fontSize: '12px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.6px',
+  },
+  tr: {
+    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
   },
   td: {
-    padding: '10px 14px',
-    borderBottom: '1px solid #202024',
+    padding: '14px 16px',
     color: tokens.colors.textPrimary,
+    fontSize: '14px',
   },
   githubDiffViewer: {
     backgroundColor: '#141417',
