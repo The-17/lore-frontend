@@ -90,7 +90,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
 
   return (
     <div style={styles.container}>
-      {/* Full Width Edge-to-Edge Sheet (#242424 - No Drop Shadow, Full Height) */}
+      {/* 100% Flush Container (#242424 - Touches Top, Bottom, and Right Viewport Edges) */}
       <div style={styles.card}>
         {/* Top Header Bar */}
         <div style={styles.header}>
@@ -216,9 +216,10 @@ const getStateBadgeStyle = (state: string): React.CSSProperties => {
 const styles: Record<string, React.CSSProperties> = {
   container: {
     flex: 1,
-    height: '100%',
+    height: '100vh',
     width: '100%',
-    padding: '24px 32px',
+    padding: 0,
+    margin: 0,
     display: 'flex',
     overflow: 'hidden',
     backgroundColor: '#222222',
@@ -235,10 +236,10 @@ const styles: Record<string, React.CSSProperties> = {
   },
   card: {
     width: '100%',
-    height: '100%',
+    height: '100vh',
     maxWidth: '100%',
     backgroundColor: '#242424',
-    borderRadius: '20px',
+    borderRadius: '20px 0 0 20px',
     border: 'none',
     padding: '40px 56px',
     display: 'flex',
@@ -246,6 +247,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     boxShadow: 'none',
     overflow: 'hidden',
+    margin: 0,
   },
   header: {
     display: 'flex',
