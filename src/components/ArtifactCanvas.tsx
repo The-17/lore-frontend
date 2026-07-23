@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, ShieldCheck } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, User, Cpu } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -87,9 +87,7 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
 
-  const markdownText = `# System Architecture & Lore Contracts
-
-Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas, ==zero-trust token authentication==, and [[Agent Token Security]] for auth headers.
+  const markdownText = `Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas, ==zero-trust token authentication==, and [[Agent Token Security]] for auth headers.
 
 > Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, ==semantic vector search==, and human-in-the-loop governance.
 
@@ -223,37 +221,22 @@ System implementation milestones:
     <div style={styles.container}>
       <div style={styles.card}>
         
-        {/* SLEEK 1-LINE HORIZONTAL IDENTITY & GOVERNANCE BAR */}
-        <div style={styles.minimalTopBar}>
-          {/* Left: Back Chevron + Complete Single-Line Metadata Strip */}
-          <div style={styles.sleekMetaStrip}>
+        {/* CLEAN TOP NAVBAR */}
+        <div style={styles.topNavbar}>
+          {/* Left: Back Button + Clean Path Breadcrumb */}
+          <div style={styles.navBreadcrumb}>
             <button style={styles.backChevronBtn} title="Back">
               <ChevronLeft size={16} />
             </button>
-            
-            <span style={styles.subtypeBadge}>Decision / ADR</span>
-            <span style={styles.metaDivider}>•</span>
-            
-            <span style={styles.metaLabel}>ID:</span>
-            <code style={styles.metaCode}>7087ed86</code>
-            <span style={styles.metaDivider}>•</span>
-            
-            <span style={styles.metaLabel}>Author:</span>
-            <span style={styles.metaValue}>Architecture Agent</span>
-            <span style={styles.metaDivider}>•</span>
-            
-            <span style={styles.metaLabel}>Owner:</span>
-            <span style={styles.metaValue}>Wisdom</span>
-            <span style={styles.metaDivider}>•</span>
-            
-            <div style={styles.policyPassChip}>
-              <ShieldCheck size={12} style={{ color: '#4ade80', marginRight: '3px' }} />
-              <span>Passed</span>
-            </div>
+            <span style={styles.pathSegment}>Lore</span>
+            <span style={styles.pathSlash}>/</span>
+            <span style={styles.pathSegment}>Architecture</span>
+            <span style={styles.pathSlash}>/</span>
+            <span style={styles.pathActive}>Decisions</span>
           </div>
 
-          {/* Right: Solid Action Tube Pill */}
-          <div style={styles.minimalActionTube}>
+          {/* Right: Floating Header Tube Action Pill */}
+          <div style={styles.actionTube}>
             <button
               onClick={() => setIsInfoOpen(true)}
               style={styles.infoPillBtn}
@@ -344,9 +327,43 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* Centered Typography Reading Column */}
+        {/* Centered Reading & Canvas Container */}
         <div style={styles.centerColumn}>
           <div style={styles.body}>
+            
+            {/* ELEGANT LINEAR-STYLE TITLE & PROPERTY STRIP */}
+            <div style={styles.canvasHeader}>
+              <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
+
+              {/* Clean Single-Line Property Strip */}
+              <div style={styles.propertyStrip}>
+                <span style={styles.subtypeChip}>Decision</span>
+
+                <span style={styles.propDot}>•</span>
+
+                <div style={styles.propItem}>
+                  <span style={styles.propLabel}>ID:</span>
+                  <code style={styles.propCode}>7087ed86</code>
+                </div>
+
+                <span style={styles.propDot}>•</span>
+
+                <div style={styles.propItem}>
+                  <Cpu size={12} style={{ color: '#a78bfa' }} />
+                  <span style={styles.propLabel}>Author:</span>
+                  <span style={styles.propVal}>Architecture Agent</span>
+                </div>
+
+                <span style={styles.propDot}>•</span>
+
+                <div style={styles.propItem}>
+                  <User size={12} style={{ color: '#38bdf8' }} />
+                  <span style={styles.propLabel}>Owner:</span>
+                  <span style={styles.propVal}>Wisdom</span>
+                </div>
+              </div>
+            </div>
+
             {showDiff ? (
               <div style={styles.githubDiffViewer}>
                 <div style={styles.diffHeaderBar}>
@@ -541,7 +558,7 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     position: 'relative',
   },
-  minimalTopBar: {
+  topNavbar: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -549,12 +566,11 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: '1px solid #27272a',
     flexShrink: 0,
   },
-  sleekMetaStrip: {
+  navBreadcrumb: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
-    fontSize: '12px',
-    color: '#71717a',
+    gap: '6px',
+    fontSize: '13px',
   },
   backChevronBtn: {
     background: 'none',
@@ -565,51 +581,21 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: '4px',
+    marginRight: '2px',
   },
-  subtypeBadge: {
-    fontSize: '11px',
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-    color: '#a1a1aa',
-    backgroundColor: '#27272a',
-    padding: '2px 7px',
-    borderRadius: '4px',
-    border: '1px solid #3f3f46',
-  },
-  metaDivider: {
-    color: '#3f3f46',
-  },
-  metaLabel: {
+  pathSegment: {
     color: '#71717a',
-    fontSize: '12px',
+    fontWeight: '400',
   },
-  metaCode: {
-    fontFamily: 'monospace',
+  pathActive: {
     color: '#a1a1aa',
-    fontSize: '11px',
-    backgroundColor: '#18181b',
-    padding: '1px 5px',
-    borderRadius: '3px',
-    border: '1px solid #27272a',
-  },
-  metaValue: {
-    color: '#f4f4f5',
     fontWeight: '500',
+  },
+  pathSlash: {
+    color: '#3f3f46',
     fontSize: '12px',
   },
-  policyPassChip: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    color: '#4ade80',
-    backgroundColor: 'rgba(74, 222, 128, 0.1)',
-    padding: '2px 6px',
-    borderRadius: '4px',
-    fontSize: '11px',
-    fontWeight: '500',
-  },
-  minimalActionTube: {
+  actionTube: {
     backgroundColor: '#18181b',
     border: '1px solid #27272a',
     borderRadius: '20px',
@@ -743,28 +729,82 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '20px',
+    paddingTop: '24px',
   },
-  heading1: {
+  canvasHeader: {
+    marginBottom: '28px',
+  },
+  mainTitle: {
     fontSize: '32px',
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#f4f4f5',
-    marginTop: '12px',
-    marginBottom: '24px',
+    margin: '0 0 12px 0',
     letterSpacing: '-0.5px',
   },
-  heading2: {
-    fontSize: '20px',
+  propertyStrip: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '8px',
+    fontSize: '12px',
+    color: '#71717a',
+  },
+  subtypeChip: {
+    fontSize: '11px',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    color: '#a1a1aa',
+    backgroundColor: '#18181b',
+    padding: '2px 7px',
+    borderRadius: '4px',
+    border: '1px solid #27272a',
+  },
+  propItem: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  propLabel: {
+    color: '#71717a',
+    fontSize: '12px',
+  },
+  propVal: {
+    color: '#d4d4d8',
     fontWeight: '500',
+    fontSize: '12px',
+  },
+  propCode: {
+    fontFamily: 'monospace',
+    color: '#a1a1aa',
+    fontSize: '11px',
+    backgroundColor: '#18181b',
+    padding: '1px 5px',
+    borderRadius: '3px',
+    border: '1px solid #27272a',
+  },
+  propDot: {
+    color: '#3f3f46',
+  },
+  heading1: {
+    fontSize: '24px',
+    fontWeight: '600',
     color: '#f4f4f5',
-    marginTop: '32px',
+    marginTop: '28px',
+    marginBottom: '16px',
+  },
+  heading2: {
+    fontSize: '19px',
+    fontWeight: '600',
+    color: '#f4f4f5',
+    marginTop: '28px',
     marginBottom: '14px',
   },
   heading3: {
     fontSize: '16px',
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#f4f4f5',
-    marginTop: '24px',
+    marginTop: '22px',
     marginBottom: '12px',
   },
   paragraph: {
