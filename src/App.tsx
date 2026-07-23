@@ -22,17 +22,17 @@ export function App() {
   const [activeHeadingId, setActiveHeadingId] = useState<string>('some-header-text');
   const [isDiffOpen, setIsDiffOpen] = useState(false);
 
-  // Helper to update location hash without full page reload
-  const navigateToHash = (path: string) => {
-    if (window.location.hash !== `#${path}`) {
-      window.history.pushState(null, '', `#${path}`);
-      parseCurrentHash(`#${path}`);
+  // Clean HTML5 History API Path Navigation (Zero Hash '#' Symbols)
+  const navigateToPath = (path: string) => {
+    if (window.location.pathname !== path) {
+      window.history.pushState(null, '', path);
+      parseCurrentPath(path);
     }
   };
 
-  // Parse location hash into state
-  const parseCurrentHash = (hashStr: string) => {
-    const rawPath = hashStr.replace(/^#\/?/, '');
+  // Parse window.location.pathname into React state
+  const parseCurrentPath = (pathnameStr: string) => {
+    const rawPath = pathnameStr.replace(/^\/+/, '');
     if (!rawPath) {
       setActiveTab('workspace');
       setIsDiffOpen(false);
@@ -63,24 +63,19 @@ export function App() {
     }
   };
 
-  // Listen to browser Back / Forward buttons and hash changes
+  // Listen to browser Back / Forward history popstate events
   useEffect(() => {
-    const handleHashChange = () => {
-      parseCurrentHash(window.location.hash);
+    const handlePopState = () => {
+      parseCurrentPath(window.location.pathname);
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    window.addEventListener('popstate', handleHashChange);
+    window.addEventListener('popstate', handlePopState);
 
-    // Initial hash parse or set default
-    if (!window.location.hash) {
-      window.history.replaceState(null, '', '#/workspace');
-    }
-    parseCurrentHash(window.location.hash);
+    // Initial load path parsing
+    parseCurrentPath(window.location.pathname);
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-      window.removeEventListener('popstate', handleHashChange);
+      window.removeEventListener('popstate', handlePopState);
     };
   }, [artifacts]);
 
@@ -94,8 +89,8 @@ export function App() {
         ]);
         setArtifacts(artsData);
         if (artsData.length > 0) {
-          const currentHash = window.location.hash.replace(/^#\/?/, '');
-          const parts = currentHash.split('/');
+          const currentPath = window.location.pathname.replace(/^\/+/, '');
+          const parts = currentPath.split('/');
           if (parts[0] === 'artifacts' && parts[1]) {
             const found = artsData.find((a) => a.id === parts[1] || a.id.startsWith(parts[1]));
             if (found) setActiveArtifact(found);
@@ -128,9 +123,9 @@ export function App() {
     if (tab === 'workspace') {
       const artId = activeArtifact?.id || '7087ed86';
       const path = isDiffOpen ? `/artifacts/${artId}/diff` : `/artifacts/${artId}`;
-      navigateToHash(path);
+      navigateToPath(path);
     } else {
-      navigateToHash(`/${tab}`);
+      navigateToPath(`/${tab}`);
     }
   };
 
@@ -138,11 +133,11 @@ export function App() {
     const found = artifacts.find((a) => a.id === id);
     if (found) {
       setActiveArtifact(found);
-      navigateToHash(`/artifacts/${found.id}${isDiffOpen ? '/diff' : ''}`);
+      navigateToPath(`/artifacts/${found.id}${isDiffOpen ? '/diff' : ''}`);
     } else {
       api.getArtifact(id).then((art) => {
         setActiveArtifact(art);
-        navigateToHash(`/artifacts/${art.id}${isDiffOpen ? '/diff' : ''}`);
+        navigateToPath(`/artifacts/${art.id}${isDiffOpen ? '/diff' : ''}`);
       }).catch(console.error);
     }
   };
@@ -151,11 +146,11 @@ export function App() {
     const found = artifacts.find((a) => a.title.toLowerCase() === title.toLowerCase());
     if (found) {
       setActiveArtifact(found);
-      navigateToHash(`/artifacts/${found.id}`);
+      navigateToPath(`/artifacts/${found.id}`);
     } else {
       api.getSkillByTitle(title).then((art) => {
         setActiveArtifact(art);
-        navigateToHash(`/artifacts/${art.id}`);
+        navigateToPath(`/artifacts/${art.id}`);
       }).catch(console.error);
     }
     setActiveTab('workspace');
@@ -166,9 +161,9 @@ export function App() {
     setIsDiffOpen(open);
     const artId = activeArtifact?.id || '7087ed86';
     if (open) {
-      navigateToHash(`/artifacts/${artId}/diff`);
+      navigateToPath(`/artifacts/${artId}/diff`);
     } else {
-      navigateToHash(`/artifacts/${artId}`);
+      navigateToPath(`/artifacts/${artId}`);
     }
   };
 

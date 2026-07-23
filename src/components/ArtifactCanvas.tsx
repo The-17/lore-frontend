@@ -303,7 +303,7 @@ System implementation milestones:
         <ChevronLeft size={16} />
       </button>
 
-      {/* FLOATING SEPARATE ACTION TUBE PILL */}
+      {/* FLOATING SEPARATE ACTION TUBE PILL (BORDERLESS) */}
       <div style={styles.floatingActionTube}>
         <button
           onClick={() => setIsInfoOpen(true)}
@@ -437,16 +437,16 @@ System implementation milestones:
             </div>
 
             {showDiff ? (
-              /* ENHANCED REVIEW & PROPOSED STATE TRANSITION EXPERIENCE */
+              /* ENHANCED REVIEW & PROPOSED STATE TRANSITION EXPERIENCE (BORDERLESS RECTANGLES) */
               <div style={styles.enhancedDiffContainer}>
                 
-                {/* HEADER METADATA DIFF BANNER */}
+                {/* HEADER METADATA DIFF BANNER (BORDERLESS SURFACE) */}
                 <div style={styles.diffMetadataBanner}>
                   <div style={styles.diffBannerTitleRow}>
                     <div style={styles.versionJumpBadge}>
                       <Clock size={13} style={{ color: '#71717a', marginRight: '5px' }} />
                       <span style={{ color: '#a1a1aa' }}>v2</span>
-                      <span style={{ color: '#3f3f46', margin: '0 4px' }}>→</span>
+                      <span style={{ color: '#52525b', margin: '0 4px' }}>→</span>
                       <span style={{ color: '#D4D4D4', fontWeight: '600' }}>v3 (Current)</span>
                     </div>
 
@@ -536,7 +536,7 @@ System implementation milestones:
                   </div>
                 </div>
 
-                {/* MERMAID DIAGRAM VISUAL COMPARISON ACCORDION */}
+                {/* MERMAID DIAGRAM VISUAL COMPARISON ACCORDION (BORDERLESS) */}
                 <div style={styles.diagramDiffAccordion}>
                   <div
                     style={styles.diagramAccordionHeader}
@@ -563,7 +563,7 @@ System implementation milestones:
                   )}
                 </div>
 
-                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH BULKY DATA & HIGH-CONTRAST LINE NUMBERS */}
+                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH BORDERLESS CARDS */}
                 {diffMode === 'unified' ? (
                   <div style={styles.unifiedDiffList}>
                     {bulkyDiffData.map((row, idx) => (
@@ -844,7 +844,7 @@ const styles: Record<string, React.CSSProperties> = {
     right: '32px',
     zIndex: 20,
     backgroundColor: '#18181b',
-    border: '1px solid #27272a',
+    border: 'none',
     borderRadius: '20px',
     padding: '4px 8px',
     display: 'flex',
@@ -888,7 +888,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '600',
   },
   bubblyActionBtn: {
-    border: '1px solid #3f3f46',
+    border: 'none',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
@@ -908,13 +908,11 @@ const styles: Record<string, React.CSSProperties> = {
   hoveredRejectBtn: {
     backgroundColor: '#7f1d1d',
     color: '#fca5a5',
-    borderColor: '#991b1b',
     padding: '4px 12px',
   },
   hoveredApproveBtn: {
     backgroundColor: '#ffffff',
     color: '#000000',
-    borderColor: '#ffffff',
     padding: '4px 12px',
   },
   bubblyText: {
@@ -937,7 +935,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tubeResetBtn: {
     backgroundColor: '#27272a',
-    border: '1px solid #3f3f46',
+    border: 'none',
     color: '#a1a1aa',
     padding: '4px 10px',
     borderRadius: '12px',
@@ -952,7 +950,7 @@ const styles: Record<string, React.CSSProperties> = {
     transform: 'translateX(-50%)',
     zIndex: 30,
     backgroundColor: '#18181b',
-    border: '1px solid #27272a',
+    border: 'none',
     borderRadius: '12px',
     padding: '8px 16px',
     color: '#D4D4D4',
@@ -1023,17 +1021,14 @@ const styles: Record<string, React.CSSProperties> = {
   draftPill: {
     color: '#a1a1aa',
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
   },
   approvedPill: {
     color: '#4ade80',
     backgroundColor: 'rgba(74, 222, 128, 0.12)',
-    border: '1px solid rgba(74, 222, 128, 0.25)',
   },
   rejectedPill: {
     color: '#f87171',
     backgroundColor: 'rgba(248, 113, 113, 0.12)',
-    border: '1px solid rgba(248, 113, 113, 0.25)',
   },
   propVal: {
     color: '#71717a',
@@ -1078,7 +1073,6 @@ const styles: Record<string, React.CSSProperties> = {
     hyphens: 'auto',
   },
   blockquote: {
-    borderLeft: '2px solid #f4f4f5',
     backgroundColor: '#18181b',
     padding: '12px 18px',
     borderRadius: '0 4px 4px 0',
@@ -1086,15 +1080,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
     fontStyle: 'italic',
     marginBottom: '28px',
-    border: '1px solid #27272a',
-    borderLeftColor: '#f4f4f5',
+    border: 'none',
+    borderLeft: '2px solid #f4f4f5',
   },
   markHighlight: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     color: '#ffffff',
     padding: '2px 6px',
     borderRadius: '4px',
-    border: '1px solid rgba(255, 255, 255, 0.25)',
     fontWeight: '500',
   },
   hr: {
@@ -1126,11 +1119,9 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '4px',
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '13px',
-    border: '1px solid #27272a',
   },
   codeContainer: {
     backgroundColor: '#09090b',
-    border: '1px solid #27272a',
     borderRadius: '8px',
     marginBottom: '28px',
     overflow: 'hidden',
@@ -1141,7 +1132,6 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid #27272a',
   },
   codeLangBadge: {
     display: 'flex',
@@ -1181,7 +1171,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   tableWrapper: {
     backgroundColor: '#18181b',
-    border: '1px solid #27272a',
     borderRadius: '8px',
     overflow: 'hidden',
     marginTop: '28px',
@@ -1197,15 +1186,12 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#f4f4f5',
     textAlign: 'left',
     padding: '10px 14px',
-    borderBottom: '1px solid #27272a',
     fontWeight: '600',
     fontSize: '11px',
     textTransform: 'uppercase',
     letterSpacing: '0.6px',
   },
-  tr: {
-    borderBottom: '1px solid #27272a',
-  },
+  tr: {},
   td: {
     padding: '12px 14px',
     color: '#d4d4d8',
@@ -1219,7 +1205,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   diffMetadataBanner: {
     backgroundColor: '#272727',
-    border: '1px solid #333333',
     borderRadius: '12px',
     padding: '16px 20px',
     display: 'flex',
@@ -1239,7 +1224,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   stateTransitionBadge: {
     backgroundColor: '#202020',
-    border: '1px solid #303030',
     borderRadius: '6px',
     padding: '2px 8px',
     fontSize: '11px',
@@ -1264,7 +1248,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   restoreBtn: {
     backgroundColor: '#202020',
-    border: '1px solid #383838',
+    border: 'none',
     color: '#D4D4D4',
     padding: '4px 10px',
     borderRadius: '6px',
@@ -1290,7 +1274,6 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: '8px',
-    borderTop: '1px solid #303030',
   },
   affectedArtifactsGroup: {
     display: 'inline-flex',
@@ -1300,7 +1283,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   affectedChip: {
     backgroundColor: '#202020',
-    border: '1px solid #303030',
     borderRadius: '4px',
     padding: '2px 6px',
     color: '#38bdf8',
@@ -1311,7 +1293,6 @@ const styles: Record<string, React.CSSProperties> = {
   modeToggleGroup: {
     display: 'inline-flex',
     backgroundColor: '#202020',
-    border: '1px solid #303030',
     borderRadius: '6px',
     padding: '2px',
     gap: '2px',
@@ -1335,7 +1316,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   diagramDiffAccordion: {
     backgroundColor: '#272727',
-    border: '1px solid #333333',
     borderRadius: '12px',
     padding: '14px 18px',
     display: 'flex',
@@ -1353,11 +1333,9 @@ const styles: Record<string, React.CSSProperties> = {
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: '16px',
     paddingTop: '12px',
-    borderTop: '1px solid #303030',
   },
   diagramComparePane: {
     backgroundColor: '#202020',
-    border: '1px solid #303030',
     borderRadius: '8px',
     padding: '14px',
     display: 'flex',
@@ -1373,7 +1351,6 @@ const styles: Record<string, React.CSSProperties> = {
   unifiedDiffList: {
     backgroundColor: '#18181a',
     borderRadius: '12px',
-    border: '1px solid #2e2e32',
     overflow: 'hidden',
     fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace",
     fontSize: '13px',
@@ -1441,7 +1418,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
   splitPane: {
     backgroundColor: '#18181a',
-    border: '1px solid #2e2e32',
     borderRadius: '12px',
     overflow: 'hidden',
   },
@@ -1451,7 +1427,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '12px',
     fontWeight: '600',
     color: '#a1a1aa',
-    borderBottom: '1px solid #2e2e32',
   },
   splitPaneContent: {
     padding: '12px',
@@ -1474,7 +1449,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: tokens.typography.caption.fontSize,
     paddingTop: '12px',
     paddingBottom: '4px',
-    borderTop: '1px solid #27272a',
     position: 'relative',
     flexShrink: 0,
     width: '100%',
