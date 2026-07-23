@@ -175,7 +175,7 @@ export const ArtifactInfoModal: React.FC<ArtifactInfoModalProps> = ({
                 <div style={styles.historyStack}>
                   <div style={styles.historyRowItem}>
                     <Clock size={12} style={{ color: '#71717a', marginRight: '6px' }} />
-                    <span style={{ color: '#f4f4f5', fontWeight: '500' }}>v3 (Current)</span>
+                    <span style={{ color: '#D4D4D4', fontWeight: '500' }}>v3 (Current)</span>
                     <span style={{ marginLeft: 'auto', color: '#71717a', fontSize: '12px' }}>+12 / -3</span>
                   </div>
                   <div style={styles.historyRowItem}>
@@ -239,7 +239,7 @@ const styles: Record<string, React.CSSProperties> = {
   sidebarTitle: {
     fontSize: '18px',
     fontWeight: '500',
-    color: '#f4f4f5',
+    color: '#D4D4D4',
     margin: 0,
     letterSpacing: '-0.3px',
   },
@@ -260,7 +260,7 @@ const styles: Record<string, React.CSSProperties> = {
     transition: 'color 0.15s ease',
   },
   activeNavItemBtn: {
-    color: '#ffffff',
+    color: '#D4D4D4',
     fontWeight: '500',
   },
   rightPane: {
@@ -309,7 +309,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   collectionValue: {
     fontSize: '14px',
-    color: '#e4e4e7',
+    color: '#D4D4D4',
     fontWeight: '400',
   },
   chipsRow: {
@@ -321,7 +321,7 @@ const styles: Record<string, React.CSSProperties> = {
   linkChipBtn: {
     background: 'none',
     border: 'none',
-    color: '#e4e4e7',
+    color: '#D4D4D4',
     fontSize: '13px',
     fontWeight: '400',
     padding: 0,
@@ -336,7 +336,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   infoTextValue: {
     fontSize: '14px',
-    color: '#e4e4e7',
+    color: '#D4D4D4',
   },
   infoTextCode: {
     fontSize: '13px',
@@ -352,7 +352,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     fontSize: '13px',
-    color: '#d4d4d8',
+    color: '#D4D4D4',
   },
   historyStack: {
     display: 'flex',
