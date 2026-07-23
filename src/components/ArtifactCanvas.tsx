@@ -236,6 +236,7 @@ System implementation milestones:
               <Info size={14} style={{ color: '#a1a1aa' }} />
             </button>
 
+            {/* CLEAR LIFECYCLE STATE BADGE */}
             <span
               style={{
                 ...styles.subtleDraftBadge,
@@ -243,9 +244,19 @@ System implementation milestones:
                   ? styles.approvedBadge
                   : approvalStatus === 'rejected'
                   ? styles.rejectedBadge
-                  : {}),
+                  : styles.draftBadge),
               }}
             >
+              <span
+                style={{
+                  ...styles.statusDot,
+                  ...(approvalStatus === 'approved'
+                    ? { backgroundColor: '#4ade80' }
+                    : approvalStatus === 'rejected'
+                    ? { backgroundColor: '#f87171' }
+                    : { backgroundColor: '#fbbf24' }),
+                }}
+              />
               {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
             </span>
 
@@ -326,9 +337,23 @@ System implementation milestones:
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
-              {/* Quiet, Single-Line Property Strip (Created by & Owner) */}
+              {/* Quiet, Single-Line Property Strip with Explicit Lifecycle State */}
               <div style={styles.quietPropertyStrip}>
                 <span style={styles.subtypeLabel}>Decision</span>
+
+                <span style={styles.propDot}>•</span>
+                <span
+                  style={{
+                    ...styles.inlineStateChip,
+                    ...(approvalStatus === 'approved'
+                      ? { color: '#4ade80', backgroundColor: 'rgba(74, 222, 128, 0.1)' }
+                      : approvalStatus === 'rejected'
+                      ? { color: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.1)' }
+                      : { color: '#fbbf24', backgroundColor: 'rgba(251, 191, 36, 0.1)' }),
+                  }}
+                >
+                  {approvalStatus.toUpperCase()}
+                </span>
 
                 <span style={styles.propDot}>•</span>
                 <span style={styles.propVal}>Created by Architecture Agent</span>
@@ -575,18 +600,32 @@ const styles: Record<string, React.CSSProperties> = {
   subtleDraftBadge: {
     fontSize: '12px',
     fontWeight: '500',
-    color: '#a1a1aa',
-    backgroundColor: '#27272a',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
     padding: '4px 10px',
     borderRadius: '12px',
+  },
+  draftBadge: {
+    color: '#fbbf24',
+    backgroundColor: 'rgba(251, 191, 36, 0.12)',
+    border: '1px solid rgba(251, 191, 36, 0.25)',
   },
   approvedBadge: {
     color: '#4ade80',
     backgroundColor: 'rgba(74, 222, 128, 0.15)',
+    border: '1px solid rgba(74, 222, 128, 0.25)',
   },
   rejectedBadge: {
     color: '#f87171',
     backgroundColor: 'rgba(248, 113, 113, 0.15)',
+    border: '1px solid rgba(248, 113, 113, 0.25)',
+  },
+  statusDot: {
+    width: '6px',
+    height: '6px',
+    borderRadius: '50%',
+    display: 'inline-block',
   },
   tubeDiffBtn: {
     background: 'none',
@@ -709,6 +748,13 @@ const styles: Record<string, React.CSSProperties> = {
   subtypeLabel: {
     color: '#a1a1aa',
     fontWeight: '500',
+  },
+  inlineStateChip: {
+    fontSize: '10px',
+    fontWeight: '700',
+    letterSpacing: '0.6px',
+    padding: '2px 6px',
+    borderRadius: '4px',
   },
   propVal: {
     color: '#71717a',
