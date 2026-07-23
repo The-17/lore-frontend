@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -311,15 +311,21 @@ System implementation milestones:
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* QUIET CANVAS HEADER */}
+            {/* CANVAS HEADER WITH GLYPH GRAMMAR, PROMINENT TYPE PILL, & STEWARD TERMINOLOGY */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
-              {/* Single-Line Property Strip containing Subtype, Lifecycle State, Attribution, & ID */}
+              {/* Single-Line Property Strip: Subtype Pill + Lifecycle State + Evolution Timeline + Principals */}
               <div style={styles.quietPropertyStrip}>
-                <span style={styles.subtypeLabel}>Decision</span>
+                
+                {/* PROMINENT SUBTYPE PILL WITH LORE ARTIFACT GLYPH ◈ */}
+                <span style={styles.prominentSubtypePill}>
+                  <span style={styles.glyphSymbol}>◈</span> Decision
+                </span>
 
                 <span style={styles.propDot}>•</span>
+                
+                {/* LIFECYCLE STATE CHIP */}
                 <span
                   style={{
                     ...styles.inlineStateChip,
@@ -334,10 +340,30 @@ System implementation milestones:
                 </span>
 
                 <span style={styles.propDot}>•</span>
-                <span style={styles.propVal}>Created by Architecture Agent</span>
+
+                {/* EVOLUTION HISTORY TIMELINE LINK */}
+                <div style={styles.historyEvolutionChip} onClick={() => setShowDiff(!showDiff)} title="View version evolution history">
+                  <Clock size={11} style={{ color: '#a1a1aa', marginRight: '4px' }} />
+                  <span style={{ color: '#a1a1aa', fontWeight: '500' }}>History</span>
+                  <span style={styles.historyPillStep}>v1</span>
+                  <span style={styles.historyArrow}>→</span>
+                  <span style={styles.historyPillStep}>v2</span>
+                  <span style={styles.historyArrow}>→</span>
+                  <span style={styles.historyPillCurrent}>v3</span>
+                </div>
 
                 <span style={styles.propDot}>•</span>
-                <span style={styles.propVal}>Owner: Wisdom</span>
+
+                {/* PRINCIPALS WITH GLYPH ◎ (Created by & Steward) */}
+                <span style={styles.propVal}>
+                  <span style={styles.glyphPrincipal}>◎</span> Created by Architecture Agent
+                </span>
+
+                <span style={styles.propDot}>•</span>
+                
+                <span style={styles.propVal}>
+                  <span style={styles.glyphPrincipal}>◎</span> Steward: Wisdom
+                </span>
 
                 <span style={styles.propDot}>•</span>
                 <code style={styles.propCode}>7087ed86</code>
@@ -350,7 +376,7 @@ System implementation milestones:
                   <button onClick={() => setShowDiff(false)} style={styles.backToDocBtn}>
                     <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Return to Content
                   </button>
-                  <span style={{ color: '#8b949e', fontSize: '12px' }}>Unified Line Diff View</span>
+                  <span style={{ color: '#8b949e', fontSize: '12px' }}>Unified Version Line Diff (v2 → v3)</span>
                 </div>
                 <div style={styles.diffLinesList}>
                   {sampleGitHubDiff.map((line, idx) => (
@@ -488,15 +514,19 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* Minimal Lineage Footer */}
+        {/* Minimal Lineage Footer with Relation Glyph ↗ */}
         <div style={styles.footerRow}>
           <div style={styles.footerCenterItem}>
-            <span style={styles.footerLabel}>Derived from:</span>
+            <span style={styles.footerLabel}>
+              <span style={styles.glyphRelation}>↗</span> Derived from:
+            </span>
             <span style={styles.footerValue}>[PRD Lore v2]</span>
           </div>
 
           <div style={styles.footerRightItem}>
-            <span style={styles.footerLabel}>References:</span>
+            <span style={styles.footerLabel}>
+              <span style={styles.glyphRelation}>↗</span> References:
+            </span>
             <span style={styles.footerValue}>[Django Ninja Patterns]</span>
             <span style={styles.countBadge}>+2</span>
           </div>
@@ -689,10 +719,34 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
     fontSize: '13px',
     color: '#71717a',
+    flexWrap: 'wrap',
   },
-  subtypeLabel: {
-    color: '#a1a1aa',
-    fontWeight: '500',
+  prominentSubtypePill: {
+    fontSize: '12px',
+    fontWeight: '600',
+    color: '#f4f4f5',
+    backgroundColor: '#18181b',
+    border: '1px solid #3f3f46',
+    borderRadius: '6px',
+    padding: '3px 8px',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  glyphSymbol: {
+    color: '#38bdf8',
+    fontSize: '13px',
+    fontWeight: '700',
+  },
+  glyphPrincipal: {
+    color: '#a78bfa',
+    marginRight: '3px',
+    fontSize: '12px',
+  },
+  glyphRelation: {
+    color: '#34d399',
+    marginRight: '4px',
+    fontSize: '12px',
   },
   inlineStateChip: {
     fontSize: '10px',
@@ -715,6 +769,32 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#f87171',
     backgroundColor: 'rgba(248, 113, 113, 0.12)',
     border: '1px solid rgba(248, 113, 113, 0.25)',
+  },
+  historyEvolutionChip: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '3px',
+    backgroundColor: '#18181b',
+    border: '1px solid #27272a',
+    borderRadius: '12px',
+    padding: '2px 8px',
+    fontSize: '11px',
+    cursor: 'pointer',
+    userSelect: 'none',
+  },
+  historyPillStep: {
+    color: '#71717a',
+    fontSize: '11px',
+    fontWeight: '500',
+  },
+  historyArrow: {
+    color: '#3f3f46',
+    fontSize: '10px',
+  },
+  historyPillCurrent: {
+    color: '#f4f4f5',
+    fontWeight: '700',
+    fontSize: '11px',
   },
   propVal: {
     color: '#71717a',
