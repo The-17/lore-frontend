@@ -311,16 +311,16 @@ System implementation milestones:
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* CANVAS HEADER WITH GLYPH GRAMMAR, PROMINENT TYPE PILL, & STEWARD TERMINOLOGY */}
+            {/* CANVAS HEADER WITH SUBTYPE PILL, STEWARD TERMINOLOGY, & HISTORY CHIP */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
               {/* Single-Line Property Strip: Subtype Pill + Lifecycle State + Evolution Timeline + Principals */}
               <div style={styles.quietPropertyStrip}>
                 
-                {/* PROMINENT SUBTYPE PILL WITH LORE ARTIFACT GLYPH ◈ */}
+                {/* SUBTYPE PILL */}
                 <span style={styles.prominentSubtypePill}>
-                  <span style={styles.glyphSymbol}>◈</span> Decision
+                  Decision
                 </span>
 
                 <span style={styles.propDot}>•</span>
@@ -341,7 +341,7 @@ System implementation milestones:
 
                 <span style={styles.propDot}>•</span>
 
-                {/* EVOLUTION HISTORY TIMELINE LINK */}
+                {/* EVOLUTION HISTORY TIMELINE CHIP */}
                 <div style={styles.historyEvolutionChip} onClick={() => setShowDiff(!showDiff)} title="View version evolution history">
                   <Clock size={11} style={{ color: '#a1a1aa', marginRight: '4px' }} />
                   <span style={{ color: '#a1a1aa', fontWeight: '500' }}>History</span>
@@ -354,16 +354,12 @@ System implementation milestones:
 
                 <span style={styles.propDot}>•</span>
 
-                {/* PRINCIPALS WITH GLYPH ◎ (Created by & Steward) */}
-                <span style={styles.propVal}>
-                  <span style={styles.glyphPrincipal}>◎</span> Created by Architecture Agent
-                </span>
+                {/* PRINCIPALS (Created by & Steward) */}
+                <span style={styles.propVal}>Created by Architecture Agent</span>
 
                 <span style={styles.propDot}>•</span>
                 
-                <span style={styles.propVal}>
-                  <span style={styles.glyphPrincipal}>◎</span> Steward: Wisdom
-                </span>
+                <span style={styles.propVal}>Steward: Wisdom</span>
 
                 <span style={styles.propDot}>•</span>
                 <code style={styles.propCode}>7087ed86</code>
@@ -514,19 +510,15 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* Minimal Lineage Footer with Relation Glyph ↗ */}
+        {/* Minimal Lineage Footer */}
         <div style={styles.footerRow}>
           <div style={styles.footerCenterItem}>
-            <span style={styles.footerLabel}>
-              <span style={styles.glyphRelation}>↗</span> Derived from:
-            </span>
+            <span style={styles.footerLabel}>Derived from:</span>
             <span style={styles.footerValue}>[PRD Lore v2]</span>
           </div>
 
           <div style={styles.footerRightItem}>
-            <span style={styles.footerLabel}>
-              <span style={styles.glyphRelation}>↗</span> References:
-            </span>
+            <span style={styles.footerLabel}>References:</span>
             <span style={styles.footerValue}>[Django Ninja Patterns]</span>
             <span style={styles.countBadge}>+2</span>
           </div>
@@ -731,22 +723,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '3px 8px',
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '4px',
-  },
-  glyphSymbol: {
-    color: '#38bdf8',
-    fontSize: '13px',
-    fontWeight: '700',
-  },
-  glyphPrincipal: {
-    color: '#a78bfa',
-    marginRight: '3px',
-    fontSize: '12px',
-  },
-  glyphRelation: {
-    color: '#34d399',
-    marginRight: '4px',
-    fontSize: '12px',
   },
   inlineStateChip: {
     fontSize: '10px',
