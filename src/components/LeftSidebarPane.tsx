@@ -144,8 +144,8 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
 const styles: Record<string, React.CSSProperties> = {
   container: {
     height: '100vh',
-    backgroundColor: tokens.colors.bgApp,
-    borderRight: '1px solid rgba(255, 255, 255, 0.05)',
+    backgroundColor: '#242424',
+    borderRight: 'none',
     display: 'flex',
     flexDirection: 'column',
     padding: '32px 16px 24px 16px',
