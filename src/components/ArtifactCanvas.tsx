@@ -236,7 +236,7 @@ System implementation milestones:
               <Info size={14} style={{ color: '#a1a1aa' }} />
             </button>
 
-            {/* CLEAR LIFECYCLE STATE BADGE */}
+            {/* ORIGINAL MONOCHROMATIC LIFECYCLE BADGE */}
             <span
               style={{
                 ...styles.subtleDraftBadge,
@@ -254,7 +254,7 @@ System implementation milestones:
                     ? { backgroundColor: '#4ade80' }
                     : approvalStatus === 'rejected'
                     ? { backgroundColor: '#f87171' }
-                    : { backgroundColor: '#fbbf24' }),
+                    : { backgroundColor: '#a1a1aa' }),
                 }}
               />
               {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
@@ -337,23 +337,9 @@ System implementation milestones:
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
-              {/* Quiet, Single-Line Property Strip with Explicit Lifecycle State */}
+              {/* Quiet Single-Line Property Strip */}
               <div style={styles.quietPropertyStrip}>
                 <span style={styles.subtypeLabel}>Decision</span>
-
-                <span style={styles.propDot}>•</span>
-                <span
-                  style={{
-                    ...styles.inlineStateChip,
-                    ...(approvalStatus === 'approved'
-                      ? { color: '#4ade80', backgroundColor: 'rgba(74, 222, 128, 0.1)' }
-                      : approvalStatus === 'rejected'
-                      ? { color: '#f87171', backgroundColor: 'rgba(248, 113, 113, 0.1)' }
-                      : { color: '#fbbf24', backgroundColor: 'rgba(251, 191, 36, 0.1)' }),
-                  }}
-                >
-                  {approvalStatus.toUpperCase()}
-                </span>
 
                 <span style={styles.propDot}>•</span>
                 <span style={styles.propVal}>Created by Architecture Agent</span>
@@ -607,9 +593,9 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '12px',
   },
   draftBadge: {
-    color: '#fbbf24',
-    backgroundColor: 'rgba(251, 191, 36, 0.12)',
-    border: '1px solid rgba(251, 191, 36, 0.25)',
+    color: '#a1a1aa',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
   },
   approvedBadge: {
     color: '#4ade80',
@@ -748,13 +734,6 @@ const styles: Record<string, React.CSSProperties> = {
   subtypeLabel: {
     color: '#a1a1aa',
     fontWeight: '500',
-  },
-  inlineStateChip: {
-    fontSize: '10px',
-    fontWeight: '700',
-    letterSpacing: '0.6px',
-    padding: '2px 6px',
-    borderRadius: '4px',
   },
   propVal: {
     color: '#71717a',
