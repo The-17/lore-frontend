@@ -286,7 +286,7 @@ System implementation milestones:
               <span
                 style={{
                   ...styles.bubblyText,
-                  ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
+                  ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
                 }}
               >
                 Approve changes
@@ -311,29 +311,29 @@ System implementation milestones:
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* CANVAS HEADER WITH SUBTYPE PILL & STEWARD TERMINOLOGY (CLEAN NO-HISTORY STRIP) */}
+            {/* CANVAS HEADER WITH NO-BG SUBTYPE TEXT & DRAFT PILL */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
-              {/* Single-Line Property Strip: Subtype Pill + Lifecycle State + Principals + ID */}
+              {/* Single-Line Property Strip */}
               <div style={styles.quietPropertyStrip}>
                 
-                {/* SUBTYPE PILL */}
-                <span style={styles.prominentSubtypePill}>
+                {/* SUBTYPE TEXT (NO BACKGROUND BOX) */}
+                <span style={styles.noBgSubtypeText}>
                   Decision
                 </span>
 
                 <span style={styles.propDot}>•</span>
                 
-                {/* LIFECYCLE STATE CHIP */}
+                {/* LIFECYCLE STATE PILL (WITH BORDER RADIUS) */}
                 <span
                   style={{
-                    ...styles.inlineStateChip,
+                    ...styles.inlineStatePill,
                     ...(approvalStatus === 'approved'
-                      ? styles.approvedChip
+                      ? styles.approvedPill
                       : approvalStatus === 'rejected'
-                      ? styles.rejectedChip
-                      : styles.draftChip),
+                      ? styles.rejectedPill
+                      : styles.draftPill),
                   }}
                 >
                   {approvalStatus.toUpperCase()}
@@ -619,8 +619,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '4px 7px',
-    borderRadius: '12px',
+    padding: '4px 8px',
+    borderRadius: '16px',
     fontSize: '12px',
     fontWeight: '600',
     transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -635,7 +635,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#7f1d1d',
     color: '#fca5a5',
     borderColor: '#991b1b',
-    padding: '4px 10px',
+    padding: '4px 12px',
   },
   hoveredApproveBtn: {
     backgroundColor: '#ffffff',
@@ -659,7 +659,7 @@ const styles: Record<string, React.CSSProperties> = {
   bubblyTextVisible: {
     maxWidth: '140px',
     opacity: 1,
-    marginLeft: '4px',
+    marginLeft: '5px',
   },
   tubeResetBtn: {
     backgroundColor: '#27272a',
@@ -716,35 +716,31 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#71717a',
     flexWrap: 'wrap',
   },
-  prominentSubtypePill: {
-    fontSize: '12px',
+  noBgSubtypeText: {
+    fontSize: '13px',
     fontWeight: '600',
-    color: '#f4f4f5',
-    backgroundColor: '#18181b',
-    border: '1px solid #3f3f46',
-    borderRadius: '6px',
-    padding: '3px 8px',
-    display: 'inline-flex',
-    alignItems: 'center',
+    color: '#a1a1aa',
   },
-  inlineStateChip: {
+  inlineStatePill: {
     fontSize: '10px',
     fontWeight: '700',
     letterSpacing: '0.6px',
-    padding: '2px 6px',
-    borderRadius: '4px',
+    padding: '3px 10px',
+    borderRadius: '12px',
+    display: 'inline-flex',
+    alignItems: 'center',
   },
-  draftChip: {
+  draftPill: {
     color: '#a1a1aa',
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
     border: '1px solid rgba(255, 255, 255, 0.1)',
   },
-  approvedChip: {
+  approvedPill: {
     color: '#4ade80',
     backgroundColor: 'rgba(74, 222, 128, 0.12)',
     border: '1px solid rgba(74, 222, 128, 0.25)',
   },
-  rejectedChip: {
+  rejectedPill: {
     color: '#f87171',
     backgroundColor: 'rgba(248, 113, 113, 0.12)',
     border: '1px solid rgba(248, 113, 113, 0.25)',
