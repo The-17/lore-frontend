@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, ShieldCheck, GitCommit, UserCheck, Cpu, ArrowUpRight } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -30,9 +30,8 @@ const renderSyntaxHighlightedCode = (rawCode: string, lang: string) => {
       if (trimmed.startsWith('#') || trimmed.startsWith('"""')) {
         lineContent = <span style={{ color: '#6b7280', fontStyle: 'italic' }}>{line}</span>;
       } else {
-        // Simple Python tokenizer for syntax highlighting
-        const tokens = line.split(/(\s+|[(),:[\]"'])/);
-        lineContent = tokens.map((token, tokIdx) => {
+        const tokensList = line.split(/(\s+|[(),:[\]"'])/);
+        lineContent = tokensList.map((token, tokIdx) => {
           if (['from', 'import', 'def', 'return', 'class', 'if', 'else', 'try', 'except', 'with', 'as', 'for', 'in'].includes(token)) {
             return <span key={tokIdx} style={{ color: '#f472b6', fontWeight: '500' }}>{token}</span>;
           }
@@ -88,7 +87,6 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
 
-  // Comprehensive Demo Markdown Content covering ALL markdown features including ==highlight==
   const markdownText = `# System Architecture & Lore Contracts
 
 Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas, ==zero-trust token authentication==, and [[Agent Token Security]] for auth headers.
@@ -178,18 +176,9 @@ System implementation milestones:
 - [x] Auto-extracted [[Wiki-Link]] dependencies and relationship lineage
 - [ ] Bring-Your-Own-Backend endpoint configuration with token auth
 - [ ] Multi-agent collaborative memory graph
+`;
 
----
-
-## 5. Architectural Diagram Asset
-
-![System Architecture Overview](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1000&q=80)
-
-Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit amet consectetur adipiscing elit.`;
-
-  // Parser for both WikiLinks [[Title]] and Highlighted Text ==Text==
   const parseRichInlineMarkdown = (text: string) => {
-    // First split by WikiLinks
     const wikiParts = text.split(/(\[\[.*?\]\])/g);
     
     return wikiParts.map((part, i) => {
@@ -204,7 +193,6 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
         );
       }
       
-      // Next split non-wiki string by ==highlight==
       const highlightParts = part.split(/(==.*?==)/g);
       return highlightParts.map((subPart, j) => {
         if (subPart.startsWith('==') && subPart.endsWith('==')) {
@@ -222,7 +210,6 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
 
   const sanitizedHtml = DOMPurify.sanitize(markdownText);
 
-  // Standard GitHub Unified Diff representation
   const sampleGitHubDiff = [
     { type: 'header', text: '@@ -4,6 +4,8 @@' },
     { type: 'deletion', text: '- Standardized API routes will use DRF endpoints.' },
@@ -234,107 +221,169 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
 
   return (
     <div style={styles.container}>
-      {/* Main Card (#292929) - Zero Radius, Zero Borders */}
+      {/* Solid Workspace Card (#202024) - Sharp Borders, Paper Infrastructure Aesthetic */}
       <div style={styles.card}>
-        {/* Absolute Top-Left Back Chevron */}
-        <button style={styles.backChevronBtn} title="Back">
-          <ChevronLeft size={20} />
-        </button>
-
-        {/* Absolute Top-Right Glassmorphic Floating Header Action Tube Pill */}
-        <div style={styles.glassHeaderActionTube}>
-          {/* 1. Info Button First */}
-          <button
-            onClick={() => setIsInfoOpen(true)}
-            style={styles.infoPillBtn}
-            title="Inspect Artifact Object Details (Lineage, Governance, Metrics)"
-          >
-            <Info size={14} style={{ color: tokens.colors.textSecondary }} />
-          </button>
-
-          {/* 2. Status Badge */}
-          <span
-            style={{
-              ...styles.subtleDraftBadge,
-              ...(approvalStatus === 'approved'
-                ? styles.approvedBadge
-                : approvalStatus === 'rejected'
-                ? styles.rejectedBadge
-                : {}),
-            }}
-          >
-            {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
-          </span>
-
-          {/* 3. Diff Stat Button inside Pill */}
-          <button
-            onClick={() => setShowDiff(!showDiff)}
-            style={styles.tubeDiffBtn}
-            title="Toggle Line Diffs"
-          >
-            <span style={{ color: tokens.colors.textSecondary, fontSize: '13px', fontWeight: '500' }}>v3</span>
-            <span style={styles.addStatBadge}>+12</span>
-            <span style={styles.delStatBadge}>-3</span>
-          </button>
-
-          {/* Independent Bubbly Micro-Interaction Governance Action Buttons */}
-          {approvalStatus === 'draft' && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              {/* Reject Icon-to-Text Smooth Expansion Button */}
-              <button
-                onClick={() => setApprovalStatus('rejected')}
-                onMouseEnter={() => setIsRejectHovered(true)}
-                onMouseLeave={() => setIsRejectHovered(false)}
-                style={{
-                  ...styles.bubblyActionBtn,
-                  ...(isRejectHovered ? styles.hoveredRejectBtn : styles.restActionBtn),
-                }}
-                title="Reject artifact changes"
-              >
-                <X size={14} style={{ flexShrink: 0 }} />
-                <span
-                  style={{
-                    ...styles.bubblyText,
-                    ...(isRejectHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
-                  }}
-                >
-                  Reject
-                </span>
+        
+        {/* TOP LEVEL: ARTIFACT-FIRST IDENTITY & GOVERNANCE BLOCK */}
+        <div style={styles.artifactObjectHeader}>
+          {/* Row 1: Object Title, Subtype Badge & Action Pills */}
+          <div style={styles.headerPrimaryRow}>
+            <div style={styles.titleGroup}>
+              <button style={styles.backChevronBtn} title="Back">
+                <ChevronLeft size={18} />
               </button>
-
-              {/* Approve Icon-to-Text Smooth Expansion Button */}
-              <button
-                onClick={() => setApprovalStatus('approved')}
-                onMouseEnter={() => setIsApproveHovered(true)}
-                onMouseLeave={() => setIsApproveHovered(false)}
-                style={{
-                  ...styles.bubblyActionBtn,
-                  ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
-                }}
-                title="Approve artifact changes"
-              >
-                <Check size={14} style={{ flexShrink: 0 }} />
-                <span
-                  style={{
-                    ...styles.bubblyText,
-                    ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
-                  }}
-                >
-                  Approve changes
-                </span>
-              </button>
+              <span style={styles.objectSubtypeChip}>Decision / ADR</span>
+              <h1 style={styles.artifactObjectTitle}>System Architecture & Lore Contracts</h1>
             </div>
-          )}
 
-          {approvalStatus !== 'draft' && (
-            <button
-              onClick={() => setApprovalStatus('draft')}
-              style={styles.tubeResetBtn}
-              title="Reset approval state back to Draft"
-            >
-              Reopen review
-            </button>
-          )}
+            {/* Solid Floating Action Tube */}
+            <div style={styles.solidActionTube}>
+              <button
+                onClick={() => setIsInfoOpen(true)}
+                style={styles.infoPillBtn}
+                title="Inspect Artifact Object Details (Lineage, Governance, Metrics)"
+              >
+                <Info size={14} style={{ color: tokens.colors.textSecondary, marginRight: '5px' }} />
+                <span style={styles.infoPillText}>Info</span>
+              </button>
+
+              <button
+                onClick={() => setShowDiff(!showDiff)}
+                style={styles.tubeDiffBtn}
+                title="Toggle Line Diffs"
+              >
+                <GitCommit size={13} style={{ color: tokens.colors.textSecondary, marginRight: '4px' }} />
+                <span style={{ color: tokens.colors.textSecondary, fontSize: '13px', fontWeight: '500' }}>v3</span>
+                <span style={styles.addStatBadge}>+12</span>
+                <span style={styles.delStatBadge}>-3</span>
+              </button>
+
+              {/* Bubbly Micro-Interaction Governance Action Buttons */}
+              {approvalStatus === 'draft' && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <button
+                    onClick={() => setApprovalStatus('rejected')}
+                    onMouseEnter={() => setIsRejectHovered(true)}
+                    onMouseLeave={() => setIsRejectHovered(false)}
+                    style={{
+                      ...styles.bubblyActionBtn,
+                      ...(isRejectHovered ? styles.hoveredRejectBtn : styles.restActionBtn),
+                    }}
+                    title="Reject artifact changes"
+                  >
+                    <X size={14} style={{ flexShrink: 0 }} />
+                    <span
+                      style={{
+                        ...styles.bubblyText,
+                        ...(isRejectHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                      }}
+                    >
+                      Reject
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={() => setApprovalStatus('approved')}
+                    onMouseEnter={() => setIsApproveHovered(true)}
+                    onMouseLeave={() => setIsApproveHovered(false)}
+                    style={{
+                      ...styles.bubblyActionBtn,
+                      ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
+                    }}
+                    title="Approve artifact changes"
+                  >
+                    <Check size={14} style={{ flexShrink: 0 }} />
+                    <span
+                      style={{
+                        ...styles.bubblyText,
+                        ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                      }}
+                    >
+                      Approve changes
+                    </span>
+                  </button>
+                </div>
+              )}
+
+              {approvalStatus !== 'draft' && (
+                <button
+                  onClick={() => setApprovalStatus('draft')}
+                  style={styles.tubeResetBtn}
+                  title="Reset approval state back to Draft"
+                >
+                  Reopen review
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Row 2: Persistent Metadata & Governance Attribution */}
+          <div style={styles.headerMetadataRow}>
+            <div style={styles.metadataItem}>
+              <span style={styles.metadataLabel}>ID:</span>
+              <code style={styles.metadataCode}>7087ed86-1490</code>
+            </div>
+
+            <div style={styles.metadataItem}>
+              <span style={styles.metadataLabel}>State:</span>
+              <span
+                style={{
+                  ...styles.statusChip,
+                  ...(approvalStatus === 'approved'
+                    ? styles.statusApproved
+                    : approvalStatus === 'rejected'
+                    ? styles.statusRejected
+                    : styles.statusDraft),
+                }}
+              >
+                {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
+              </span>
+            </div>
+
+            <div style={styles.metadataItem}>
+              <Cpu size={12} style={{ color: '#a78bfa', marginRight: '4px' }} />
+              <span style={styles.metadataLabel}>Author:</span>
+              <span style={styles.metadataValue}>Architecture Agent</span>
+            </div>
+
+            <div style={styles.metadataItem}>
+              <UserCheck size={12} style={{ color: '#38bdf8', marginRight: '4px' }} />
+              <span style={styles.metadataLabel}>Owner:</span>
+              <span style={styles.metadataValue}>Wisdom (Human)</span>
+            </div>
+
+            <div style={styles.policyPassBadge}>
+              <ShieldCheck size={12} style={{ color: '#4ade80', marginRight: '4px' }} />
+              <span>Policy Check: Passed</span>
+            </div>
+          </div>
+
+          {/* Row 3: Relational Graph Lineage Context */}
+          <div style={styles.graphLineageRow}>
+            <div style={styles.lineageSegment}>
+              <span style={styles.lineageLabel}>Derived From:</span>
+              <span style={styles.lineageLink} onClick={() => onSelectWikiLink && onSelectWikiLink('PRD Lore v2')}>
+                [[PRD Lore v2]] <ArrowUpRight size={11} />
+              </span>
+            </div>
+
+            <div style={styles.lineageDivider}>•</div>
+
+            <div style={styles.lineageSegment}>
+              <span style={styles.lineageLabel}>Used In:</span>
+              <span style={styles.lineageLink} onClick={() => onSelectWikiLink && onSelectWikiLink('Django Ninja Patterns')}>
+                [[Django Ninja Patterns]] <ArrowUpRight size={11} />
+              </span>
+              <span style={styles.lineageLink} onClick={() => onSelectWikiLink && onSelectWikiLink('Agent Token Security')}>
+                [[Agent Token Security]] <ArrowUpRight size={11} />
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION DIVIDER */}
+        <div style={styles.sectionDivider}>
+          <span style={styles.sectionDividerText}>CONTENT REPRESENTATION</span>
         </div>
 
         {/* Centered Typography Reading Column */}
@@ -344,9 +393,9 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
               <div style={styles.githubDiffViewer}>
                 <div style={styles.diffHeaderBar}>
                   <button onClick={() => setShowDiff(false)} style={styles.backToDocBtn}>
-                    <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Return to Document
+                    <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Return to Content
                   </button>
-                  <span style={{ color: '#8b949e', fontSize: '12px' }}>Unified GitHub Diff View</span>
+                  <span style={{ color: '#8b949e', fontSize: '12px' }}>Unified Line Diff View</span>
                 </div>
                 <div style={styles.diffLinesList}>
                   {sampleGitHubDiff.map((line, idx) => (
@@ -383,7 +432,6 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                     else if (text.includes('2')) id = '2-backend-api-contracts--endpoints';
                     else if (text.includes('3')) id = '3-subtype-matrix--governance';
                     else if (text.includes('4')) id = '4-key-roadmap-tasks--checklists';
-                    else if (text.includes('5')) id = '5-architectural-diagram-asset';
                     return (
                       <h2 id={id} style={styles.heading2}>
                         {children}
@@ -418,12 +466,6 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                       )}
                     </li>
                   ),
-                  img: ({ src, alt }) => (
-                    <figure style={styles.figure}>
-                      <img src={src} alt={alt} style={styles.image} />
-                      {alt && <figcaption style={styles.figcaption}>{alt}</figcaption>}
-                    </figure>
-                  ),
                   code: ({ inline, className, children }: any) => {
                     const match = /language-(\w+)/.exec(className || '');
                     const lang = match ? match[1] : '';
@@ -433,7 +475,6 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
                       return <MermaidRenderer chart={rawCode} />;
                     }
 
-                    // A code block has a language class OR multiline text. Single-line backticked words (e.g. inside tables) are inline code.
                     const isMultiLine = rawCode.includes('\n');
                     const isInlineCode = inline || (!match && !isMultiLine);
 
@@ -494,17 +535,13 @@ Ad litora torquent per conubia nostra inceptos himenaeos. Lorem ipsum dolor sit 
 
         {/* Footer Provenance Row */}
         <div style={styles.footerRow}>
-          {/* Centered: Derived from */}
           <div style={styles.footerCenterItem}>
-            <span style={styles.footerLabel}>Derived from:</span>
-            <span style={styles.footerValue}>[PRD Lore v2]</span>
+            <span style={styles.footerLabel}>Lore Artifact Plane v2.4</span>
           </div>
 
-          {/* Far Right: References */}
           <div style={styles.footerRightItem}>
-            <span style={styles.footerLabel}>References:</span>
-            <span style={styles.footerValue}>[Django Ninja Patterns]</span>
-            <span style={styles.countBadge}>+2</span>
+            <span style={styles.footerLabel}>Status:</span>
+            <span style={styles.footerValue}>{approvalStatus.toUpperCase()}</span>
           </div>
         </div>
       </div>
@@ -528,83 +565,77 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     display: 'flex',
     overflow: 'hidden',
-    backgroundColor: tokens.colors.bgApp,
+    backgroundColor: '#18181b',
   },
   card: {
     width: '100%',
     height: '100vh',
-    maxWidth: '100%',
-    backgroundColor: tokens.colors.bgCard,
-    borderRadius: tokens.radii.none,
+    backgroundColor: '#202024',
+    borderRadius: '0px',
     border: 'none',
-    padding: '20px 48px 16px 48px',
+    padding: '24px 48px 16px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    boxShadow: 'none',
     overflow: 'hidden',
     margin: 0,
     position: 'relative',
   },
+  artifactObjectHeader: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '14px',
+    paddingBottom: '20px',
+    borderBottom: '1px solid #27272a',
+    flexShrink: 0,
+  },
+  headerPrimaryRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  titleGroup: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
   backChevronBtn: {
-    position: 'absolute',
-    left: '48px',
-    top: '32px',
     background: 'none',
-    border: 'none',
-    color: tokens.colors.textDim,
+    border: '1px solid #27272a',
+    borderRadius: '6px',
+    color: '#a1a1aa',
     cursor: 'pointer',
-    padding: '4px',
+    padding: '5px',
     display: 'flex',
     alignItems: 'center',
-    zIndex: 10,
+    justifyContent: 'center',
   },
-  glassHeaderActionTube: {
-    position: 'absolute',
-    right: '48px',
-    top: '24px',
-    backgroundColor: tokens.colors.bgGlass,
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
-    border: `1px solid ${tokens.colors.borderGlass}`,
-    boxShadow: tokens.shadows.glass,
-    borderRadius: tokens.radii.pill,
-    padding: '6px 12px',
+  objectSubtypeChip: {
+    fontSize: '11px',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '0.6px',
+    color: '#a1a1aa',
+    backgroundColor: '#27272a',
+    padding: '3px 8px',
+    borderRadius: '4px',
+    border: '1px solid #3f3f46',
+  },
+  artifactObjectTitle: {
+    fontSize: '22px',
+    fontWeight: '600',
+    color: '#f4f4f5',
+    margin: 0,
+    letterSpacing: '-0.3px',
+  },
+  solidActionTube: {
+    backgroundColor: '#18181b',
+    border: '1px solid #27272a',
+    borderRadius: '24px',
+    padding: '5px 10px',
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
-    zIndex: 10,
-  },
-  subtleDraftBadge: {
-    fontSize: '13px',
-    fontWeight: '500',
-    color: tokens.colors.textSecondary,
-    backgroundColor: tokens.colors.badgeDraftBg,
-    padding: '6px 14px',
-    borderRadius: tokens.radii.lg,
-    display: 'inline-flex',
-    alignItems: 'center',
-    transition: 'all 0.2s ease',
-  },
-  approvedBadge: {
-    color: '#3fb950',
-    backgroundColor: 'rgba(46, 160, 67, 0.15)',
-    border: '1px solid rgba(46, 160, 67, 0.25)',
-  },
-  rejectedBadge: {
-    color: '#f85149',
-    backgroundColor: 'rgba(248, 81, 73, 0.15)',
-    border: '1px solid rgba(248, 81, 73, 0.25)',
-  },
-  tubeDiffBtn: {
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '6px 10px',
-    borderRadius: '8px',
+    gap: '8px',
   },
   infoPillBtn: {
     background: 'none',
@@ -612,61 +643,73 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: '6px',
-    borderRadius: '8px',
+    padding: '5px 8px',
+    borderRadius: '12px',
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    transition: 'all 0.15s ease',
+  },
+  infoPillText: {
+    fontSize: '12px',
+    fontWeight: '500',
+    color: '#a1a1aa',
+  },
+  tubeDiffBtn: {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '5px 8px',
+    borderRadius: '6px',
   },
   addStatBadge: {
-    color: tokens.colors.diffAddText,
-    backgroundColor: tokens.colors.diffAddBg,
-    padding: '3px 7px',
-    borderRadius: tokens.radii.sm,
-    fontSize: '12px',
+    color: '#4ade80',
+    backgroundColor: 'rgba(74, 222, 128, 0.12)',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontSize: '11px',
     fontWeight: '600',
   },
   delStatBadge: {
-    color: tokens.colors.diffDelText,
-    backgroundColor: tokens.colors.diffDelBg,
-    padding: '3px 7px',
-    borderRadius: tokens.radii.sm,
-    fontSize: '12px',
+    color: '#f87171',
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontSize: '11px',
     fontWeight: '600',
   },
   bubblyActionBtn: {
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    border: '1px solid #3f3f46',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '6px 9px',
-    borderRadius: '16px',
-    fontSize: '13px',
+    padding: '5px 8px',
+    borderRadius: '14px',
+    fontSize: '12px',
     fontWeight: '600',
     transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    boxShadow: 'none',
   },
   restActionBtn: {
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    color: tokens.colors.textSecondary,
+    backgroundColor: '#27272a',
+    color: '#a1a1aa',
   },
   hoveredRejectBtn: {
-    backgroundColor: '#f85149',
-    color: '#ffffff',
-    borderColor: '#f85149',
-    padding: '6px 14px',
+    backgroundColor: '#7f1d1d',
+    color: '#fca5a5',
+    borderColor: '#991b1b',
+    padding: '5px 12px',
   },
   hoveredApproveBtn: {
     backgroundColor: '#ffffff',
     color: '#000000',
     borderColor: '#ffffff',
-    padding: '6px 16px',
+    padding: '5px 14px',
   },
   bubblyText: {
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '600',
     transition: 'max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, margin-left 0.25s ease',
     overflow: 'hidden',
@@ -681,17 +724,129 @@ const styles: Record<string, React.CSSProperties> = {
   bubblyTextVisible: {
     maxWidth: '140px',
     opacity: 1,
-    marginLeft: '6px',
+    marginLeft: '5px',
   },
   tubeResetBtn: {
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    color: tokens.colors.textSecondary,
-    padding: '6px 14px',
-    borderRadius: '16px',
+    backgroundColor: '#27272a',
+    border: '1px solid #3f3f46',
+    color: '#a1a1aa',
+    padding: '5px 12px',
+    borderRadius: '14px',
     fontSize: '12px',
     fontWeight: '500',
     cursor: 'pointer',
+  },
+  headerMetadataRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '20px',
+    fontSize: '13px',
+  },
+  metadataItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  metadataLabel: {
+    color: '#71717a',
+    fontSize: '12px',
+    fontWeight: '500',
+  },
+  metadataValue: {
+    color: '#f4f4f5',
+    fontWeight: '500',
+    fontSize: '13px',
+  },
+  metadataCode: {
+    backgroundColor: '#18181b',
+    color: '#a1a1aa',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontFamily: 'monospace',
+    fontSize: '12px',
+    border: '1px solid #27272a',
+  },
+  statusChip: {
+    fontSize: '11px',
+    fontWeight: '600',
+    padding: '2px 8px',
+    borderRadius: '4px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+  },
+  statusDraft: {
+    backgroundColor: '#27272a',
+    color: '#a1a1aa',
+    border: '1px solid #3f3f46',
+  },
+  statusApproved: {
+    backgroundColor: 'rgba(74, 222, 128, 0.15)',
+    color: '#4ade80',
+    border: '1px solid rgba(74, 222, 128, 0.3)',
+  },
+  statusRejected: {
+    backgroundColor: 'rgba(248, 113, 113, 0.15)',
+    color: '#f87171',
+    border: '1px solid rgba(248, 113, 113, 0.3)',
+  },
+  policyPassBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: 'rgba(74, 222, 128, 0.08)',
+    color: '#4ade80',
+    padding: '3px 9px',
+    borderRadius: '4px',
+    border: '1px solid rgba(74, 222, 128, 0.2)',
+    fontSize: '12px',
+    fontWeight: '500',
+    marginLeft: 'auto',
+  },
+  graphLineageRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    fontSize: '12px',
+    color: '#71717a',
+    backgroundColor: '#18181b',
+    padding: '8px 12px',
+    borderRadius: '6px',
+    border: '1px solid #27272a',
+  },
+  lineageSegment: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  lineageLabel: {
+    color: '#71717a',
+    fontWeight: '500',
+  },
+  lineageLink: {
+    color: '#38bdf8',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '2px',
+    fontWeight: '500',
+  },
+  lineageDivider: {
+    color: '#3f3f46',
+  },
+  sectionDivider: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: '16px 0 8px 0',
+    position: 'relative',
+  },
+  sectionDividerText: {
+    fontSize: '10px',
+    fontWeight: '700',
+    letterSpacing: '1.2px',
+    color: '#52525b',
+    backgroundColor: '#202024',
+    padding: '0 12px',
+    zIndex: 1,
   },
   centerColumn: {
     flex: 1,
@@ -708,45 +863,47 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '28px',
+    paddingTop: '16px',
   },
   heading1: {
-    fontSize: tokens.typography.h1.fontSize,
-    fontWeight: tokens.typography.h1.fontWeight,
-    color: tokens.colors.textPrimary,
-    marginTop: '24px',
-    marginBottom: '28px',
-    letterSpacing: tokens.typography.h1.letterSpacing,
+    fontSize: '28px',
+    fontWeight: '600',
+    color: '#f4f4f5',
+    marginTop: '16px',
+    marginBottom: '20px',
+    letterSpacing: '-0.4px',
   },
   heading2: {
-    fontSize: tokens.typography.h2.fontSize,
-    fontWeight: tokens.typography.h2.fontWeight,
-    color: tokens.colors.textPrimary,
-    marginTop: '36px',
-    marginBottom: '16px',
-  },
-  heading3: {
-    fontSize: tokens.typography.h3.fontSize,
-    fontWeight: tokens.typography.h3.fontWeight,
-    color: tokens.colors.textPrimary,
+    fontSize: '20px',
+    fontWeight: '600',
+    color: '#f4f4f5',
     marginTop: '28px',
     marginBottom: '14px',
   },
+  heading3: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: '#f4f4f5',
+    marginTop: '22px',
+    marginBottom: '12px',
+  },
   paragraph: {
-    fontSize: tokens.typography.body.fontSize,
-    lineHeight: tokens.typography.body.lineHeight,
-    color: tokens.colors.textPrimary,
-    marginBottom: '24px',
+    fontSize: '15px',
+    lineHeight: '1.7',
+    color: '#d4d4d8',
+    marginBottom: '20px',
   },
   blockquote: {
-    borderLeft: '3px solid #ffffff',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    padding: '14px 20px',
-    borderRadius: '0 8px 8px 0',
-    color: tokens.colors.textPrimary,
-    fontSize: '15px',
+    borderLeft: '3px solid #f4f4f5',
+    backgroundColor: '#18181b',
+    padding: '12px 18px',
+    borderRadius: '0 6px 6px 0',
+    color: '#e4e4e7',
+    fontSize: '14px',
     fontStyle: 'italic',
-    marginBottom: '28px',
+    marginBottom: '24px',
+    border: '1px solid #27272a',
+    borderLeftColor: '#f4f4f5',
   },
   markHighlight: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
@@ -758,67 +915,47 @@ const styles: Record<string, React.CSSProperties> = {
   },
   hr: {
     border: 'none',
-    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-    margin: '32px 0',
+    borderTop: '1px solid #27272a',
+    margin: '28px 0',
   },
   ul: {
-    marginBottom: '24px',
+    marginBottom: '20px',
     paddingLeft: '24px',
-    color: tokens.colors.textPrimary,
+    color: '#d4d4d8',
   },
   ol: {
-    marginBottom: '24px',
+    marginBottom: '20px',
     paddingLeft: '24px',
-    color: tokens.colors.textPrimary,
+    color: '#d4d4d8',
   },
   li: {
-    fontSize: tokens.typography.body.fontSize,
-    lineHeight: tokens.typography.body.lineHeight,
-    marginBottom: '8px',
-  },
-  figure: {
-    marginBottom: '28px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  },
-  image: {
-    width: '100%',
-    borderRadius: '10px',
-    objectFit: 'cover',
-    maxHeight: '380px',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-  },
-  figcaption: {
-    fontSize: '12px',
-    color: tokens.colors.textSecondary,
-    textAlign: 'center',
-    fontStyle: 'italic',
+    fontSize: '15px',
+    lineHeight: '1.7',
+    marginBottom: '6px',
   },
   inlineCode: {
-    backgroundColor: '#202024',
-    color: '#ffffff',
+    backgroundColor: '#18181b',
+    color: '#f4f4f5',
     padding: '2px 6px',
-    borderRadius: tokens.radii.sm,
+    borderRadius: '4px',
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '13px',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    border: '1px solid #27272a',
   },
   codeContainer: {
-    backgroundColor: '#131316',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: '10px',
-    marginBottom: '28px',
+    backgroundColor: '#09090b',
+    border: '1px solid #27272a',
+    borderRadius: '8px',
+    marginBottom: '24px',
     overflow: 'hidden',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)',
   },
   codeHeader: {
-    backgroundColor: '#161619',
-    padding: '9px 16px',
+    backgroundColor: '#18181b',
+    padding: '8px 14px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+    borderBottom: '1px solid #27272a',
   },
   codeLangBadge: {
     display: 'flex',
@@ -826,7 +963,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
     fontSize: '11px',
     fontWeight: '600',
-    color: tokens.colors.textSecondary,
+    color: '#a1a1aa',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
   },
@@ -839,17 +976,16 @@ const styles: Record<string, React.CSSProperties> = {
   copyBtn: {
     background: 'none',
     border: 'none',
-    color: tokens.colors.textSecondary,
+    color: '#a1a1aa',
     fontSize: '12px',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     padding: '4px 8px',
     borderRadius: '4px',
-    transition: 'background-color 0.15s ease',
   },
   codeBlock: {
-    padding: '16px 18px',
+    padding: '14px 16px',
     fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace",
     fontSize: '13px',
     lineHeight: '1.65',
@@ -858,12 +994,12 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
   },
   tableWrapper: {
-    backgroundColor: 'rgba(255, 255, 255, 0.02)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    borderRadius: '10px',
+    backgroundColor: '#18181b',
+    border: '1px solid #27272a',
+    borderRadius: '8px',
     overflow: 'hidden',
-    marginTop: '28px',
-    marginBottom: '32px',
+    marginTop: '24px',
+    marginBottom: '28px',
   },
   table: {
     width: '100%',
@@ -871,31 +1007,31 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
   },
   th: {
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    color: '#ffffff',
+    backgroundColor: '#202024',
+    color: '#f4f4f5',
     textAlign: 'left',
-    padding: '12px 16px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+    padding: '10px 14px',
+    borderBottom: '1px solid #27272a',
     fontWeight: '600',
-    fontSize: '12px',
+    fontSize: '11px',
     textTransform: 'uppercase',
     letterSpacing: '0.6px',
   },
   tr: {
-    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+    borderBottom: '1px solid #27272a',
   },
   td: {
-    padding: '14px 16px',
-    color: tokens.colors.textPrimary,
-    fontSize: '14px',
+    padding: '12px 14px',
+    color: '#d4d4d8',
+    fontSize: '13px',
   },
   githubDiffViewer: {
-    backgroundColor: '#141417',
-    borderRadius: '10px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    padding: '20px',
-    marginTop: '44px',
-    fontFamily: 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace',
+    backgroundColor: '#09090b',
+    borderRadius: '8px',
+    border: '1px solid #27272a',
+    padding: '18px',
+    marginTop: '20px',
+    fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '13px',
     lineHeight: '1.6',
     color: '#e4e4e7',
@@ -904,9 +1040,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '16px',
+    marginBottom: '14px',
     paddingBottom: '10px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+    borderBottom: '1px solid #27272a',
   },
   backToDocBtn: {
     background: 'none',
@@ -924,8 +1060,8 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '4px',
   },
   diffLineRow: {
-    padding: '6px 12px',
-    borderRadius: '6px',
+    padding: '6px 10px',
+    borderRadius: '4px',
     display: 'flex',
     gap: '8px',
   },
@@ -935,24 +1071,25 @@ const styles: Record<string, React.CSSProperties> = {
     width: '12px',
   },
   additionLine: {
-    backgroundColor: 'rgba(46, 160, 67, 0.18)',
-    color: '#3fb950',
+    backgroundColor: 'rgba(74, 222, 128, 0.12)',
+    color: '#4ade80',
   },
   deletionLine: {
-    backgroundColor: 'rgba(248, 81, 73, 0.18)',
-    color: '#f85149',
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    color: '#f87171',
   },
   headerLine: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    color: '#ffffff',
+    backgroundColor: '#27272a',
+    color: '#f4f4f5',
     fontStyle: 'italic',
   },
   footerRow: {
     display: 'flex',
     alignItems: 'center',
     fontSize: tokens.typography.caption.fontSize,
-    paddingTop: '16px',
+    paddingTop: '14px',
     paddingBottom: '4px',
+    borderTop: '1px solid #27272a',
     position: 'relative',
     flexShrink: 0,
     width: '100%',
@@ -972,18 +1109,12 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
   },
   footerLabel: {
-    color: tokens.colors.textSecondary,
+    color: '#71717a',
+    fontSize: '12px',
   },
   footerValue: {
-    color: tokens.colors.textPrimary,
-    fontWeight: '400',
-  },
-  countBadge: {
-    backgroundColor: '#383838',
-    color: tokens.colors.textSecondary,
-    fontSize: '11px',
+    color: '#f4f4f5',
     fontWeight: '600',
-    padding: '3px 8px',
-    borderRadius: '10px',
+    fontSize: '12px',
   },
 };
