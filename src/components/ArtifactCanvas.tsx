@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, ShieldCheck, GitCommit, UserCheck, Cpu, ArrowUpRight } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -221,169 +221,112 @@ System implementation milestones:
 
   return (
     <div style={styles.container}>
-      {/* Solid Workspace Card (#202024) - Sharp Borders, Paper Infrastructure Aesthetic */}
       <div style={styles.card}>
         
-        {/* TOP LEVEL: ARTIFACT-FIRST IDENTITY & GOVERNANCE BLOCK */}
-        <div style={styles.artifactObjectHeader}>
-          {/* Row 1: Object Title, Subtype Badge & Action Pills */}
-          <div style={styles.headerPrimaryRow}>
-            <div style={styles.titleGroup}>
-              <button style={styles.backChevronBtn} title="Back">
-                <ChevronLeft size={18} />
-              </button>
-              <span style={styles.objectSubtypeChip}>Decision / ADR</span>
-              <h1 style={styles.artifactObjectTitle}>System Architecture & Lore Contracts</h1>
-            </div>
+        {/* ULTRA-MINIMAL TOP BAR */}
+        <div style={styles.minimalTopBar}>
+          {/* Left: Back Chevron + Subtle 1-Line Object Identity Meta */}
+          <div style={styles.minimalMetaGroup}>
+            <button style={styles.backChevronBtn} title="Back">
+              <ChevronLeft size={16} />
+            </button>
+            <span style={styles.minimalSubtype}>Decision</span>
+            <span style={styles.minimalDot}>•</span>
+            <span style={styles.minimalId}>7087ed86</span>
+            <span style={styles.minimalDot}>•</span>
+            <span style={styles.minimalAuthor}>Architecture Agent</span>
+          </div>
 
-            {/* Solid Floating Action Tube */}
-            <div style={styles.solidActionTube}>
-              <button
-                onClick={() => setIsInfoOpen(true)}
-                style={styles.infoPillBtn}
-                title="Inspect Artifact Object Details (Lineage, Governance, Metrics)"
-              >
-                <Info size={14} style={{ color: tokens.colors.textSecondary, marginRight: '5px' }} />
-                <span style={styles.infoPillText}>Info</span>
-              </button>
+          {/* Right: Floating Header Tube Pill */}
+          <div style={styles.minimalActionTube}>
+            <button
+              onClick={() => setIsInfoOpen(true)}
+              style={styles.infoPillBtn}
+              title="Inspect Artifact Object Details"
+            >
+              <Info size={14} style={{ color: '#a1a1aa' }} />
+            </button>
 
-              <button
-                onClick={() => setShowDiff(!showDiff)}
-                style={styles.tubeDiffBtn}
-                title="Toggle Line Diffs"
-              >
-                <GitCommit size={13} style={{ color: tokens.colors.textSecondary, marginRight: '4px' }} />
-                <span style={{ color: tokens.colors.textSecondary, fontSize: '13px', fontWeight: '500' }}>v3</span>
-                <span style={styles.addStatBadge}>+12</span>
-                <span style={styles.delStatBadge}>-3</span>
-              </button>
+            <span
+              style={{
+                ...styles.subtleDraftBadge,
+                ...(approvalStatus === 'approved'
+                  ? styles.approvedBadge
+                  : approvalStatus === 'rejected'
+                  ? styles.rejectedBadge
+                  : {}),
+              }}
+            >
+              {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
+            </span>
 
-              {/* Bubbly Micro-Interaction Governance Action Buttons */}
-              {approvalStatus === 'draft' && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <button
-                    onClick={() => setApprovalStatus('rejected')}
-                    onMouseEnter={() => setIsRejectHovered(true)}
-                    onMouseLeave={() => setIsRejectHovered(false)}
-                    style={{
-                      ...styles.bubblyActionBtn,
-                      ...(isRejectHovered ? styles.hoveredRejectBtn : styles.restActionBtn),
-                    }}
-                    title="Reject artifact changes"
-                  >
-                    <X size={14} style={{ flexShrink: 0 }} />
-                    <span
-                      style={{
-                        ...styles.bubblyText,
-                        ...(isRejectHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
-                      }}
-                    >
-                      Reject
-                    </span>
-                  </button>
+            <button
+              onClick={() => setShowDiff(!showDiff)}
+              style={styles.tubeDiffBtn}
+              title="Toggle Line Diffs"
+            >
+              <GitCommit size={13} style={{ color: '#a1a1aa', marginRight: '3px' }} />
+              <span style={{ color: '#a1a1aa', fontSize: '12px', fontWeight: '500' }}>v3</span>
+              <span style={styles.addStatBadge}>+12</span>
+              <span style={styles.delStatBadge}>-3</span>
+            </button>
 
-                  <button
-                    onClick={() => setApprovalStatus('approved')}
-                    onMouseEnter={() => setIsApproveHovered(true)}
-                    onMouseLeave={() => setIsApproveHovered(false)}
-                    style={{
-                      ...styles.bubblyActionBtn,
-                      ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
-                    }}
-                    title="Approve artifact changes"
-                  >
-                    <Check size={14} style={{ flexShrink: 0 }} />
-                    <span
-                      style={{
-                        ...styles.bubblyText,
-                        ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
-                      }}
-                    >
-                      Approve changes
-                    </span>
-                  </button>
-                </div>
-              )}
-
-              {approvalStatus !== 'draft' && (
+            {approvalStatus === 'draft' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <button
-                  onClick={() => setApprovalStatus('draft')}
-                  style={styles.tubeResetBtn}
-                  title="Reset approval state back to Draft"
+                  onClick={() => setApprovalStatus('rejected')}
+                  onMouseEnter={() => setIsRejectHovered(true)}
+                  onMouseLeave={() => setIsRejectHovered(false)}
+                  style={{
+                    ...styles.bubblyActionBtn,
+                    ...(isRejectHovered ? styles.hoveredRejectBtn : styles.restActionBtn),
+                  }}
+                  title="Reject artifact changes"
                 >
-                  Reopen review
+                  <X size={14} style={{ flexShrink: 0 }} />
+                  <span
+                    style={{
+                      ...styles.bubblyText,
+                      ...(isRejectHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                    }}
+                  >
+                    Reject
+                  </span>
                 </button>
-              )}
-            </div>
-          </div>
 
-          {/* Row 2: Persistent Metadata & Governance Attribution */}
-          <div style={styles.headerMetadataRow}>
-            <div style={styles.metadataItem}>
-              <span style={styles.metadataLabel}>ID:</span>
-              <code style={styles.metadataCode}>7087ed86-1490</code>
-            </div>
+                <button
+                  onClick={() => setApprovalStatus('approved')}
+                  onMouseEnter={() => setIsApproveHovered(true)}
+                  onMouseLeave={() => setIsApproveHovered(false)}
+                  style={{
+                    ...styles.bubblyActionBtn,
+                    ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
+                  }}
+                  title="Approve artifact changes"
+                >
+                  <Check size={14} style={{ flexShrink: 0 }} />
+                  <span
+                    style={{
+                      ...styles.bubblyText,
+                      ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                    }}
+                  >
+                    Approve changes
+                  </span>
+                </button>
+              </div>
+            )}
 
-            <div style={styles.metadataItem}>
-              <span style={styles.metadataLabel}>State:</span>
-              <span
-                style={{
-                  ...styles.statusChip,
-                  ...(approvalStatus === 'approved'
-                    ? styles.statusApproved
-                    : approvalStatus === 'rejected'
-                    ? styles.statusRejected
-                    : styles.statusDraft),
-                }}
+            {approvalStatus !== 'draft' && (
+              <button
+                onClick={() => setApprovalStatus('draft')}
+                style={styles.tubeResetBtn}
+                title="Reset approval state back to Draft"
               >
-                {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
-              </span>
-            </div>
-
-            <div style={styles.metadataItem}>
-              <Cpu size={12} style={{ color: '#a78bfa', marginRight: '4px' }} />
-              <span style={styles.metadataLabel}>Author:</span>
-              <span style={styles.metadataValue}>Architecture Agent</span>
-            </div>
-
-            <div style={styles.metadataItem}>
-              <UserCheck size={12} style={{ color: '#38bdf8', marginRight: '4px' }} />
-              <span style={styles.metadataLabel}>Owner:</span>
-              <span style={styles.metadataValue}>Wisdom (Human)</span>
-            </div>
-
-            <div style={styles.policyPassBadge}>
-              <ShieldCheck size={12} style={{ color: '#4ade80', marginRight: '4px' }} />
-              <span>Policy Check: Passed</span>
-            </div>
+                Reopen review
+              </button>
+            )}
           </div>
-
-          {/* Row 3: Relational Graph Lineage Context */}
-          <div style={styles.graphLineageRow}>
-            <div style={styles.lineageSegment}>
-              <span style={styles.lineageLabel}>Derived From:</span>
-              <span style={styles.lineageLink} onClick={() => onSelectWikiLink && onSelectWikiLink('PRD Lore v2')}>
-                [[PRD Lore v2]] <ArrowUpRight size={11} />
-              </span>
-            </div>
-
-            <div style={styles.lineageDivider}>•</div>
-
-            <div style={styles.lineageSegment}>
-              <span style={styles.lineageLabel}>Used In:</span>
-              <span style={styles.lineageLink} onClick={() => onSelectWikiLink && onSelectWikiLink('Django Ninja Patterns')}>
-                [[Django Ninja Patterns]] <ArrowUpRight size={11} />
-              </span>
-              <span style={styles.lineageLink} onClick={() => onSelectWikiLink && onSelectWikiLink('Agent Token Security')}>
-                [[Agent Token Security]] <ArrowUpRight size={11} />
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* SECTION DIVIDER */}
-        <div style={styles.sectionDivider}>
-          <span style={styles.sectionDividerText}>CONTENT REPRESENTATION</span>
         </div>
 
         {/* Centered Typography Reading Column */}
@@ -533,15 +476,17 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* Footer Provenance Row */}
+        {/* Minimal Footer Lineage Row */}
         <div style={styles.footerRow}>
           <div style={styles.footerCenterItem}>
-            <span style={styles.footerLabel}>Lore Artifact Plane v2.4</span>
+            <span style={styles.footerLabel}>Derived from:</span>
+            <span style={styles.footerValue}>[PRD Lore v2]</span>
           </div>
 
           <div style={styles.footerRightItem}>
-            <span style={styles.footerLabel}>Status:</span>
-            <span style={styles.footerValue}>{approvalStatus.toUpperCase()}</span>
+            <span style={styles.footerLabel}>References:</span>
+            <span style={styles.footerValue}>[Django Ninja Patterns]</span>
+            <span style={styles.countBadge}>+2</span>
           </div>
         </div>
       </div>
@@ -573,7 +518,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#202024',
     borderRadius: '0px',
     border: 'none',
-    padding: '24px 48px 16px 48px',
+    padding: '16px 48px 16px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -581,61 +526,54 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     position: 'relative',
   },
-  artifactObjectHeader: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '14px',
-    paddingBottom: '20px',
-    borderBottom: '1px solid #27272a',
-    flexShrink: 0,
-  },
-  headerPrimaryRow: {
+  minimalTopBar: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingBottom: '12px',
+    borderBottom: '1px solid #27272a',
+    flexShrink: 0,
   },
-  titleGroup: {
+  minimalMetaGroup: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '8px',
+    fontSize: '12px',
+    color: '#71717a',
   },
   backChevronBtn: {
     background: 'none',
-    border: '1px solid #27272a',
-    borderRadius: '6px',
-    color: '#a1a1aa',
+    border: 'none',
+    color: '#71717a',
     cursor: 'pointer',
-    padding: '5px',
+    padding: '4px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  objectSubtypeChip: {
-    fontSize: '11px',
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: '0.6px',
+  minimalSubtype: {
     color: '#a1a1aa',
-    backgroundColor: '#27272a',
-    padding: '3px 8px',
-    borderRadius: '4px',
-    border: '1px solid #3f3f46',
+    fontWeight: '500',
   },
-  artifactObjectTitle: {
-    fontSize: '22px',
-    fontWeight: '600',
-    color: '#f4f4f5',
-    margin: 0,
-    letterSpacing: '-0.3px',
+  minimalDot: {
+    color: '#3f3f46',
   },
-  solidActionTube: {
+  minimalId: {
+    fontFamily: 'monospace',
+    color: '#71717a',
+    fontSize: '11px',
+  },
+  minimalAuthor: {
+    color: '#a1a1aa',
+  },
+  minimalActionTube: {
     backgroundColor: '#18181b',
     border: '1px solid #27272a',
-    borderRadius: '24px',
-    padding: '5px 10px',
+    borderRadius: '20px',
+    padding: '4px 8px',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '6px',
   },
   infoPillBtn: {
     background: 'none',
@@ -643,14 +581,25 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    padding: '5px 8px',
-    borderRadius: '12px',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    justifyContent: 'center',
+    padding: '5px',
+    borderRadius: '6px',
   },
-  infoPillText: {
+  subtleDraftBadge: {
     fontSize: '12px',
     fontWeight: '500',
     color: '#a1a1aa',
+    backgroundColor: '#27272a',
+    padding: '4px 10px',
+    borderRadius: '12px',
+  },
+  approvedBadge: {
+    color: '#4ade80',
+    backgroundColor: 'rgba(74, 222, 128, 0.15)',
+  },
+  rejectedBadge: {
+    color: '#f87171',
+    backgroundColor: 'rgba(248, 113, 113, 0.15)',
   },
   tubeDiffBtn: {
     background: 'none',
@@ -658,23 +607,23 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    gap: '4px',
-    padding: '5px 8px',
-    borderRadius: '6px',
+    gap: '3px',
+    padding: '4px 6px',
+    borderRadius: '4px',
   },
   addStatBadge: {
     color: '#4ade80',
     backgroundColor: 'rgba(74, 222, 128, 0.12)',
-    padding: '2px 6px',
-    borderRadius: '4px',
+    padding: '2px 5px',
+    borderRadius: '3px',
     fontSize: '11px',
     fontWeight: '600',
   },
   delStatBadge: {
     color: '#f87171',
     backgroundColor: 'rgba(248, 113, 113, 0.12)',
-    padding: '2px 6px',
-    borderRadius: '4px',
+    padding: '2px 5px',
+    borderRadius: '3px',
     fontSize: '11px',
     fontWeight: '600',
   },
@@ -684,8 +633,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '5px 8px',
-    borderRadius: '14px',
+    padding: '4px 7px',
+    borderRadius: '12px',
     fontSize: '12px',
     fontWeight: '600',
     transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -700,13 +649,13 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#7f1d1d',
     color: '#fca5a5',
     borderColor: '#991b1b',
-    padding: '5px 12px',
+    padding: '4px 10px',
   },
   hoveredApproveBtn: {
     backgroundColor: '#ffffff',
     color: '#000000',
     borderColor: '#ffffff',
-    padding: '5px 14px',
+    padding: '4px 12px',
   },
   bubblyText: {
     fontSize: '12px',
@@ -724,129 +673,17 @@ const styles: Record<string, React.CSSProperties> = {
   bubblyTextVisible: {
     maxWidth: '140px',
     opacity: 1,
-    marginLeft: '5px',
+    marginLeft: '4px',
   },
   tubeResetBtn: {
     backgroundColor: '#27272a',
     border: '1px solid #3f3f46',
     color: '#a1a1aa',
-    padding: '5px 12px',
-    borderRadius: '14px',
-    fontSize: '12px',
-    fontWeight: '500',
-    cursor: 'pointer',
-  },
-  headerMetadataRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '20px',
-    fontSize: '13px',
-  },
-  metadataItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  metadataLabel: {
-    color: '#71717a',
-    fontSize: '12px',
-    fontWeight: '500',
-  },
-  metadataValue: {
-    color: '#f4f4f5',
-    fontWeight: '500',
-    fontSize: '13px',
-  },
-  metadataCode: {
-    backgroundColor: '#18181b',
-    color: '#a1a1aa',
-    padding: '2px 6px',
-    borderRadius: '4px',
-    fontFamily: 'monospace',
-    fontSize: '12px',
-    border: '1px solid #27272a',
-  },
-  statusChip: {
+    padding: '4px 10px',
+    borderRadius: '12px',
     fontSize: '11px',
-    fontWeight: '600',
-    padding: '2px 8px',
-    borderRadius: '4px',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
-  },
-  statusDraft: {
-    backgroundColor: '#27272a',
-    color: '#a1a1aa',
-    border: '1px solid #3f3f46',
-  },
-  statusApproved: {
-    backgroundColor: 'rgba(74, 222, 128, 0.15)',
-    color: '#4ade80',
-    border: '1px solid rgba(74, 222, 128, 0.3)',
-  },
-  statusRejected: {
-    backgroundColor: 'rgba(248, 113, 113, 0.15)',
-    color: '#f87171',
-    border: '1px solid rgba(248, 113, 113, 0.3)',
-  },
-  policyPassBadge: {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: 'rgba(74, 222, 128, 0.08)',
-    color: '#4ade80',
-    padding: '3px 9px',
-    borderRadius: '4px',
-    border: '1px solid rgba(74, 222, 128, 0.2)',
-    fontSize: '12px',
     fontWeight: '500',
-    marginLeft: 'auto',
-  },
-  graphLineageRow: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    fontSize: '12px',
-    color: '#71717a',
-    backgroundColor: '#18181b',
-    padding: '8px 12px',
-    borderRadius: '6px',
-    border: '1px solid #27272a',
-  },
-  lineageSegment: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-  },
-  lineageLabel: {
-    color: '#71717a',
-    fontWeight: '500',
-  },
-  lineageLink: {
-    color: '#38bdf8',
     cursor: 'pointer',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '2px',
-    fontWeight: '500',
-  },
-  lineageDivider: {
-    color: '#3f3f46',
-  },
-  sectionDivider: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: '16px 0 8px 0',
-    position: 'relative',
-  },
-  sectionDividerText: {
-    fontSize: '10px',
-    fontWeight: '700',
-    letterSpacing: '1.2px',
-    color: '#52525b',
-    backgroundColor: '#202024',
-    padding: '0 12px',
-    zIndex: 1,
   },
   centerColumn: {
     flex: 1,
@@ -863,45 +700,45 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '16px',
+    paddingTop: '20px',
   },
   heading1: {
-    fontSize: '28px',
-    fontWeight: '600',
+    fontSize: '32px',
+    fontWeight: '500',
     color: '#f4f4f5',
-    marginTop: '16px',
-    marginBottom: '20px',
-    letterSpacing: '-0.4px',
+    marginTop: '12px',
+    marginBottom: '24px',
+    letterSpacing: '-0.5px',
   },
   heading2: {
     fontSize: '20px',
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#f4f4f5',
-    marginTop: '28px',
+    marginTop: '32px',
     marginBottom: '14px',
   },
   heading3: {
     fontSize: '16px',
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#f4f4f5',
-    marginTop: '22px',
+    marginTop: '24px',
     marginBottom: '12px',
   },
   paragraph: {
     fontSize: '15px',
-    lineHeight: '1.7',
+    lineHeight: '1.75',
     color: '#d4d4d8',
-    marginBottom: '20px',
+    marginBottom: '24px',
   },
   blockquote: {
-    borderLeft: '3px solid #f4f4f5',
+    borderLeft: '2px solid #f4f4f5',
     backgroundColor: '#18181b',
     padding: '12px 18px',
-    borderRadius: '0 6px 6px 0',
+    borderRadius: '0 4px 4px 0',
     color: '#e4e4e7',
     fontSize: '14px',
     fontStyle: 'italic',
-    marginBottom: '24px',
+    marginBottom: '28px',
     border: '1px solid #27272a',
     borderLeftColor: '#f4f4f5',
   },
@@ -916,22 +753,22 @@ const styles: Record<string, React.CSSProperties> = {
   hr: {
     border: 'none',
     borderTop: '1px solid #27272a',
-    margin: '28px 0',
+    margin: '32px 0',
   },
   ul: {
-    marginBottom: '20px',
+    marginBottom: '24px',
     paddingLeft: '24px',
     color: '#d4d4d8',
   },
   ol: {
-    marginBottom: '20px',
+    marginBottom: '24px',
     paddingLeft: '24px',
     color: '#d4d4d8',
   },
   li: {
     fontSize: '15px',
-    lineHeight: '1.7',
-    marginBottom: '6px',
+    lineHeight: '1.75',
+    marginBottom: '8px',
   },
   inlineCode: {
     backgroundColor: '#18181b',
@@ -946,7 +783,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#09090b',
     border: '1px solid #27272a',
     borderRadius: '8px',
-    marginBottom: '24px',
+    marginBottom: '28px',
     overflow: 'hidden',
   },
   codeHeader: {
@@ -998,8 +835,8 @@ const styles: Record<string, React.CSSProperties> = {
     border: '1px solid #27272a',
     borderRadius: '8px',
     overflow: 'hidden',
-    marginTop: '24px',
-    marginBottom: '28px',
+    marginTop: '28px',
+    marginBottom: '32px',
   },
   table: {
     width: '100%',
@@ -1087,7 +924,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     fontSize: tokens.typography.caption.fontSize,
-    paddingTop: '14px',
+    paddingTop: '12px',
     paddingBottom: '4px',
     borderTop: '1px solid #27272a',
     position: 'relative',
@@ -1114,7 +951,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
   footerValue: {
     color: '#f4f4f5',
-    fontWeight: '600',
+    fontWeight: '500',
     fontSize: '12px',
+  },
+  countBadge: {
+    backgroundColor: '#27272a',
+    color: '#a1a1aa',
+    fontSize: '11px',
+    fontWeight: '600',
+    padding: '2px 6px',
+    borderRadius: '8px',
   },
 };
