@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, ShieldCheck } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -223,21 +223,36 @@ System implementation milestones:
     <div style={styles.container}>
       <div style={styles.card}>
         
-        {/* ULTRA-MINIMAL TOP BAR */}
+        {/* SLEEK 1-LINE HORIZONTAL IDENTITY & GOVERNANCE BAR */}
         <div style={styles.minimalTopBar}>
-          {/* Left: Back Chevron + Subtle 1-Line Object Identity Meta */}
-          <div style={styles.minimalMetaGroup}>
+          {/* Left: Back Chevron + Complete Single-Line Metadata Strip */}
+          <div style={styles.sleekMetaStrip}>
             <button style={styles.backChevronBtn} title="Back">
               <ChevronLeft size={16} />
             </button>
-            <span style={styles.minimalSubtype}>Decision</span>
-            <span style={styles.minimalDot}>•</span>
-            <span style={styles.minimalId}>7087ed86</span>
-            <span style={styles.minimalDot}>•</span>
-            <span style={styles.minimalAuthor}>Architecture Agent</span>
+            
+            <span style={styles.subtypeBadge}>Decision / ADR</span>
+            <span style={styles.metaDivider}>•</span>
+            
+            <span style={styles.metaLabel}>ID:</span>
+            <code style={styles.metaCode}>7087ed86</code>
+            <span style={styles.metaDivider}>•</span>
+            
+            <span style={styles.metaLabel}>Author:</span>
+            <span style={styles.metaValue}>Architecture Agent</span>
+            <span style={styles.metaDivider}>•</span>
+            
+            <span style={styles.metaLabel}>Owner:</span>
+            <span style={styles.metaValue}>Wisdom</span>
+            <span style={styles.metaDivider}>•</span>
+            
+            <div style={styles.policyPassChip}>
+              <ShieldCheck size={12} style={{ color: '#4ade80', marginRight: '3px' }} />
+              <span>Passed</span>
+            </div>
           </div>
 
-          {/* Right: Floating Header Tube Pill */}
+          {/* Right: Solid Action Tube Pill */}
           <div style={styles.minimalActionTube}>
             <button
               onClick={() => setIsInfoOpen(true)}
@@ -476,7 +491,7 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* Minimal Footer Lineage Row */}
+        {/* Minimal Lineage Footer */}
         <div style={styles.footerRow}>
           <div style={styles.footerCenterItem}>
             <span style={styles.footerLabel}>Derived from:</span>
@@ -534,7 +549,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: '1px solid #27272a',
     flexShrink: 0,
   },
-  minimalMetaGroup: {
+  sleekMetaStrip: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
@@ -550,21 +565,49 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: '4px',
   },
-  minimalSubtype: {
+  subtypeBadge: {
+    fontSize: '11px',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
     color: '#a1a1aa',
-    fontWeight: '500',
+    backgroundColor: '#27272a',
+    padding: '2px 7px',
+    borderRadius: '4px',
+    border: '1px solid #3f3f46',
   },
-  minimalDot: {
+  metaDivider: {
     color: '#3f3f46',
   },
-  minimalId: {
-    fontFamily: 'monospace',
+  metaLabel: {
     color: '#71717a',
-    fontSize: '11px',
+    fontSize: '12px',
   },
-  minimalAuthor: {
+  metaCode: {
+    fontFamily: 'monospace',
     color: '#a1a1aa',
+    fontSize: '11px',
+    backgroundColor: '#18181b',
+    padding: '1px 5px',
+    borderRadius: '3px',
+    border: '1px solid #27272a',
+  },
+  metaValue: {
+    color: '#f4f4f5',
+    fontWeight: '500',
+    fontSize: '12px',
+  },
+  policyPassChip: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    color: '#4ade80',
+    backgroundColor: 'rgba(74, 222, 128, 0.1)',
+    padding: '2px 6px',
+    borderRadius: '4px',
+    fontSize: '11px',
+    fontWeight: '500',
   },
   minimalActionTube: {
     backgroundColor: '#18181b',
