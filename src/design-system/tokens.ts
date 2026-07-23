@@ -56,7 +56,7 @@ export const tokens = {
   },
 
   typography: {
-    fontFamily: "'Poppins', system-ui, -apple-system, sans-serif",
+    fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
     h1: { fontSize: '36px', fontWeight: '400', letterSpacing: '-0.5px' },
     h2: { fontSize: '24px', fontWeight: '500' },
     h3: { fontSize: '18px', fontWeight: '500' },
