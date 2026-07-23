@@ -750,6 +750,8 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: '1.7',
     color: '#d4d4d8',
     marginBottom: '24px',
+    textAlign: 'justify',
+    hyphens: 'auto',
   },
   blockquote: {
     borderLeft: '2px solid #f4f4f5',
@@ -790,6 +792,8 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
     lineHeight: '1.7',
     marginBottom: '8px',
+    textAlign: 'justify',
+    hyphens: 'auto',
   },
   inlineCode: {
     backgroundColor: '#18181b',
