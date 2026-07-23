@@ -440,13 +440,13 @@ System implementation milestones:
               /* MODAL-CARD STYLED REVIEW & PROPOSED STATE TRANSITION CONTAINER (#272727 SURFACE) */
               <div style={styles.modalStyledDiffCard}>
                 
-                {/* HEADER METADATA DIFF SECTION */}
+                {/* HEADER METADATA DIFF SECTION (CLEAN UNNESTED LAYOUT) */}
                 <div style={styles.diffMetadataBanner}>
                   <div style={styles.diffBannerTitleRow}>
                     <div style={styles.versionJumpBadge}>
-                      <Clock size={13} style={{ color: '#71717a', marginRight: '5px' }} />
+                      <Clock size={13} style={{ color: '#7c7c80', marginRight: '6px' }} />
                       <span style={{ color: '#a1a1aa' }}>v2</span>
-                      <span style={{ color: '#52525b', margin: '0 4px' }}>→</span>
+                      <span style={{ color: '#52525b', margin: '0 6px' }}>→</span>
                       <span style={{ color: '#D4D4D4', fontWeight: '600' }}>v3 (Current)</span>
                     </div>
 
@@ -488,7 +488,7 @@ System implementation milestones:
                     <div style={styles.affectedArtifactsGroup}>
                       <Network size={12} style={{ color: '#38bdf8', marginRight: '4px' }} />
                       <span style={{ color: '#7c7c80', fontSize: '12px', marginRight: '6px' }}>
-                        Affected Graph Artifacts (3):
+                        Derived & Affected (3):
                       </span>
                       <span
                         style={styles.affectedChip}
@@ -843,7 +843,7 @@ const styles: Record<string, React.CSSProperties> = {
     top: '24px',
     right: '32px',
     zIndex: 20,
-    backgroundColor: '#18181b',
+    backgroundColor: '#202020',
     border: 'none',
     borderRadius: '20px',
     padding: '4px 8px',
@@ -949,7 +949,7 @@ const styles: Record<string, React.CSSProperties> = {
     left: '50%',
     transform: 'translateX(-50%)',
     zIndex: 30,
-    backgroundColor: '#18181b',
+    backgroundColor: '#202020',
     border: 'none',
     borderRadius: '12px',
     padding: '8px 16px',
@@ -987,12 +987,12 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '88px',
   },
   canvasHeader: {
-    marginBottom: '48px',
+    marginBottom: '36px',
   },
   mainTitle: {
     fontSize: '32px',
     fontWeight: '600',
-    color: '#f4f4f5',
+    color: '#D4D4D4',
     margin: '0 0 12px 0',
     letterSpacing: '-0.5px',
   },
@@ -1046,42 +1046,42 @@ const styles: Record<string, React.CSSProperties> = {
   heading1: {
     fontSize: '24px',
     fontWeight: '600',
-    color: '#f4f4f5',
+    color: '#D4D4D4',
     marginTop: '28px',
     marginBottom: '16px',
   },
   heading2: {
     fontSize: '19px',
     fontWeight: '600',
-    color: '#f4f4f5',
+    color: '#D4D4D4',
     marginTop: '28px',
     marginBottom: '14px',
   },
   heading3: {
     fontSize: '16px',
     fontWeight: '600',
-    color: '#f4f4f5',
+    color: '#D4D4D4',
     marginTop: '22px',
     marginBottom: '12px',
   },
   paragraph: {
     fontSize: '14px',
     lineHeight: '1.7',
-    color: '#d4d4d8',
+    color: '#D4D4D4',
     marginBottom: '24px',
     textAlign: 'justify',
     hyphens: 'auto',
   },
   blockquote: {
-    backgroundColor: '#18181b',
+    backgroundColor: '#202020',
     padding: '12px 18px',
     borderRadius: '0 4px 4px 0',
-    color: '#e4e4e7',
+    color: '#D4D4D4',
     fontSize: '14px',
     fontStyle: 'italic',
     marginBottom: '28px',
     border: 'none',
-    borderLeft: '2px solid #f4f4f5',
+    borderLeft: '2px solid #D4D4D4',
   },
   markHighlight: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
@@ -1092,18 +1092,18 @@ const styles: Record<string, React.CSSProperties> = {
   },
   hr: {
     border: 'none',
-    borderTop: '1px solid #27272a',
+    borderTop: '1px solid #353535',
     margin: '32px 0',
   },
   ul: {
     marginBottom: '24px',
     paddingLeft: '24px',
-    color: '#d4d4d8',
+    color: '#D4D4D4',
   },
   ol: {
     marginBottom: '24px',
     paddingLeft: '24px',
-    color: '#d4d4d8',
+    color: '#D4D4D4',
   },
   li: {
     fontSize: '14px',
@@ -1113,21 +1113,21 @@ const styles: Record<string, React.CSSProperties> = {
     hyphens: 'auto',
   },
   inlineCode: {
-    backgroundColor: '#18181b',
-    color: '#f4f4f5',
+    backgroundColor: '#202020',
+    color: '#D4D4D4',
     padding: '2px 6px',
     borderRadius: '4px',
     fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
     fontSize: '13px',
   },
   codeContainer: {
-    backgroundColor: '#09090b',
+    backgroundColor: '#202020',
     borderRadius: '8px',
     marginBottom: '28px',
     overflow: 'hidden',
   },
   codeHeader: {
-    backgroundColor: '#18181b',
+    backgroundColor: '#272727',
     padding: '8px 14px',
     display: 'flex',
     justifyContent: 'space-between',
@@ -1165,12 +1165,12 @@ const styles: Record<string, React.CSSProperties> = {
     fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace",
     fontSize: '13px',
     lineHeight: '1.65',
-    color: '#e4e4e7',
+    color: '#D4D4D4',
     overflowX: 'auto',
     margin: 0,
   },
   tableWrapper: {
-    backgroundColor: '#18181b',
+    backgroundColor: '#202020',
     borderRadius: '8px',
     overflow: 'hidden',
     marginTop: '28px',
@@ -1182,8 +1182,8 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
   },
   th: {
-    backgroundColor: '#202024',
-    color: '#f4f4f5',
+    backgroundColor: '#272727',
+    color: '#D4D4D4',
     textAlign: 'left',
     padding: '10px 14px',
     fontWeight: '600',
@@ -1194,36 +1194,30 @@ const styles: Record<string, React.CSSProperties> = {
   tr: {},
   td: {
     padding: '12px 14px',
-    color: '#d4d4d8',
+    color: '#D4D4D4',
     fontSize: '13px',
   },
   modalStyledDiffCard: {
     backgroundColor: '#272727',
     borderRadius: '16px',
-    padding: '24px',
+    padding: '36px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '24px',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-    marginTop: '16px',
-  },
-  enhancedDiffContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
+    gap: '28px',
+    boxShadow: '0 16px 48px rgba(0, 0, 0, 0.4)',
+    marginTop: '8px',
   },
   diffMetadataBanner: {
-    backgroundColor: '#202020',
-    borderRadius: '12px',
-    padding: '16px 20px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
+    gap: '16px',
+    paddingBottom: '24px',
+    borderBottom: '1px solid #353535',
   },
   diffBannerTitleRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '14px',
     flexWrap: 'wrap',
   },
   versionJumpBadge: {
@@ -1232,14 +1226,14 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '13px',
   },
   stateTransitionBadge: {
-    backgroundColor: '#272727',
+    backgroundColor: '#202020',
     borderRadius: '6px',
-    padding: '2px 8px',
-    fontSize: '11px',
-    fontWeight: '600',
+    padding: '3px 10px',
+    fontSize: '12px',
+    fontWeight: '500',
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '4px',
+    gap: '6px',
   },
   stateFromLabel: {
     color: '#a1a1aa',
@@ -1256,10 +1250,10 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '6px',
   },
   restoreBtn: {
-    backgroundColor: '#272727',
+    backgroundColor: '#202020',
     border: 'none',
     color: '#D4D4D4',
-    padding: '4px 10px',
+    padding: '5px 12px',
     borderRadius: '6px',
     fontSize: '12px',
     fontWeight: '500',
@@ -1282,26 +1276,26 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: '8px',
+    paddingTop: '4px',
   },
   affectedArtifactsGroup: {
     display: 'inline-flex',
     alignItems: 'center',
-    gap: '6px',
+    gap: '8px',
     flexWrap: 'wrap',
   },
   affectedChip: {
-    backgroundColor: '#272727',
+    backgroundColor: '#202020',
     borderRadius: '4px',
-    padding: '2px 6px',
+    padding: '3px 8px',
     color: '#38bdf8',
-    fontSize: '11px',
-    fontWeight: '500',
+    fontSize: '12px',
+    fontWeight: '400',
     cursor: 'pointer',
   },
   modeToggleGroup: {
     display: 'inline-flex',
-    backgroundColor: '#272727',
+    backgroundColor: '#202020',
     borderRadius: '6px',
     padding: '2px',
     gap: '2px',
@@ -1313,23 +1307,22 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#71717a',
     fontSize: '12px',
     fontWeight: '500',
-    padding: '3px 8px',
+    padding: '4px 10px',
     borderRadius: '4px',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
   },
   activeToggleBtn: {
-    backgroundColor: '#383838',
+    backgroundColor: '#272727',
     color: '#D4D4D4',
   },
   diagramDiffAccordion: {
-    backgroundColor: '#202020',
-    borderRadius: '12px',
-    padding: '14px 18px',
     display: 'flex',
     flexDirection: 'column',
     gap: '14px',
+    paddingBottom: '24px',
+    borderBottom: '1px solid #353535',
   },
   diagramAccordionHeader: {
     display: 'flex',
@@ -1341,24 +1334,25 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: '16px',
-    paddingTop: '12px',
+    paddingTop: '8px',
   },
   diagramComparePane: {
-    backgroundColor: '#272727',
+    backgroundColor: '#202020',
     borderRadius: '8px',
-    padding: '14px',
+    padding: '16px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '12px',
   },
   diagramPaneLabel: {
     fontSize: '11px',
     fontWeight: '600',
-    color: '#71717a',
+    color: '#7c7c80',
     textTransform: 'uppercase',
+    letterSpacing: '0.6px',
   },
   unifiedDiffList: {
-    backgroundColor: '#1d1d1f',
+    backgroundColor: '#202020',
     borderRadius: '12px',
     overflow: 'hidden',
     fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace",
@@ -1366,7 +1360,7 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: '1.65',
   },
   unifiedDiffRow: {
-    padding: '6px 12px',
+    padding: '6px 14px',
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
@@ -1374,7 +1368,7 @@ const styles: Record<string, React.CSSProperties> = {
   lineNumCol: {
     userSelect: 'none',
     width: '24px',
-    color: '#a1a1aa',
+    color: '#71717a',
     fontSize: '11px',
     fontWeight: '500',
     textAlign: 'right',
@@ -1404,11 +1398,11 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fca5a5',
   },
   additionLine: {
-    backgroundColor: 'rgba(74, 222, 128, 0.08)',
+    backgroundColor: 'rgba(74, 222, 128, 0.12)',
     color: '#4ade80',
   },
   deletionLine: {
-    backgroundColor: 'rgba(248, 113, 113, 0.08)',
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
     color: '#f87171',
   },
   contextLine: {
@@ -1416,9 +1410,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   headerLine: {
     backgroundColor: '#272727',
-    color: '#71717a',
+    color: '#7c7c80',
     fontStyle: 'italic',
-    padding: '4px 12px',
+    padding: '6px 14px',
   },
   splitDiffGrid: {
     display: 'grid',
@@ -1426,7 +1420,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '16px',
   },
   splitPane: {
-    backgroundColor: '#1d1d1f',
+    backgroundColor: '#202020',
     borderRadius: '12px',
     overflow: 'hidden',
   },
@@ -1435,7 +1429,9 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 14px',
     fontSize: '12px',
     fontWeight: '600',
-    color: '#a1a1aa',
+    color: '#7c7c80',
+    textTransform: 'uppercase',
+    letterSpacing: '0.6px',
   },
   splitPaneContent: {
     padding: '12px',
@@ -1483,7 +1479,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '10px',
   },
   historyStepCurrent: {
-    color: '#f4f4f5',
+    color: '#D4D4D4',
     fontWeight: '600',
     fontSize: '11px',
   },
@@ -1506,12 +1502,12 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '12px',
   },
   footerValue: {
-    color: '#f4f4f5',
+    color: '#D4D4D4',
     fontWeight: '500',
     fontSize: '12px',
   },
   countBadge: {
-    backgroundColor: '#27272a',
+    backgroundColor: '#202020',
     color: '#a1a1aa',
     fontSize: '11px',
     fontWeight: '600',
