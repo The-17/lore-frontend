@@ -311,7 +311,7 @@ System implementation milestones:
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* CANVAS HEADER WITH NO-BG SUBTYPE TEXT & DRAFT PILL */}
+            {/* CANVAS HEADER WITH SOFTENED OPACITY SEPARATORS */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
@@ -755,7 +755,8 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '12px',
   },
   propDot: {
-    color: '#3f3f46',
+    color: 'rgba(255, 255, 255, 0.2)',
+    fontSize: '11px',
   },
   heading1: {
     fontSize: '24px',
