@@ -286,7 +286,7 @@ System implementation milestones:
               <span
                 style={{
                   ...styles.bubblyText,
-                  ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                  ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
                 }}
               >
                 Approve changes
@@ -311,11 +311,11 @@ System implementation milestones:
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* CANVAS HEADER WITH SUBTYPE PILL, STEWARD TERMINOLOGY, & HISTORY CHIP */}
+            {/* CANVAS HEADER WITH SUBTYPE PILL & STEWARD TERMINOLOGY (CLEAN NO-HISTORY STRIP) */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
-              {/* Single-Line Property Strip: Subtype Pill + Lifecycle State + Evolution Timeline + Principals */}
+              {/* Single-Line Property Strip: Subtype Pill + Lifecycle State + Principals + ID */}
               <div style={styles.quietPropertyStrip}>
                 
                 {/* SUBTYPE PILL */}
@@ -338,19 +338,6 @@ System implementation milestones:
                 >
                   {approvalStatus.toUpperCase()}
                 </span>
-
-                <span style={styles.propDot}>•</span>
-
-                {/* EVOLUTION HISTORY TIMELINE CHIP */}
-                <div style={styles.historyEvolutionChip} onClick={() => setShowDiff(!showDiff)} title="View version evolution history">
-                  <Clock size={11} style={{ color: '#a1a1aa', marginRight: '4px' }} />
-                  <span style={{ color: '#a1a1aa', fontWeight: '500' }}>History</span>
-                  <span style={styles.historyPillStep}>v1</span>
-                  <span style={styles.historyArrow}>→</span>
-                  <span style={styles.historyPillStep}>v2</span>
-                  <span style={styles.historyArrow}>→</span>
-                  <span style={styles.historyPillCurrent}>v3</span>
-                </div>
 
                 <span style={styles.propDot}>•</span>
 
@@ -510,13 +497,29 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* Minimal Lineage Footer */}
+        {/* PROVENANCE & EVOLUTION HISTORY FOOTER (LAST 3 VERSIONS) */}
         <div style={styles.footerRow}>
+          
+          {/* LEFT ITEM: VERSION HISTORY (LAST 3 VERSIONS) */}
+          <div style={styles.footerLeftItem} onClick={() => setShowDiff(!showDiff)} title="Toggle version diff view">
+            <Clock size={12} style={{ color: '#71717a', marginRight: '4px' }} />
+            <span style={styles.footerLabel}>History:</span>
+            <div style={styles.footerHistorySteps}>
+              <span style={styles.historyStepLabel}>v1</span>
+              <span style={styles.historyStepArrow}>→</span>
+              <span style={styles.historyStepLabel}>v2</span>
+              <span style={styles.historyStepArrow}>→</span>
+              <span style={styles.historyStepCurrent}>v3</span>
+            </div>
+          </div>
+
+          {/* CENTER ITEM: DERIVATION */}
           <div style={styles.footerCenterItem}>
             <span style={styles.footerLabel}>Derived from:</span>
             <span style={styles.footerValue}>[PRD Lore v2]</span>
           </div>
 
+          {/* RIGHT ITEM: REFERENCES */}
           <div style={styles.footerRightItem}>
             <span style={styles.footerLabel}>References:</span>
             <span style={styles.footerValue}>[Django Ninja Patterns]</span>
@@ -745,32 +748,6 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#f87171',
     backgroundColor: 'rgba(248, 113, 113, 0.12)',
     border: '1px solid rgba(248, 113, 113, 0.25)',
-  },
-  historyEvolutionChip: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '3px',
-    backgroundColor: '#18181b',
-    border: '1px solid #27272a',
-    borderRadius: '12px',
-    padding: '2px 8px',
-    fontSize: '11px',
-    cursor: 'pointer',
-    userSelect: 'none',
-  },
-  historyPillStep: {
-    color: '#71717a',
-    fontSize: '11px',
-    fontWeight: '500',
-  },
-  historyArrow: {
-    color: '#3f3f46',
-    fontSize: '10px',
-  },
-  historyPillCurrent: {
-    color: '#f4f4f5',
-    fontWeight: '700',
-    fontSize: '11px',
   },
   propVal: {
     color: '#71717a',
@@ -1015,6 +992,31 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'relative',
     flexShrink: 0,
     width: '100%',
+  },
+  footerLeftItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+    cursor: 'pointer',
+    userSelect: 'none',
+  },
+  footerHistorySteps: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  historyStepLabel: {
+    color: '#71717a',
+    fontSize: '11px',
+  },
+  historyStepArrow: {
+    color: '#3f3f46',
+    fontSize: '10px',
+  },
+  historyStepCurrent: {
+    color: '#f4f4f5',
+    fontWeight: '600',
+    fontSize: '11px',
   },
   footerCenterItem: {
     position: 'absolute',
