@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, User, Cpu } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -221,21 +221,12 @@ System implementation milestones:
     <div style={styles.container}>
       <div style={styles.card}>
         
-        {/* CLEAN TOP NAVBAR */}
-        <div style={styles.topNavbar}>
-          {/* Left: Back Button + Clean Path Breadcrumb */}
-          <div style={styles.navBreadcrumb}>
-            <button style={styles.backChevronBtn} title="Back">
-              <ChevronLeft size={16} />
-            </button>
-            <span style={styles.pathSegment}>Lore</span>
-            <span style={styles.pathSlash}>/</span>
-            <span style={styles.pathSegment}>Architecture</span>
-            <span style={styles.pathSlash}>/</span>
-            <span style={styles.pathActive}>Decisions</span>
-          </div>
+        {/* OBSIDIAN-LEVEL CALM: FLOATING HEADER ACTION TUBE PILL */}
+        <div style={styles.calmTopBar}>
+          <button style={styles.backChevronBtn} title="Back">
+            <ChevronLeft size={16} />
+          </button>
 
-          {/* Right: Floating Header Tube Action Pill */}
           <div style={styles.actionTube}>
             <button
               onClick={() => setIsInfoOpen(true)}
@@ -327,40 +318,26 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* Centered Reading & Canvas Container */}
+        {/* Centered Reading Column — Artifact Breathes */}
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* ELEGANT LINEAR-STYLE TITLE & PROPERTY STRIP */}
+            {/* QUIET CANVAS HEADER */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
-              {/* Clean Single-Line Property Strip */}
-              <div style={styles.propertyStrip}>
-                <span style={styles.subtypeChip}>Decision</span>
+              {/* Quiet, Single-Line Property Strip (Created by & Owner) */}
+              <div style={styles.quietPropertyStrip}>
+                <span style={styles.subtypeLabel}>Decision</span>
 
                 <span style={styles.propDot}>•</span>
-
-                <div style={styles.propItem}>
-                  <span style={styles.propLabel}>ID:</span>
-                  <code style={styles.propCode}>7087ed86</code>
-                </div>
+                <span style={styles.propVal}>Created by Architecture Agent</span>
 
                 <span style={styles.propDot}>•</span>
-
-                <div style={styles.propItem}>
-                  <Cpu size={12} style={{ color: '#a78bfa' }} />
-                  <span style={styles.propLabel}>Author:</span>
-                  <span style={styles.propVal}>Architecture Agent</span>
-                </div>
+                <span style={styles.propVal}>Owner: Wisdom</span>
 
                 <span style={styles.propDot}>•</span>
-
-                <div style={styles.propItem}>
-                  <User size={12} style={{ color: '#38bdf8' }} />
-                  <span style={styles.propLabel}>Owner:</span>
-                  <span style={styles.propVal}>Wisdom</span>
-                </div>
+                <code style={styles.propCode}>7087ed86</code>
               </div>
             </div>
 
@@ -550,7 +527,7 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: '#202024',
     borderRadius: '0px',
     border: 'none',
-    padding: '16px 48px 16px 48px',
+    padding: '20px 48px 16px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -558,19 +535,12 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     position: 'relative',
   },
-  topNavbar: {
+  calmTopBar: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: '12px',
-    borderBottom: '1px solid #27272a',
+    paddingBottom: '8px',
     flexShrink: 0,
-  },
-  navBreadcrumb: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    fontSize: '13px',
   },
   backChevronBtn: {
     background: 'none',
@@ -581,19 +551,6 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: '2px',
-  },
-  pathSegment: {
-    color: '#71717a',
-    fontWeight: '400',
-  },
-  pathActive: {
-    color: '#a1a1aa',
-    fontWeight: '500',
-  },
-  pathSlash: {
-    color: '#3f3f46',
-    fontSize: '12px',
   },
   actionTube: {
     backgroundColor: '#18181b',
@@ -603,6 +560,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
+    marginLeft: 'auto',
   },
   infoPillBtn: {
     background: 'none',
@@ -716,7 +674,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   centerColumn: {
     flex: 1,
-    maxWidth: tokens.layout.readingMeasureWidth,
+    maxWidth: '720px',
     width: '100%',
     margin: '0 auto',
     display: 'flex',
@@ -729,59 +687,37 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '24px',
+    paddingTop: '28px',
   },
   canvasHeader: {
-    marginBottom: '28px',
+    marginBottom: '32px',
   },
   mainTitle: {
     fontSize: '32px',
     fontWeight: '600',
     color: '#f4f4f5',
-    margin: '0 0 12px 0',
+    margin: '0 0 10px 0',
     letterSpacing: '-0.5px',
   },
-  propertyStrip: {
+  quietPropertyStrip: {
     display: 'flex',
     alignItems: 'center',
-    flexWrap: 'wrap',
     gap: '8px',
-    fontSize: '12px',
+    fontSize: '13px',
     color: '#71717a',
   },
-  subtypeChip: {
-    fontSize: '11px',
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
+  subtypeLabel: {
     color: '#a1a1aa',
-    backgroundColor: '#18181b',
-    padding: '2px 7px',
-    borderRadius: '4px',
-    border: '1px solid #27272a',
-  },
-  propItem: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '4px',
-  },
-  propLabel: {
-    color: '#71717a',
-    fontSize: '12px',
+    fontWeight: '500',
   },
   propVal: {
-    color: '#d4d4d8',
-    fontWeight: '500',
-    fontSize: '12px',
+    color: '#71717a',
+    fontWeight: '400',
   },
   propCode: {
     fontFamily: 'monospace',
-    color: '#a1a1aa',
-    fontSize: '11px',
-    backgroundColor: '#18181b',
-    padding: '1px 5px',
-    borderRadius: '3px',
-    border: '1px solid #27272a',
+    color: '#71717a',
+    fontSize: '12px',
   },
   propDot: {
     color: '#3f3f46',
