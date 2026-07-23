@@ -302,12 +302,12 @@ System implementation milestones:
         )}
       </div>
 
-      {/* FULL CANVAS READING AREA — STARTS LOWER WITH SPACED TITLE HEADER */}
+      {/* FULL CANVAS READING AREA */}
       <div style={styles.fullCanvasScrollArea}>
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* QUIET CANVAS HEADER — LOWER TOP MARGIN & GENEROUS BOTTOM SPACING */}
+            {/* QUIET CANVAS HEADER */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
@@ -667,10 +667,10 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '64px',
+    paddingTop: '88px',
   },
   canvasHeader: {
-    marginBottom: '52px',
+    marginBottom: '60px',
   },
   mainTitle: {
     fontSize: '32px',
@@ -746,8 +746,8 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '12px',
   },
   paragraph: {
-    fontSize: '15px',
-    lineHeight: '1.75',
+    fontSize: '14px',
+    lineHeight: '1.7',
     color: '#d4d4d8',
     marginBottom: '24px',
   },
@@ -787,8 +787,8 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#d4d4d8',
   },
   li: {
-    fontSize: '15px',
-    lineHeight: '1.75',
+    fontSize: '14px',
+    lineHeight: '1.7',
     marginBottom: '8px',
   },
   inlineCode: {
