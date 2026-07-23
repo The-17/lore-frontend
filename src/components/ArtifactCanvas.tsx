@@ -303,7 +303,7 @@ System implementation milestones:
         <ChevronLeft size={16} />
       </button>
 
-      {/* FLOATING SEPARATE ACTION TUBE PILL (BORDERLESS) */}
+      {/* FLOATING SEPARATE ACTION TUBE PILL */}
       <div style={styles.floatingActionTube}>
         <button
           onClick={() => setIsInfoOpen(true)}
@@ -437,10 +437,10 @@ System implementation milestones:
             </div>
 
             {showDiff ? (
-              /* ENHANCED REVIEW & PROPOSED STATE TRANSITION EXPERIENCE (BORDERLESS RECTANGLES) */
-              <div style={styles.enhancedDiffContainer}>
+              /* MODAL-CARD STYLED REVIEW & PROPOSED STATE TRANSITION CONTAINER (#272727 SURFACE) */
+              <div style={styles.modalStyledDiffCard}>
                 
-                {/* HEADER METADATA DIFF BANNER (BORDERLESS SURFACE) */}
+                {/* HEADER METADATA DIFF SECTION */}
                 <div style={styles.diffMetadataBanner}>
                   <div style={styles.diffBannerTitleRow}>
                     <div style={styles.versionJumpBadge}>
@@ -487,7 +487,7 @@ System implementation milestones:
                   <div style={styles.diffBannerSubRow}>
                     <div style={styles.affectedArtifactsGroup}>
                       <Network size={12} style={{ color: '#38bdf8', marginRight: '4px' }} />
-                      <span style={{ color: '#71717a', fontSize: '12px', marginRight: '6px' }}>
+                      <span style={{ color: '#7c7c80', fontSize: '12px', marginRight: '6px' }}>
                         Affected Graph Artifacts (3):
                       </span>
                       <span
@@ -536,7 +536,7 @@ System implementation milestones:
                   </div>
                 </div>
 
-                {/* MERMAID DIAGRAM VISUAL COMPARISON ACCORDION (BORDERLESS) */}
+                {/* MERMAID DIAGRAM VISUAL COMPARISON ACCORDION */}
                 <div style={styles.diagramDiffAccordion}>
                   <div
                     style={styles.diagramAccordionHeader}
@@ -563,7 +563,7 @@ System implementation milestones:
                   )}
                 </div>
 
-                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH BORDERLESS CARDS */}
+                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH MODAL-CARD SURFACING */}
                 {diffMode === 'unified' ? (
                   <div style={styles.unifiedDiffList}>
                     {bulkyDiffData.map((row, idx) => (
@@ -1197,14 +1197,23 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#d4d4d8',
     fontSize: '13px',
   },
+  modalStyledDiffCard: {
+    backgroundColor: '#272727',
+    borderRadius: '16px',
+    padding: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '24px',
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+    marginTop: '16px',
+  },
   enhancedDiffContainer: {
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    marginTop: '16px',
   },
   diffMetadataBanner: {
-    backgroundColor: '#272727',
+    backgroundColor: '#202020',
     borderRadius: '12px',
     padding: '16px 20px',
     display: 'flex',
@@ -1223,7 +1232,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '13px',
   },
   stateTransitionBadge: {
-    backgroundColor: '#202020',
+    backgroundColor: '#272727',
     borderRadius: '6px',
     padding: '2px 8px',
     fontSize: '11px',
@@ -1247,7 +1256,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '6px',
   },
   restoreBtn: {
-    backgroundColor: '#202020',
+    backgroundColor: '#272727',
     border: 'none',
     color: '#D4D4D4',
     padding: '4px 10px',
@@ -1282,7 +1291,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexWrap: 'wrap',
   },
   affectedChip: {
-    backgroundColor: '#202020',
+    backgroundColor: '#272727',
     borderRadius: '4px',
     padding: '2px 6px',
     color: '#38bdf8',
@@ -1292,7 +1301,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   modeToggleGroup: {
     display: 'inline-flex',
-    backgroundColor: '#202020',
+    backgroundColor: '#272727',
     borderRadius: '6px',
     padding: '2px',
     gap: '2px',
@@ -1311,11 +1320,11 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
   },
   activeToggleBtn: {
-    backgroundColor: '#333333',
+    backgroundColor: '#383838',
     color: '#D4D4D4',
   },
   diagramDiffAccordion: {
-    backgroundColor: '#272727',
+    backgroundColor: '#202020',
     borderRadius: '12px',
     padding: '14px 18px',
     display: 'flex',
@@ -1335,7 +1344,7 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '12px',
   },
   diagramComparePane: {
-    backgroundColor: '#202020',
+    backgroundColor: '#272727',
     borderRadius: '8px',
     padding: '14px',
     display: 'flex',
@@ -1349,7 +1358,7 @@ const styles: Record<string, React.CSSProperties> = {
     textTransform: 'uppercase',
   },
   unifiedDiffList: {
-    backgroundColor: '#18181a',
+    backgroundColor: '#1d1d1f',
     borderRadius: '12px',
     overflow: 'hidden',
     fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace",
@@ -1406,7 +1415,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#a1a1aa',
   },
   headerLine: {
-    backgroundColor: '#242424',
+    backgroundColor: '#272727',
     color: '#71717a',
     fontStyle: 'italic',
     padding: '4px 12px',
@@ -1417,12 +1426,12 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '16px',
   },
   splitPane: {
-    backgroundColor: '#18181a',
+    backgroundColor: '#1d1d1f',
     borderRadius: '12px',
     overflow: 'hidden',
   },
   splitPaneHeader: {
-    backgroundColor: '#202022',
+    backgroundColor: '#272727',
     padding: '8px 14px',
     fontSize: '12px',
     fontWeight: '600',
