@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { List, AlignLeft, Compass, GitCommit } from 'lucide-react';
+import { List, AlignLeft, GitCommit } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 
 export interface TocItem {
@@ -36,11 +36,12 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
     { id: '4-key-roadmap-tasks--checklists', text: '4. Key Roadmap Tasks & Checklists', level: 2 },
   ];
 
+  // Clean changed sections matching TOC styling without §
   const defaultDiffSections: TocItem[] = [
-    { id: 'diff-chunk-1', text: '§ 1. Architectural Paradigm', level: 1 },
-    { id: 'diff-chunk-2', text: '§ 2. Mermaid Sequence Diagram', level: 1 },
-    { id: 'diff-chunk-3', text: '§ 3. Python Router API', level: 1 },
-    { id: 'diff-chunk-4', text: '§ 4. Subtype Matrix Table', level: 1 },
+    { id: 'diff-chunk-1', text: '1. Architectural Paradigm', level: 1 },
+    { id: 'diff-chunk-2', text: '2. Mermaid Sequence Diagram', level: 1 },
+    { id: 'diff-chunk-3', text: '3. Python Router API', level: 1 },
+    { id: 'diff-chunk-4', text: '4. Subtype Matrix Table', level: 1 },
   ];
 
   const currentItems = tocItems || (isDiffOpen ? defaultDiffSections : defaultDocToc);
@@ -86,18 +87,18 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
       <div style={styles.header}>
         {isDiffOpen ? (
           <>
-            <GitCommit size={15} style={{ color: '#38bdf8', marginRight: '8px' }} />
-            <span style={{ ...styles.headerTitle, color: '#38bdf8' }}>Changed Sections</span>
+            <GitCommit size={16} style={{ color: tokens.colors.textSecondary, marginRight: '8px' }} />
+            <span style={styles.headerTitle}>Changed Sections</span>
           </>
         ) : (
           <>
-            <List size={15} style={{ color: tokens.colors.textSecondary, marginRight: '8px' }} />
+            <List size={16} style={{ color: tokens.colors.textSecondary, marginRight: '8px' }} />
             <span style={styles.headerTitle}>Table of Contents</span>
           </>
         )}
       </div>
 
-      {/* TOC Outline Tree / Changed Sections list */}
+      {/* TOC Outline Tree / Changed Sections list matching exact TOC styling */}
       <div style={styles.tocList}>
         {currentItems.map((item) => {
           const isActive = activeHeadingId === item.id;
@@ -110,31 +111,20 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
                 ...styles.tocRow,
                 paddingLeft: `${12 + indent}px`,
                 backgroundColor: isActive ? 'rgba(255, 255, 255, 0.06)' : 'transparent',
-                color: isDiffOpen ? '#D4D4D4' : isActive ? '#ffffff' : tokens.colors.textSecondary,
+                color: isActive ? '#ffffff' : tokens.colors.textSecondary,
                 fontWeight: isActive ? '600' : '400',
               }}
               title={item.text}
             >
-              {isDiffOpen ? (
-                <Compass
-                  size={13}
-                  style={{
-                    marginRight: '8px',
-                    color: '#38bdf8',
-                    flexShrink: 0,
-                  }}
-                />
-              ) : (
-                <AlignLeft
-                  size={13}
-                  style={{
-                    marginRight: '8px',
-                    opacity: isActive ? 1 : 0.5,
-                    color: isActive ? tokens.colors.accentPrimary : tokens.colors.textDim,
-                    flexShrink: 0,
-                  }}
-                />
-              )}
+              <AlignLeft
+                size={13}
+                style={{
+                  marginRight: '8px',
+                  opacity: isActive ? 1 : 0.5,
+                  color: isActive ? tokens.colors.accentPrimary : tokens.colors.textDim,
+                  flexShrink: 0,
+                }}
+              />
               <span style={styles.tocText}>{item.text}</span>
             </div>
           );

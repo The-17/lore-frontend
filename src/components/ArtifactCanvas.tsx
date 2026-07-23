@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock, Columns, AlignLeft, RotateCcw, Eye, ChevronDown, ChevronRight, Network, Compass } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock, Columns, AlignLeft, RotateCcw, Eye, ChevronDown, ChevronRight, Network } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -112,13 +112,6 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
   const handleRevertVersion = (ver: string) => {
     setRestoreNotification(`Reverted to ${ver} — appended snapshot as new forward draft v4`);
     setTimeout(() => setRestoreNotification(null), 4000);
-  };
-
-  const scrollToDiffSection = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
   };
 
   const markdownText = `Lore operates on a fundamental architectural paradigm known as the **Artifact Plane**. Unlike conventional document editors or unstructured knowledge bases, an artifact in Lore is a durable, immutable, version-controlled entity equipped with cryptographic attribution, explicit dependency lineage, and deterministic state transitions. Every modification created by either human principals or autonomous AI coding agents produces an incremental state snapshot, preventing silent regressions and guaranteeing long-term system auditability across complex multi-agent engineering workflows.
@@ -540,28 +533,6 @@ System implementation milestones:
                         Split
                       </button>
                     </div>
-                  </div>
-                </div>
-
-                {/* CHANGED SECTIONS QUICK-JUMP NAVIGATION BAR */}
-                <div style={styles.jumpNavContainer}>
-                  <div style={styles.jumpNavHeader}>
-                    <Compass size={13} style={{ color: '#38bdf8', marginRight: '5px' }} />
-                    <span style={{ color: '#38bdf8' }}>Jump to Changed Section:</span>
-                  </div>
-                  <div style={styles.jumpPillsGroup}>
-                    <button onClick={() => scrollToDiffSection('diff-chunk-1')} style={styles.jumpPillBtn}>
-                      § 1. Architectural Paradigm
-                    </button>
-                    <button onClick={() => scrollToDiffSection('diff-chunk-2')} style={styles.jumpPillBtn}>
-                      § 2. Mermaid Sequence Diagram
-                    </button>
-                    <button onClick={() => scrollToDiffSection('diff-chunk-3')} style={styles.jumpPillBtn}>
-                      § 3. Python Router API
-                    </button>
-                    <button onClick={() => scrollToDiffSection('diff-chunk-4')} style={styles.jumpPillBtn}>
-                      § 4. Subtype Matrix Table
-                    </button>
                   </div>
                 </div>
 
@@ -1336,41 +1307,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '11px',
     fontWeight: '500',
     cursor: 'pointer',
-  },
-  jumpNavContainer: {
-    backgroundColor: '#202022',
-    border: '1px solid #2e2e32',
-    borderRadius: '10px',
-    padding: '10px 14px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '12px',
-  },
-  jumpNavHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#38bdf8',
-    flexShrink: 0,
-  },
-  jumpPillsGroup: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    flexWrap: 'wrap',
-  },
-  jumpPillBtn: {
-    backgroundColor: '#272727',
-    border: '1px solid #383838',
-    color: '#D4D4D4',
-    padding: '3px 8px',
-    borderRadius: '6px',
-    fontSize: '11px',
-    fontWeight: '500',
-    cursor: 'pointer',
-    transition: 'background 0.15s ease',
   },
   modeToggleGroup: {
     display: 'inline-flex',
