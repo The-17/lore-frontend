@@ -221,7 +221,7 @@ System implementation milestones:
     <div style={styles.container}>
       <div style={styles.card}>
         
-        {/* OBSIDIAN-LEVEL CALM: FLOATING HEADER ACTION TUBE PILL */}
+        {/* TRANSPARENT FLOATING TOP BAR — NO FULL WIDTH BG */}
         <div style={styles.calmTopBar}>
           <button style={styles.backChevronBtn} title="Back">
             <ChevronLeft size={16} />
@@ -521,15 +521,15 @@ const styles: Record<string, React.CSSProperties> = {
     margin: 0,
     display: 'flex',
     overflow: 'hidden',
-    backgroundColor: '#18181b',
+    backgroundColor: '#242424',
   },
   card: {
     width: '100%',
     height: '100vh',
-    backgroundColor: '#202024',
+    backgroundColor: '#242424',
     borderRadius: '0px',
     border: 'none',
-    padding: '20px 48px 16px 48px',
+    padding: '16px 48px 16px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -541,8 +541,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: '8px',
+    paddingBottom: '4px',
     flexShrink: 0,
+    backgroundColor: 'transparent',
   },
   backChevronBtn: {
     background: 'none',
@@ -673,7 +674,7 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '28px',
+    paddingTop: '16px',
   },
   canvasHeader: {
     marginBottom: '32px',
