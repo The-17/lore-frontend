@@ -20,7 +20,7 @@ export const ArtifactInfoModal: React.FC<ArtifactInfoModalProps> = ({
     <div style={styles.backdrop} onClick={onClose}>
       <div style={styles.modalCard} onClick={(e) => e.stopPropagation()}>
         
-        {/* LEFT COLUMN: TITLE & VERTICAL NAVIGATION */}
+        {/* LEFT COLUMN: TITLE & VERTICAL NAVIGATION (BG: #242424) */}
         <div style={styles.leftPane}>
           <h2 style={styles.sidebarTitle}>Artifact Inspector</h2>
 
@@ -57,14 +57,14 @@ export const ArtifactInfoModal: React.FC<ArtifactInfoModalProps> = ({
           </nav>
         </div>
 
-        {/* RIGHT COLUMN: CONTENT PANE */}
+        {/* RIGHT COLUMN: CONTENT PANE (BG: #272727) */}
         <div style={styles.rightPane}>
           {/* Close button in top right */}
           <button style={styles.closeBtn} onClick={onClose} title="Close (Esc)">
             <X size={16} />
           </button>
 
-          {/* TAB 1: PROVENANCE & LINEAGE (MATCHES DESIGN SCREENSHOT EXACTLY) */}
+          {/* TAB 1: PROVENANCE & LINEAGE */}
           {activeTab === 'lineage' && (
             <div style={styles.contentGroupStack}>
               
@@ -207,9 +207,9 @@ const styles: Record<string, React.CSSProperties> = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.72)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backdropFilter: 'blur(12px)',
+    WebkitBackdropFilter: 'blur(12px)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -220,20 +220,20 @@ const styles: Record<string, React.CSSProperties> = {
     width: '740px',
     maxWidth: '92vw',
     minHeight: '380px',
-    backgroundColor: '#202022',
-    border: '1px solid #2a2a2e',
+    backgroundColor: '#242424',
+    border: '1px solid #333333',
     borderRadius: '16px',
-    boxShadow: '0 24px 64px rgba(0, 0, 0, 0.65)',
+    boxShadow: '0 24px 64px rgba(0, 0, 0, 0.7)',
     overflow: 'hidden',
   },
   leftPane: {
     width: '240px',
-    backgroundColor: '#202022',
+    backgroundColor: '#242424',
     padding: '36px 28px',
     display: 'flex',
     flexDirection: 'column',
     gap: '36px',
-    borderRight: '1px solid #28282b',
+    borderRight: '1px solid #303030',
     flexShrink: 0,
   },
   sidebarTitle: {
@@ -265,7 +265,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   rightPane: {
     flex: 1,
-    backgroundColor: '#171719',
+    backgroundColor: '#272727',
     padding: '36px 36px 36px 36px',
     position: 'relative',
     display: 'flex',
@@ -277,7 +277,7 @@ const styles: Record<string, React.CSSProperties> = {
     right: '20px',
     background: 'none',
     border: 'none',
-    color: '#52525b',
+    color: '#71717a',
     cursor: 'pointer',
     padding: '4px',
     borderRadius: '4px',
@@ -295,7 +295,7 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: 'column',
     gap: '6px',
     paddingBottom: '20px',
-    borderBottom: '1px solid #252528',
+    borderBottom: '1px solid #353535',
   },
   sectionBlock: {
     display: 'flex',
@@ -304,7 +304,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   sectionLabel: {
     fontSize: '12px',
-    color: '#636366',
+    color: '#7c7c80',
     fontWeight: '400',
   },
   collectionValue: {
