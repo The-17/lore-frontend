@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock, Columns, AlignLeft, RotateCcw, Eye, ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock, Columns, AlignLeft, RotateCcw, Eye, ChevronDown, ChevronRight, Network } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -90,8 +90,8 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
 
-  const handleRestoreVersion = (ver: string) => {
-    setRestoreNotification(`Artifact restored to ${ver} snapshot as new forward draft v4`);
+  const handleRevertVersion = (ver: string) => {
+    setRestoreNotification(`Reverted to ${ver} — appended snapshot as new forward draft v4`);
     setTimeout(() => setRestoreNotification(null), 4000);
   };
 
@@ -334,7 +334,7 @@ System implementation milestones:
         )}
       </div>
 
-      {/* RESTORE NOTIFICATION BANNER */}
+      {/* REVERT NOTIFICATION BANNER */}
       {restoreNotification && (
         <div style={styles.restoreToast}>
           <Check size={14} style={{ color: '#4ade80', marginRight: '6px' }} />
@@ -390,7 +390,7 @@ System implementation milestones:
             </div>
 
             {showDiff ? (
-              /* ENHANCED PUBLICATION-GRADE DIFF & HISTORY EXPERIENCE */
+              /* ENHANCED REVIEW & PROPOSED STATE TRANSITION EXPERIENCE */
               <div style={styles.enhancedDiffContainer}>
                 
                 {/* HEADER METADATA DIFF BANNER */}
@@ -404,34 +404,56 @@ System implementation milestones:
                     </div>
 
                     <div style={styles.stateTransitionBadge}>
-                      <span style={styles.stateFromLabel}>DRAFT</span>
+                      <span style={styles.stateFromLabel}>Draft</span>
                       <span style={styles.stateArrow}>→</span>
-                      <span style={styles.stateToLabel}>APPROVED</span>
+                      <span style={styles.stateToLabel}>Approved</span>
                     </div>
 
                     <div style={styles.diffStatsSummary}>
-                      <span style={styles.addStatBadge}>+12 additions</span>
-                      <span style={styles.delStatBadge}>-3 deletions</span>
+                      <span style={styles.addStatBadge}>+12</span>
+                      <span style={styles.delStatBadge}>-3</span>
                     </div>
 
                     <button
-                      onClick={() => handleRestoreVersion('v2')}
+                      onClick={() => handleRevertVersion('v2')}
                       style={styles.restoreBtn}
-                      title="Restore v2 snapshot into new forward draft"
+                      title="Revert snapshot to v2 (appends new forward draft snapshot v4)"
                     >
                       <RotateCcw size={12} style={{ marginRight: '5px' }} />
-                      <span>Restore v2</span>
+                      <span>Revert to v2</span>
                     </button>
 
                     <button onClick={() => setShowDiff(false)} style={styles.backToDocBtn}>
-                      <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Return to Content
+                      <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Exit Review
                     </button>
                   </div>
 
+                  {/* LORE GRAPH DEPENDENCY CONTEXT (AFFECTED ARTIFACTS) */}
                   <div style={styles.diffBannerSubRow}>
-                    <span style={{ color: '#71717a', fontSize: '12px' }}>
-                      Attribution: Created by Architecture Agent • Steward: Wisdom
-                    </span>
+                    <div style={styles.affectedArtifactsGroup}>
+                      <Network size={12} style={{ color: '#38bdf8', marginRight: '4px' }} />
+                      <span style={{ color: '#71717a', fontSize: '12px', marginRight: '6px' }}>
+                        Affected Graph Artifacts (3):
+                      </span>
+                      <span
+                        style={styles.affectedChip}
+                        onClick={() => onSelectWikiLink?.('API Gateway')}
+                      >
+                        API Gateway ↗
+                      </span>
+                      <span
+                        style={styles.affectedChip}
+                        onClick={() => onSelectWikiLink?.('Security Policy')}
+                      >
+                        Security Policy ↗
+                      </span>
+                      <span
+                        style={styles.affectedChip}
+                        onClick={() => onSelectWikiLink?.('OAuth ADR')}
+                      >
+                        OAuth ADR ↗
+                      </span>
+                    </div>
 
                     {/* SPLIT VS UNIFIED MODE TOGGLE CONTROLS */}
                     <div style={styles.modeToggleGroup}>
@@ -486,7 +508,7 @@ System implementation milestones:
                   )}
                 </div>
 
-                {/* UNIFIED OR SPLIT LINE DIFF VIEW */}
+                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH HIGH-CONTRAST LINE NUMBERS */}
                 {diffMode === 'unified' ? (
                   <div style={styles.unifiedDiffList}>
                     {sampleDiffData.map((row, idx) => (
@@ -1212,6 +1234,22 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '8px',
     borderTop: '1px solid #303030',
   },
+  affectedArtifactsGroup: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+    flexWrap: 'wrap',
+  },
+  affectedChip: {
+    backgroundColor: '#202020',
+    border: '1px solid #303030',
+    borderRadius: '4px',
+    padding: '2px 6px',
+    color: '#38bdf8',
+    fontSize: '11px',
+    fontWeight: '500',
+    cursor: 'pointer',
+  },
   modeToggleGroup: {
     display: 'inline-flex',
     backgroundColor: '#202020',
@@ -1219,6 +1257,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '6px',
     padding: '2px',
     gap: '2px',
+    marginLeft: 'auto',
   },
   toggleBtn: {
     background: 'none',
@@ -1291,8 +1330,9 @@ const styles: Record<string, React.CSSProperties> = {
   lineNumCol: {
     userSelect: 'none',
     width: '24px',
-    color: '#52525b',
+    color: '#a1a1aa',
     fontSize: '11px',
+    fontWeight: '500',
     textAlign: 'right',
     flexShrink: 0,
   },
