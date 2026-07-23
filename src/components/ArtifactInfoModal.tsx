@@ -162,29 +162,41 @@ export const ArtifactInfoModal: React.FC<ArtifactInfoModalProps> = ({
             </div>
           )}
 
-          {/* TAB 3: ACTIVITY & METRICS (RESTORED METRICS GRID + DETAILED VERSION TIMELINE) */}
+          {/* TAB 3: ACTIVITY & METRICS (MATCHES EXACT USER SCREENSHOT DESIGN) */}
           {activeTab === 'activity' && (
             <div style={styles.contentGroupStack}>
               
-              {/* Metrics Card Grid */}
+              {/* Artifact Metrics Inline Horizontal Row */}
               <div style={styles.sectionBlock}>
-                <span style={styles.sectionLabel}>System Metrics</span>
-                <div style={styles.metricsGrid}>
-                  <div style={styles.metricCard}>
-                    <span style={styles.metricVal}>26</span>
-                    <span style={styles.metricLabel}>Total Relationships</span>
+                <span style={styles.sectionLabel}>Artifact metrics</span>
+                
+                <div style={styles.inlineMetricsRow}>
+                  <div style={styles.statColumn}>
+                    <span style={styles.statNumber}>26</span>
+                    <span style={styles.statSublabel}>
+                      Total<br />Relationships
+                    </span>
                   </div>
-                  <div style={styles.metricCard}>
-                    <span style={styles.metricVal}>14</span>
-                    <span style={styles.metricLabel}>Incoming Links</span>
+
+                  <div style={styles.statColumn}>
+                    <span style={styles.statNumber}>14</span>
+                    <span style={styles.statSublabel}>
+                      Incoming<br />Links
+                    </span>
                   </div>
-                  <div style={styles.metricCard}>
-                    <span style={styles.metricVal}>12</span>
-                    <span style={styles.metricLabel}>Outgoing References</span>
+
+                  <div style={styles.statColumn}>
+                    <span style={styles.statNumber}>12</span>
+                    <span style={styles.statSublabel}>
+                      Outgoing<br />References
+                    </span>
                   </div>
-                  <div style={styles.metricCard}>
-                    <span style={styles.metricVal}>8</span>
-                    <span style={styles.metricLabel}>Referencing Artifacts</span>
+
+                  <div style={styles.statColumn}>
+                    <span style={styles.statNumber}>8</span>
+                    <span style={styles.statSublabel}>
+                      Referencing<br />Artifacts
+                    </span>
                   </div>
                 </div>
               </div>
@@ -310,7 +322,7 @@ const styles: Record<string, React.CSSProperties> = {
   contentGroupStack: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '24px',
+    gap: '32px',
   },
   collectionSection: {
     display: 'flex',
@@ -322,7 +334,7 @@ const styles: Record<string, React.CSSProperties> = {
   sectionBlock: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '10px',
+    gap: '12px',
   },
   sectionLabel: {
     fontSize: '12px',
@@ -371,28 +383,27 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '13px',
     color: '#D4D4D4',
   },
-  metricsGrid: {
+  inlineMetricsRow: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: '10px',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: '20px',
+    paddingTop: '4px',
   },
-  metricCard: {
-    backgroundColor: '#202020',
-    border: '1px solid #303030',
-    borderRadius: '8px',
-    padding: '12px 14px',
+  statColumn: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '2px',
+    gap: '4px',
   },
-  metricVal: {
-    fontSize: '20px',
-    fontWeight: '600',
+  statNumber: {
+    fontSize: '24px',
+    fontWeight: '400',
     color: '#D4D4D4',
+    letterSpacing: '-0.5px',
   },
-  metricLabel: {
+  statSublabel: {
     fontSize: '11px',
     color: '#7c7c80',
+    lineHeight: '1.3',
   },
   historyStack: {
     display: 'flex',
