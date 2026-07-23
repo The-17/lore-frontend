@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock, Columns, AlignLeft, RotateCcw, Eye, ChevronDown, ChevronRight } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -75,16 +75,24 @@ const renderSyntaxHighlightedCode = (rawCode: string, lang: string) => {
 
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink }) => {
   const [showDiff, setShowDiff] = useState(false);
+  const [diffMode, setDiffMode] = useState<'unified' | 'split'>('unified');
+  const [showDiagramDiff, setShowDiagramDiff] = useState(true);
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [approvalStatus, setApprovalStatus] = useState<'draft' | 'approved' | 'rejected'>('draft');
   const [isRejectHovered, setIsRejectHovered] = useState(false);
   const [isApproveHovered, setIsApproveHovered] = useState(false);
+  const [restoreNotification, setRestoreNotification] = useState<string | null>(null);
 
   const handleCopyCode = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
     setCopiedCodeIndex(index);
     setTimeout(() => setCopiedCodeIndex(null), 2000);
+  };
+
+  const handleRestoreVersion = (ver: string) => {
+    setRestoreNotification(`Artifact restored to ${ver} snapshot as new forward draft v4`);
+    setTimeout(() => setRestoreNotification(null), 4000);
   };
 
   const markdownText = `Lore operates on a fundamental architectural paradigm known as the **Artifact Plane**. Unlike conventional document editors or unstructured knowledge bases, an artifact in Lore is a durable, immutable, version-controlled entity equipped with cryptographic attribution, explicit dependency lineage, and deterministic state transitions. Every modification created by either human principals or autonomous AI coding agents produces an incremental state snapshot, preventing silent regressions and guaranteeing long-term system auditability across complex multi-agent engineering workflows.
@@ -212,12 +220,32 @@ System implementation milestones:
 
   const sanitizedHtml = DOMPurify.sanitize(markdownText);
 
-  const sampleGitHubDiff = [
-    { type: 'header', text: '@@ -4,6 +4,8 @@' },
-    { type: 'deletion', text: '- Standardized API routes will use DRF endpoints.' },
-    { type: 'addition', text: '+ Standardized API routes will reference [[Django Ninja Patterns]] for all error handling.' },
-    { type: 'addition', text: '+ Authentication middleware will resolve both JWT Bearer tokens and [[Agent Token Security]] headers.' },
+  // Sample unified & split diff data model for enhanced diff experience
+  const sampleDiffData = [
+    { type: 'header', text: '@@ -4,8 +4,11 @@ System Architecture & Lore Contracts' },
+    { type: 'context', text: 'Lore operates on a fundamental architectural paradigm known as the Artifact Plane.', leftNum: 4, rightNum: 4 },
+    { type: 'deletion', text: '- Standardized API routes will use legacy DRF endpoints.', leftNum: 5, rightNum: null, wordHighlight: 'legacy DRF endpoints' },
+    { type: 'addition', text: '+ Standardized API routes will reference [[Django Ninja Patterns]] for all error handling.', leftNum: null, rightNum: 5, wordHighlight: '[[Django Ninja Patterns]] for all error handling' },
+    { type: 'addition', text: '+ Authentication middleware will resolve both JWT Bearer tokens and [[Agent Token Security]] headers.', leftNum: null, rightNum: 6, wordHighlight: 'JWT Bearer tokens and [[Agent Token Security]]' },
+    { type: 'context', text: 'By decoupling the high-frequency execution context of autonomous AI agents...', leftNum: 6, rightNum: 7 },
+    { type: 'deletion', text: '- Policy verification checks are executed asynchronously once per day.', leftNum: 7, rightNum: null, wordHighlight: 'asynchronously once per day' },
+    { type: 'addition', text: '+ Policy verification checks execute deterministically on every agent artifact proposal.', leftNum: null, rightNum: 8, wordHighlight: 'deterministically on every agent artifact proposal' },
   ];
+
+  const diagramV2Code = `sequenceDiagram
+    actor Human
+    actor Agent
+    Human->>Agent: Send task
+    Agent-->>Human: Done`;
+
+  const diagramV3Code = `sequenceDiagram
+    autonumber
+    actor Human as Human Developer
+    participant Agent as AI Coding Agent
+    participant Gateway as Lore API Gateway
+    Human->>Agent: Propose task
+    Agent->>Gateway: POST /api/artifacts
+    Gateway-->>Human: Draft Created`;
 
   let codeBlockCounter = 0;
 
@@ -306,26 +334,34 @@ System implementation milestones:
         )}
       </div>
 
+      {/* RESTORE NOTIFICATION BANNER */}
+      {restoreNotification && (
+        <div style={styles.restoreToast}>
+          <Check size={14} style={{ color: '#4ade80', marginRight: '6px' }} />
+          <span>{restoreNotification}</span>
+        </div>
+      )}
+
       {/* FULL CANVAS READING AREA */}
       <div style={styles.fullCanvasScrollArea}>
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* CANVAS HEADER WITH SOFTENED OPACITY SEPARATORS */}
+            {/* CANVAS HEADER WITH NO-BG SUBTYPE TEXT & DRAFT PILL */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
               {/* Single-Line Property Strip */}
               <div style={styles.quietPropertyStrip}>
                 
-                {/* SUBTYPE TEXT (NO BACKGROUND BOX) */}
+                {/* SUBTYPE TEXT */}
                 <span style={styles.noBgSubtypeText}>
                   Decision
                 </span>
 
                 <span style={styles.propDot}>•</span>
                 
-                {/* LIFECYCLE STATE PILL (WITH BORDER RADIUS) */}
+                {/* LIFECYCLE STATE PILL */}
                 <span
                   style={{
                     ...styles.inlineStatePill,
@@ -341,7 +377,7 @@ System implementation milestones:
 
                 <span style={styles.propDot}>•</span>
 
-                {/* PRINCIPALS (Created by & Steward) */}
+                {/* PRINCIPALS */}
                 <span style={styles.propVal}>Created by Architecture Agent</span>
 
                 <span style={styles.propDot}>•</span>
@@ -354,31 +390,189 @@ System implementation milestones:
             </div>
 
             {showDiff ? (
-              <div style={styles.githubDiffViewer}>
-                <div style={styles.diffHeaderBar}>
-                  <button onClick={() => setShowDiff(false)} style={styles.backToDocBtn}>
-                    <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Return to Content
-                  </button>
-                  <span style={{ color: '#8b949e', fontSize: '12px' }}>Unified Version Line Diff (v2 → v3)</span>
-                </div>
-                <div style={styles.diffLinesList}>
-                  {sampleGitHubDiff.map((line, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        ...styles.diffLineRow,
-                        ...(line.type === 'addition'
-                          ? styles.additionLine
-                          : line.type === 'deletion'
-                          ? styles.deletionLine
-                          : styles.headerLine),
-                      }}
-                    >
-                      <span style={styles.linePrefix}>{line.text.slice(0, 1)}</span>
-                      <span>{line.text.slice(2)}</span>
+              /* ENHANCED PUBLICATION-GRADE DIFF & HISTORY EXPERIENCE */
+              <div style={styles.enhancedDiffContainer}>
+                
+                {/* HEADER METADATA DIFF BANNER */}
+                <div style={styles.diffMetadataBanner}>
+                  <div style={styles.diffBannerTitleRow}>
+                    <div style={styles.versionJumpBadge}>
+                      <Clock size={13} style={{ color: '#71717a', marginRight: '5px' }} />
+                      <span style={{ color: '#a1a1aa' }}>v2</span>
+                      <span style={{ color: '#3f3f46', margin: '0 4px' }}>→</span>
+                      <span style={{ color: '#D4D4D4', fontWeight: '600' }}>v3 (Current)</span>
                     </div>
-                  ))}
+
+                    <div style={styles.stateTransitionBadge}>
+                      <span style={styles.stateFromLabel}>DRAFT</span>
+                      <span style={styles.stateArrow}>→</span>
+                      <span style={styles.stateToLabel}>APPROVED</span>
+                    </div>
+
+                    <div style={styles.diffStatsSummary}>
+                      <span style={styles.addStatBadge}>+12 additions</span>
+                      <span style={styles.delStatBadge}>-3 deletions</span>
+                    </div>
+
+                    <button
+                      onClick={() => handleRestoreVersion('v2')}
+                      style={styles.restoreBtn}
+                      title="Restore v2 snapshot into new forward draft"
+                    >
+                      <RotateCcw size={12} style={{ marginRight: '5px' }} />
+                      <span>Restore v2</span>
+                    </button>
+
+                    <button onClick={() => setShowDiff(false)} style={styles.backToDocBtn}>
+                      <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Return to Content
+                    </button>
+                  </div>
+
+                  <div style={styles.diffBannerSubRow}>
+                    <span style={{ color: '#71717a', fontSize: '12px' }}>
+                      Attribution: Created by Architecture Agent • Steward: Wisdom
+                    </span>
+
+                    {/* SPLIT VS UNIFIED MODE TOGGLE CONTROLS */}
+                    <div style={styles.modeToggleGroup}>
+                      <button
+                        onClick={() => setDiffMode('unified')}
+                        style={{
+                          ...styles.toggleBtn,
+                          ...(diffMode === 'unified' ? styles.activeToggleBtn : {}),
+                        }}
+                      >
+                        <AlignLeft size={12} style={{ marginRight: '4px' }} />
+                        Unified
+                      </button>
+                      <button
+                        onClick={() => setDiffMode('split')}
+                        style={{
+                          ...styles.toggleBtn,
+                          ...(diffMode === 'split' ? styles.activeToggleBtn : {}),
+                        }}
+                      >
+                        <Columns size={12} style={{ marginRight: '4px' }} />
+                        Split
+                      </button>
+                    </div>
+                  </div>
                 </div>
+
+                {/* MERMAID DIAGRAM VISUAL COMPARISON ACCORDION */}
+                <div style={styles.diagramDiffAccordion}>
+                  <div
+                    style={styles.diagramAccordionHeader}
+                    onClick={() => setShowDiagramDiff(!showDiagramDiff)}
+                  >
+                    {showDiagramDiff ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+                    <Eye size={13} style={{ color: '#38bdf8', marginLeft: '6px', marginRight: '6px' }} />
+                    <span style={{ color: '#D4D4D4', fontWeight: '500', fontSize: '13px' }}>
+                      Visual Diagram Comparison (Mermaid Flow v2 vs v3)
+                    </span>
+                  </div>
+
+                  {showDiagramDiff && (
+                    <div style={styles.diagramCompareGrid}>
+                      <div style={styles.diagramComparePane}>
+                        <span style={styles.diagramPaneLabel}>v2 Previous Diagram</span>
+                        <MermaidRenderer chart={diagramV2Code} />
+                      </div>
+                      <div style={styles.diagramComparePane}>
+                        <span style={styles.diagramPaneLabel}>v3 Current Diagram</span>
+                        <MermaidRenderer chart={diagramV3Code} />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* UNIFIED OR SPLIT LINE DIFF VIEW */}
+                {diffMode === 'unified' ? (
+                  <div style={styles.unifiedDiffList}>
+                    {sampleDiffData.map((row, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          ...styles.unifiedDiffRow,
+                          ...(row.type === 'addition'
+                            ? styles.additionLine
+                            : row.type === 'deletion'
+                            ? styles.deletionLine
+                            : row.type === 'header'
+                            ? styles.headerLine
+                            : styles.contextLine),
+                        }}
+                      >
+                        <span style={styles.lineNumCol}>{row.leftNum || ''}</span>
+                        <span style={styles.lineNumCol}>{row.rightNum || ''}</span>
+                        <span style={styles.linePrefix}>{row.text.slice(0, 1)}</span>
+                        <span style={styles.lineContentText}>
+                          {row.wordHighlight ? (
+                            <>
+                              {row.text.slice(2).split(row.wordHighlight)[0]}
+                              <span
+                                style={{
+                                  ...styles.wordHighlightSpan,
+                                  ...(row.type === 'addition'
+                                    ? styles.addWordSpan
+                                    : styles.delWordSpan),
+                                }}
+                              >
+                                {row.wordHighlight}
+                              </span>
+                              {row.text.slice(2).split(row.wordHighlight)[1] || ''}
+                            </>
+                          ) : (
+                            row.text.slice(2)
+                          )}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={styles.splitDiffGrid}>
+                    <div style={styles.splitPane}>
+                      <div style={styles.splitPaneHeader}>Previous Version (v2)</div>
+                      <div style={styles.splitPaneContent}>
+                        {sampleDiffData
+                          .filter((r) => r.type !== 'addition')
+                          .map((r, idx) => (
+                            <div
+                              key={idx}
+                              style={{
+                                ...styles.splitRow,
+                                ...(r.type === 'deletion' ? styles.deletionLine : {}),
+                              }}
+                            >
+                              <span style={styles.lineNumCol}>{r.leftNum || ''}</span>
+                              <span>{r.text}</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+
+                    <div style={styles.splitPane}>
+                      <div style={styles.splitPaneHeader}>Current Version (v3)</div>
+                      <div style={styles.splitPaneContent}>
+                        {sampleDiffData
+                          .filter((r) => r.type !== 'deletion')
+                          .map((r, idx) => (
+                            <div
+                              key={idx}
+                              style={{
+                                ...styles.splitRow,
+                                ...(r.type === 'addition' ? styles.additionLine : {}),
+                              }}
+                            >
+                              <span style={styles.lineNumCol}>{r.rightNum || ''}</span>
+                              <span>{r.text}</span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
               </div>
             ) : (
               <ReactMarkdown
@@ -497,10 +691,10 @@ System implementation milestones:
           </div>
         </div>
 
-        {/* PROVENANCE & EVOLUTION HISTORY FOOTER (LAST 3 VERSIONS) */}
+        {/* PROVENANCE & EVOLUTION HISTORY FOOTER */}
         <div style={styles.footerRow}>
           
-          {/* LEFT ITEM: VERSION HISTORY (LAST 3 VERSIONS) */}
+          {/* LEFT ITEM: VERSION HISTORY */}
           <div style={styles.footerLeftItem} onClick={() => setShowDiff(!showDiff)} title="Toggle version diff view">
             <Clock size={12} style={{ color: '#71717a', marginRight: '4px' }} />
             <span style={styles.footerLabel}>History:</span>
@@ -671,6 +865,22 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '500',
     cursor: 'pointer',
   },
+  restoreToast: {
+    position: 'absolute',
+    top: '72px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    zIndex: 30,
+    backgroundColor: '#18181b',
+    border: '1px solid #27272a',
+    borderRadius: '12px',
+    padding: '8px 16px',
+    color: '#D4D4D4',
+    fontSize: '13px',
+    boxShadow: '0 12px 32px rgba(0,0,0,0.5)',
+    display: 'flex',
+    alignItems: 'center',
+  },
   fullCanvasScrollArea: {
     width: '100%',
     height: '100vh',
@@ -683,7 +893,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   centerColumn: {
     flex: 1,
-    maxWidth: '720px',
+    maxWidth: '740px',
     width: '100%',
     margin: '0 auto',
     display: 'flex',
@@ -699,7 +909,7 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '88px',
   },
   canvasHeader: {
-    marginBottom: '60px',
+    marginBottom: '48px',
   },
   mainTitle: {
     fontSize: '32px',
@@ -921,63 +1131,244 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#d4d4d8',
     fontSize: '13px',
   },
-  githubDiffViewer: {
-    backgroundColor: '#09090b',
-    borderRadius: '8px',
-    border: '1px solid #27272a',
-    padding: '18px',
-    marginTop: '20px',
-    fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace',
-    fontSize: '13px',
-    lineHeight: '1.6',
-    color: '#e4e4e7',
-  },
-  diffHeaderBar: {
+  enhancedDiffContainer: {
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    gap: '20px',
+    marginTop: '16px',
+  },
+  diffMetadataBanner: {
+    backgroundColor: '#272727',
+    border: '1px solid #333333',
+    borderRadius: '12px',
+    padding: '16px 20px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '12px',
+  },
+  diffBannerTitleRow: {
+    display: 'flex',
     alignItems: 'center',
-    marginBottom: '14px',
-    paddingBottom: '10px',
-    borderBottom: '1px solid #27272a',
+    gap: '12px',
+    flexWrap: 'wrap',
+  },
+  versionJumpBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    fontSize: '13px',
+  },
+  stateTransitionBadge: {
+    backgroundColor: '#202020',
+    border: '1px solid #303030',
+    borderRadius: '6px',
+    padding: '2px 8px',
+    fontSize: '11px',
+    fontWeight: '600',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  stateFromLabel: {
+    color: '#a1a1aa',
+  },
+  stateArrow: {
+    color: '#52525b',
+  },
+  stateToLabel: {
+    color: '#4ade80',
+  },
+  diffStatsSummary: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  restoreBtn: {
+    backgroundColor: '#202020',
+    border: '1px solid #383838',
+    color: '#D4D4D4',
+    padding: '4px 10px',
+    borderRadius: '6px',
+    fontSize: '12px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
   },
   backToDocBtn: {
     background: 'none',
     border: 'none',
-    color: '#ffffff',
+    color: '#a1a1aa',
     cursor: 'pointer',
     fontSize: '12px',
     fontWeight: '500',
-    display: 'flex',
+    display: 'inline-flex',
     alignItems: 'center',
   },
-  diffLinesList: {
+  diffBannerSubRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: '8px',
+    borderTop: '1px solid #303030',
+  },
+  modeToggleGroup: {
+    display: 'inline-flex',
+    backgroundColor: '#202020',
+    border: '1px solid #303030',
+    borderRadius: '6px',
+    padding: '2px',
+    gap: '2px',
+  },
+  toggleBtn: {
+    background: 'none',
+    border: 'none',
+    color: '#71717a',
+    fontSize: '12px',
+    fontWeight: '500',
+    padding: '3px 8px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+  },
+  activeToggleBtn: {
+    backgroundColor: '#333333',
+    color: '#D4D4D4',
+  },
+  diagramDiffAccordion: {
+    backgroundColor: '#272727',
+    border: '1px solid #333333',
+    borderRadius: '12px',
+    padding: '14px 18px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px',
+    gap: '14px',
   },
-  diffLineRow: {
-    padding: '6px 10px',
-    borderRadius: '4px',
+  diagramAccordionHeader: {
     display: 'flex',
-    gap: '8px',
+    alignItems: 'center',
+    cursor: 'pointer',
+    userSelect: 'none',
+  },
+  diagramCompareGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '16px',
+    paddingTop: '12px',
+    borderTop: '1px solid #303030',
+  },
+  diagramComparePane: {
+    backgroundColor: '#202020',
+    border: '1px solid #303030',
+    borderRadius: '8px',
+    padding: '14px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '10px',
+  },
+  diagramPaneLabel: {
+    fontSize: '11px',
+    fontWeight: '600',
+    color: '#71717a',
+    textTransform: 'uppercase',
+  },
+  unifiedDiffList: {
+    backgroundColor: '#18181a',
+    borderRadius: '12px',
+    border: '1px solid #2e2e32',
+    overflow: 'hidden',
+    fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace",
+    fontSize: '13px',
+    lineHeight: '1.65',
+  },
+  unifiedDiffRow: {
+    padding: '6px 12px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+  },
+  lineNumCol: {
+    userSelect: 'none',
+    width: '24px',
+    color: '#52525b',
+    fontSize: '11px',
+    textAlign: 'right',
+    flexShrink: 0,
   },
   linePrefix: {
     userSelect: 'none',
     fontWeight: '700',
     width: '12px',
+    flexShrink: 0,
+  },
+  lineContentText: {
+    flex: 1,
+    whiteSpace: 'pre-wrap',
+  },
+  wordHighlightSpan: {
+    padding: '1px 4px',
+    borderRadius: '3px',
+    fontWeight: '500',
+  },
+  addWordSpan: {
+    backgroundColor: 'rgba(74, 222, 128, 0.25)',
+    color: '#86efac',
+  },
+  delWordSpan: {
+    backgroundColor: 'rgba(248, 113, 113, 0.25)',
+    color: '#fca5a5',
   },
   additionLine: {
-    backgroundColor: 'rgba(74, 222, 128, 0.12)',
+    backgroundColor: 'rgba(74, 222, 128, 0.08)',
     color: '#4ade80',
   },
   deletionLine: {
-    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    backgroundColor: 'rgba(248, 113, 113, 0.08)',
     color: '#f87171',
   },
+  contextLine: {
+    color: '#a1a1aa',
+  },
   headerLine: {
-    backgroundColor: '#27272a',
-    color: '#f4f4f5',
+    backgroundColor: '#242424',
+    color: '#71717a',
     fontStyle: 'italic',
+    padding: '4px 12px',
+  },
+  splitDiffGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '16px',
+  },
+  splitPane: {
+    backgroundColor: '#18181a',
+    border: '1px solid #2e2e32',
+    borderRadius: '12px',
+    overflow: 'hidden',
+  },
+  splitPaneHeader: {
+    backgroundColor: '#202022',
+    padding: '8px 14px',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: '#a1a1aa',
+    borderBottom: '1px solid #2e2e32',
+  },
+  splitPaneContent: {
+    padding: '12px',
+    fontFamily: "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace",
+    fontSize: '12px',
+    lineHeight: '1.6',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+  },
+  splitRow: {
+    padding: '4px 8px',
+    borderRadius: '4px',
+    display: 'flex',
+    gap: '8px',
   },
   footerRow: {
     display: 'flex',
