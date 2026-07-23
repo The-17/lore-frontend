@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
-import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock, Columns, AlignLeft, RotateCcw, Eye, ChevronDown, ChevronRight, Network } from 'lucide-react';
+import { ChevronLeft, ArrowLeft, Copy, Check, Info, X, GitCommit, Clock, Columns, AlignLeft, RotateCcw, Eye, ChevronDown, ChevronRight, Network, Compass } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 import { WikiLink } from './WikiLink';
 import { MermaidRenderer } from './MermaidRenderer';
@@ -18,7 +18,7 @@ interface ArtifactCanvasProps {
   onReject?: (id: string) => void;
 }
 
-// Lightweight Syntax Highlighter for code blocks
+// Syntax Highlighter for code blocks
 const renderSyntaxHighlightedCode = (rawCode: string, lang: string) => {
   const lines = rawCode.split('\n');
 
@@ -35,7 +35,7 @@ const renderSyntaxHighlightedCode = (rawCode: string, lang: string) => {
           if (['from', 'import', 'def', 'return', 'class', 'if', 'else', 'try', 'except', 'with', 'as', 'for', 'in'].includes(token)) {
             return <span key={tokIdx} style={{ color: '#f472b6', fontWeight: '500' }}>{token}</span>;
           }
-          if (['True', 'False', 'None', 'UUID', 'Router', 'ArtifactSchema', 'ArtifactCreateSchema'].includes(token)) {
+          if (['True', 'False', 'None', 'UUID', 'Router', 'ArtifactSchema', 'ArtifactCreateSchema', 'ArtifactRevertSchema'].includes(token)) {
             return <span key={tokIdx} style={{ color: '#38bdf8', fontWeight: '500' }}>{token}</span>;
           }
           if (token.startsWith('@')) {
@@ -93,6 +93,13 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
   const handleRevertVersion = (ver: string) => {
     setRestoreNotification(`Reverted to ${ver} — appended snapshot as new forward draft v4`);
     setTimeout(() => setRestoreNotification(null), 4000);
+  };
+
+  const scrollToDiffSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   const markdownText = `Lore operates on a fundamental architectural paradigm known as the **Artifact Plane**. Unlike conventional document editors or unstructured knowledge bases, an artifact in Lore is a durable, immutable, version-controlled entity equipped with cryptographic attribution, explicit dependency lineage, and deterministic state transitions. Every modification created by either human principals or autonomous AI coding agents produces an incremental state snapshot, preventing silent regressions and guaranteeing long-term system auditability across complex multi-agent engineering workflows.
@@ -220,16 +227,44 @@ System implementation milestones:
 
   const sanitizedHtml = DOMPurify.sanitize(markdownText);
 
-  // Sample unified & split diff data model for enhanced diff experience
-  const sampleDiffData = [
-    { type: 'header', text: '@@ -4,8 +4,11 @@ System Architecture & Lore Contracts' },
+  // Bulky, multi-chunk realistic diff data set for testing diff features
+  const bulkyDiffData = [
+    // HUNK 1: Section 1 Architectural Paradigm
+    { id: 'diff-chunk-1', type: 'header', text: '@@ -4,12 +4,16 @@ Hunk 1: Architectural Paradigm & Auth Rules' },
     { type: 'context', text: 'Lore operates on a fundamental architectural paradigm known as the Artifact Plane.', leftNum: 4, rightNum: 4 },
     { type: 'deletion', text: '- Standardized API routes will use legacy DRF endpoints.', leftNum: 5, rightNum: null, wordHighlight: 'legacy DRF endpoints' },
-    { type: 'addition', text: '+ Standardized API routes will reference [[Django Ninja Patterns]] for all error handling.', leftNum: null, rightNum: 5, wordHighlight: '[[Django Ninja Patterns]] for all error handling' },
-    { type: 'addition', text: '+ Authentication middleware will resolve both JWT Bearer tokens and [[Agent Token Security]] headers.', leftNum: null, rightNum: 6, wordHighlight: 'JWT Bearer tokens and [[Agent Token Security]]' },
+    { type: 'addition', text: '+ Standardized API routes will reference [[Django Ninja Patterns]] for all error handling and router schemas.', leftNum: null, rightNum: 5, wordHighlight: '[[Django Ninja Patterns]] for all error handling' },
+    { type: 'addition', text: '+ Authentication middleware will resolve both JWT Bearer tokens and [[Agent Token Security]] headers deterministically.', leftNum: null, rightNum: 6, wordHighlight: 'JWT Bearer tokens and [[Agent Token Security]]' },
     { type: 'context', text: 'By decoupling the high-frequency execution context of autonomous AI agents...', leftNum: 6, rightNum: 7 },
     { type: 'deletion', text: '- Policy verification checks are executed asynchronously once per day.', leftNum: 7, rightNum: null, wordHighlight: 'asynchronously once per day' },
     { type: 'addition', text: '+ Policy verification checks execute deterministically on every agent artifact proposal.', leftNum: null, rightNum: 8, wordHighlight: 'deterministically on every agent artifact proposal' },
+
+    // HUNK 2: Section 2 Sequence Diagram
+    { id: 'diff-chunk-2', type: 'header', text: '@@ -24,9 +28,15 @@ Hunk 2: Mermaid Sequence Diagram Flow' },
+    { type: 'context', text: '```mermaid', leftNum: 24, rightNum: 28 },
+    { type: 'deletion', text: '-     Agent->>Gateway: POST /api/artifacts', leftNum: 25, rightNum: null, wordHighlight: '/api/artifacts' },
+    { type: 'addition', text: '+     Agent->>Gateway: POST /api/v1/artifacts (Draft Skill Payload)', leftNum: null, rightNum: 29, wordHighlight: '/api/v1/artifacts (Draft Skill Payload)' },
+    { type: 'deletion', text: '-     Gateway->>Engine: Validate schema', leftNum: 26, rightNum: null, wordHighlight: 'Validate schema' },
+    { type: 'addition', text: '+     Gateway->>Engine: Validate schema & cryptographic token headers', leftNum: null, rightNum: 30, wordHighlight: 'cryptographic token headers' },
+    { type: 'context', text: '```', leftNum: 27, rightNum: 31 },
+
+    // HUNK 3: Section 3 API Router Python Code
+    { id: 'diff-chunk-3', type: 'header', text: '@@ -42,10 +52,18 @@ Hunk 3: Python Router Schema & Endpoints' },
+    { type: 'context', text: 'from ninja import Router', leftNum: 42, rightNum: 52 },
+    { type: 'deletion', text: '- from .schemas import ArtifactSchema', leftNum: 43, rightNum: null, wordHighlight: 'ArtifactSchema' },
+    { type: 'addition', text: '+ from .schemas import ArtifactSchema, ArtifactCreateSchema, ArtifactRevertSchema', leftNum: null, rightNum: 53, wordHighlight: 'ArtifactRevertSchema' },
+    { type: 'context', text: 'router = Router(tags=["Artifacts"])', leftNum: 44, rightNum: 54 },
+    { type: 'deletion', text: '- @router.get("/artifacts/{artifact_id}", response=ArtifactSchema)', leftNum: 45, rightNum: null, wordHighlight: '/artifacts/{artifact_id}' },
+    { type: 'addition', text: '+ @router.get("/artifacts/{artifact_id}", response=ArtifactSchema, auth=JWTBearer())', leftNum: null, rightNum: 55, wordHighlight: 'auth=JWTBearer()' },
+    { type: 'addition', text: '+ @router.post("/artifacts/{artifact_id}/revert", response=ArtifactSchema)', leftNum: null, rightNum: 56, wordHighlight: '/artifacts/{artifact_id}/revert' },
+    { type: 'addition', text: '+ def revert_artifact(request, artifact_id: UUID, payload: ArtifactRevertSchema):', leftNum: null, rightNum: 57, wordHighlight: 'ArtifactRevertSchema' },
+    { type: 'addition', text: '+     """Append historical snapshot as new forward version."""', leftNum: null, rightNum: 58, wordHighlight: 'Append historical snapshot' },
+
+    // HUNK 4: Section 4 Subtype Governance Table
+    { id: 'diff-chunk-4', type: 'header', text: '@@ -68,6 +86,7 @@ Hunk 4: Subtype Matrix & Governance Table' },
+    { type: 'context', text: '| `Document` | Structured knowledge sheet article | `under_review` | Semantic Graph Check |', leftNum: 68, rightNum: 86 },
+    { type: 'addition', text: '+ | `Context` | Execution context snapshot for AI agents | `draft` | Automated Schema Validation |', leftNum: null, rightNum: 87, wordHighlight: 'Execution context snapshot' },
+    { type: 'context', text: '---', leftNum: 69, rightNum: 88 },
   ];
 
   const diagramV2Code = `sequenceDiagram
@@ -403,10 +438,18 @@ System implementation milestones:
                       <span style={{ color: '#D4D4D4', fontWeight: '600' }}>v3 (Current)</span>
                     </div>
 
+                    {/* DYNAMIC STATE TRANSITION BADGE */}
                     <div style={styles.stateTransitionBadge}>
                       <span style={styles.stateFromLabel}>Draft</span>
                       <span style={styles.stateArrow}>→</span>
-                      <span style={styles.stateToLabel}>Approved</span>
+                      <span
+                        style={{
+                          ...styles.stateToLabel,
+                          color: approvalStatus === 'approved' ? '#4ade80' : approvalStatus === 'rejected' ? '#f87171' : '#a1a1aa',
+                        }}
+                      >
+                        {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft Proposal'}
+                      </span>
                     </div>
 
                     <div style={styles.diffStatsSummary}>
@@ -481,6 +524,28 @@ System implementation milestones:
                   </div>
                 </div>
 
+                {/* CHANGED SECTIONS QUICK-JUMP NAVIGATION BAR (REPLACES BULKY TOC) */}
+                <div style={styles.jumpNavContainer}>
+                  <div style={styles.jumpNavHeader}>
+                    <Compass size={13} style={{ color: '#a1a1aa', marginRight: '5px' }} />
+                    <span>Jump to Changed Section:</span>
+                  </div>
+                  <div style={styles.jumpPillsGroup}>
+                    <button onClick={() => scrollToDiffSection('diff-chunk-1')} style={styles.jumpPillBtn}>
+                      § 1. Architectural Paradigm
+                    </button>
+                    <button onClick={() => scrollToDiffSection('diff-chunk-2')} style={styles.jumpPillBtn}>
+                      § 2. Mermaid Sequence Diagram
+                    </button>
+                    <button onClick={() => scrollToDiffSection('diff-chunk-3')} style={styles.jumpPillBtn}>
+                      § 3. Python Router API
+                    </button>
+                    <button onClick={() => scrollToDiffSection('diff-chunk-4')} style={styles.jumpPillBtn}>
+                      § 4. Subtype Matrix Table
+                    </button>
+                  </div>
+                </div>
+
                 {/* MERMAID DIAGRAM VISUAL COMPARISON ACCORDION */}
                 <div style={styles.diagramDiffAccordion}>
                   <div
@@ -508,12 +573,13 @@ System implementation milestones:
                   )}
                 </div>
 
-                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH HIGH-CONTRAST LINE NUMBERS */}
+                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH BULKY DATA & HIGH-CONTRAST LINE NUMBERS */}
                 {diffMode === 'unified' ? (
                   <div style={styles.unifiedDiffList}>
-                    {sampleDiffData.map((row, idx) => (
+                    {bulkyDiffData.map((row, idx) => (
                       <div
                         key={idx}
+                        id={row.id}
                         style={{
                           ...styles.unifiedDiffRow,
                           ...(row.type === 'addition'
@@ -556,11 +622,12 @@ System implementation milestones:
                     <div style={styles.splitPane}>
                       <div style={styles.splitPaneHeader}>Previous Version (v2)</div>
                       <div style={styles.splitPaneContent}>
-                        {sampleDiffData
+                        {bulkyDiffData
                           .filter((r) => r.type !== 'addition')
                           .map((r, idx) => (
                             <div
                               key={idx}
+                              id={r.id ? `${r.id}-left` : undefined}
                               style={{
                                 ...styles.splitRow,
                                 ...(r.type === 'deletion' ? styles.deletionLine : {}),
@@ -576,11 +643,12 @@ System implementation milestones:
                     <div style={styles.splitPane}>
                       <div style={styles.splitPaneHeader}>Current Version (v3)</div>
                       <div style={styles.splitPaneContent}>
-                        {sampleDiffData
+                        {bulkyDiffData
                           .filter((r) => r.type !== 'deletion')
                           .map((r, idx) => (
                             <div
                               key={idx}
+                              id={r.id ? `${r.id}-right` : undefined}
                               style={{
                                 ...styles.splitRow,
                                 ...(r.type === 'addition' ? styles.additionLine : {}),
@@ -1249,6 +1317,41 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '11px',
     fontWeight: '500',
     cursor: 'pointer',
+  },
+  jumpNavContainer: {
+    backgroundColor: '#202022',
+    border: '1px solid #2e2e32',
+    borderRadius: '10px',
+    padding: '10px 14px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '12px',
+  },
+  jumpNavHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: '#a1a1aa',
+    flexShrink: 0,
+  },
+  jumpPillsGroup: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    flexWrap: 'wrap',
+  },
+  jumpPillBtn: {
+    backgroundColor: '#272727',
+    border: '1px solid #383838',
+    color: '#D4D4D4',
+    padding: '3px 8px',
+    borderRadius: '6px',
+    fontSize: '11px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'background 0.15s ease',
   },
   modeToggleGroup: {
     display: 'inline-flex',
