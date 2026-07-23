@@ -5,8 +5,8 @@
 export const tokens = {
   colors: {
     // Canvas & Surfacing
-    bgApp: '#222222',        // Outer workspace app shell canvas background
-    bgCard: '#292929',       // Main flush artifact sheet card background
+    bgApp: '#242424',        // Outer workspace app shell canvas background
+    bgCard: '#272727',       // Main flush artifact sheet card background
     bgTube: '#202020',       // Dark tube capsules background
     bgGlass: 'rgba(32, 32, 36, 0.75)', // Glassmorphic floating action bar background
     borderGlass: 'rgba(255, 255, 255, 0.08)',
@@ -56,7 +56,7 @@ export const tokens = {
   },
 
   typography: {
-    fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+    fontFamily: "'Poppins', system-ui, -apple-system, sans-serif",
     h1: { fontSize: '36px', fontWeight: '400', letterSpacing: '-0.5px' },
     h2: { fontSize: '24px', fontWeight: '500' },
     h3: { fontSize: '18px', fontWeight: '500' },

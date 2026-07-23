@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 /* Antigravity Design System Tokens */
 :root {
-  --ag-bg-app: #222222;
-  --ag-bg-card: #292929;
+  --ag-bg-app: #242424;
+  --ag-bg-card: #272727;
   --ag-bg-tube: #202020;
   --ag-bg-glass: rgba(32, 32, 36, 0.75);
   --ag-border-glass: rgba(255, 255, 255, 0.08);
@@ -18,7 +18,7 @@
   --ag-diff-del-text: #f85149;
   --ag-diff-del-bg: rgba(248, 81, 73, 0.15);
 
-  --ag-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --ag-font-family: 'Poppins', system-ui, -apple-system, sans-serif;
   --ag-shadow-glass: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
