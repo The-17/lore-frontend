@@ -437,10 +437,10 @@ System implementation milestones:
             </div>
 
             {showDiff ? (
-              /* MODAL-CARD STYLED REVIEW & PROPOSED STATE TRANSITION CONTAINER (#272727 SURFACE) */
-              <div style={styles.modalStyledDiffCard}>
+              /* DIRECT-ON-CANVAS REVIEW FLOW (SEAMLESS UNWRAPPED CANVAS EXPERIENCE) */
+              <div style={styles.canvasDiffFlowContainer}>
                 
-                {/* HEADER METADATA DIFF SECTION (CLEAN UNNESTED LAYOUT) */}
+                {/* HEADER METADATA DIFF SECTION (DIRECT ON CANVAS, NO OUTER BOX) */}
                 <div style={styles.diffMetadataBanner}>
                   <div style={styles.diffBannerTitleRow}>
                     <div style={styles.versionJumpBadge}>
@@ -536,7 +536,7 @@ System implementation milestones:
                   </div>
                 </div>
 
-                {/* MERMAID DIAGRAM VISUAL COMPARISON ACCORDION */}
+                {/* MERMAID DIAGRAM VISUAL COMPARISON (TRANSPARENT DIRECT-ON-CANVAS LOOK) */}
                 <div style={styles.diagramDiffAccordion}>
                   <div
                     style={styles.diagramAccordionHeader}
@@ -563,7 +563,7 @@ System implementation milestones:
                   )}
                 </div>
 
-                {/* UNIFIED OR SPLIT LINE DIFF VIEW WITH MODAL-CARD SURFACING */}
+                {/* UNIFIED OR SPLIT LINE DIFF VIEW (DIRECT ON CANVAS SURFACING) */}
                 {diffMode === 'unified' ? (
                   <div style={styles.unifiedDiffList}>
                     {bulkyDiffData.map((row, idx) => (
@@ -1073,7 +1073,7 @@ const styles: Record<string, React.CSSProperties> = {
     hyphens: 'auto',
   },
   blockquote: {
-    backgroundColor: '#202020',
+    backgroundColor: 'transparent',
     padding: '12px 18px',
     borderRadius: '0 4px 4px 0',
     color: '#D4D4D4',
@@ -1197,15 +1197,12 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#D4D4D4',
     fontSize: '13px',
   },
-  modalStyledDiffCard: {
-    backgroundColor: '#272727',
-    borderRadius: '16px',
-    padding: '36px',
+  canvasDiffFlowContainer: {
+    backgroundColor: 'transparent',
     display: 'flex',
     flexDirection: 'column',
-    gap: '28px',
-    boxShadow: '0 16px 48px rgba(0, 0, 0, 0.4)',
-    marginTop: '8px',
+    gap: '32px',
+    paddingTop: '8px',
   },
   diffMetadataBanner: {
     display: 'flex',
@@ -1337,9 +1334,9 @@ const styles: Record<string, React.CSSProperties> = {
     paddingTop: '8px',
   },
   diagramComparePane: {
-    backgroundColor: '#202020',
-    borderRadius: '8px',
-    padding: '16px',
+    backgroundColor: 'transparent',
+    borderRadius: 0,
+    padding: '8px',
     display: 'flex',
     flexDirection: 'column',
     gap: '12px',
