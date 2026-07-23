@@ -302,12 +302,12 @@ System implementation milestones:
         )}
       </div>
 
-      {/* FULL CANVAS READING AREA — SCROLLS FROM VERY TOP WITHOUT FULL-WIDTH HEADER CUTOFF */}
+      {/* FULL CANVAS READING AREA — STARTS LOWER WITH SPACED TITLE HEADER */}
       <div style={styles.fullCanvasScrollArea}>
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
-            {/* QUIET CANVAS HEADER */}
+            {/* QUIET CANVAS HEADER — LOWER TOP MARGIN & GENEROUS BOTTOM SPACING */}
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
@@ -522,7 +522,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   floatingBackBtn: {
     position: 'absolute',
-    top: '20px',
+    top: '24px',
     left: '32px',
     zIndex: 20,
     background: 'none',
@@ -537,7 +537,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   floatingActionTube: {
     position: 'absolute',
-    top: '20px',
+    top: '24px',
     right: '32px',
     zIndex: 20,
     backgroundColor: '#18181b',
@@ -645,7 +645,7 @@ const styles: Record<string, React.CSSProperties> = {
   fullCanvasScrollArea: {
     width: '100%',
     height: '100vh',
-    padding: '24px 48px 16px 48px',
+    padding: '0px 48px 16px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -667,16 +667,16 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '24px',
+    paddingTop: '64px',
   },
   canvasHeader: {
-    marginBottom: '32px',
+    marginBottom: '52px',
   },
   mainTitle: {
     fontSize: '32px',
     fontWeight: '600',
     color: '#f4f4f5',
-    margin: '0 0 10px 0',
+    margin: '0 0 12px 0',
     letterSpacing: '-0.5px',
   },
   quietPropertyStrip: {
