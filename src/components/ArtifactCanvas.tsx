@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import DOMPurify from 'dompurify';
@@ -12,6 +12,8 @@ interface ArtifactCanvasProps {
   artifact?: any;
   versions?: any[];
   relationships?: any[];
+  isDiffOpen?: boolean;
+  onToggleDiff?: (open: boolean) => void;
   onBack?: () => void;
   onSelectWikiLink?: (title: string) => void;
   onApprove?: (id: string) => void;
@@ -73,8 +75,12 @@ const renderSyntaxHighlightedCode = (rawCode: string, lang: string) => {
   });
 };
 
-export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink }) => {
-  const [showDiff, setShowDiff] = useState(false);
+export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
+  isDiffOpen: propIsDiffOpen,
+  onToggleDiff,
+  onSelectWikiLink,
+}) => {
+  const [showDiff, setShowDiff] = useState(propIsDiffOpen || false);
   const [diffMode, setDiffMode] = useState<'unified' | 'split'>('unified');
   const [showDiagramDiff, setShowDiagramDiff] = useState(true);
   const [copiedCodeIndex, setCopiedCodeIndex] = useState<number | null>(null);
@@ -83,6 +89,19 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
   const [isRejectHovered, setIsRejectHovered] = useState(false);
   const [isApproveHovered, setIsApproveHovered] = useState(false);
   const [restoreNotification, setRestoreNotification] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (propIsDiffOpen !== undefined) {
+      setShowDiff(propIsDiffOpen);
+    }
+  }, [propIsDiffOpen]);
+
+  const toggleDiffState = (newVal: boolean) => {
+    setShowDiff(newVal);
+    if (onToggleDiff) {
+      onToggleDiff(newVal);
+    }
+  };
 
   const handleCopyCode = (text: string, index: number) => {
     navigator.clipboard.writeText(text);
@@ -227,7 +246,7 @@ System implementation milestones:
 
   const sanitizedHtml = DOMPurify.sanitize(markdownText);
 
-  // Bulky, multi-chunk realistic diff data set for testing diff features
+  // Bulky multi-chunk realistic diff dataset for testing diff features
   const bulkyDiffData = [
     // HUNK 1: Section 1 Architectural Paradigm
     { id: 'diff-chunk-1', type: 'header', text: '@@ -4,12 +4,16 @@ Hunk 1: Architectural Paradigm & Auth Rules' },
@@ -302,7 +321,7 @@ System implementation milestones:
         </button>
 
         <button
-          onClick={() => setShowDiff(!showDiff)}
+          onClick={() => toggleDiffState(!showDiff)}
           style={styles.tubeDiffBtn}
           title="Toggle Line Diffs"
         >
@@ -466,7 +485,7 @@ System implementation milestones:
                       <span>Revert to v2</span>
                     </button>
 
-                    <button onClick={() => setShowDiff(false)} style={styles.backToDocBtn}>
+                    <button onClick={() => toggleDiffState(false)} style={styles.backToDocBtn}>
                       <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Exit Review
                     </button>
                   </div>
@@ -524,11 +543,11 @@ System implementation milestones:
                   </div>
                 </div>
 
-                {/* CHANGED SECTIONS QUICK-JUMP NAVIGATION BAR (REPLACES BULKY TOC) */}
+                {/* CHANGED SECTIONS QUICK-JUMP NAVIGATION BAR */}
                 <div style={styles.jumpNavContainer}>
                   <div style={styles.jumpNavHeader}>
-                    <Compass size={13} style={{ color: '#a1a1aa', marginRight: '5px' }} />
-                    <span>Jump to Changed Section:</span>
+                    <Compass size={13} style={{ color: '#38bdf8', marginRight: '5px' }} />
+                    <span style={{ color: '#38bdf8' }}>Jump to Changed Section:</span>
                   </div>
                   <div style={styles.jumpPillsGroup}>
                     <button onClick={() => scrollToDiffSection('diff-chunk-1')} style={styles.jumpPillBtn}>
@@ -785,7 +804,7 @@ System implementation milestones:
         <div style={styles.footerRow}>
           
           {/* LEFT ITEM: VERSION HISTORY */}
-          <div style={styles.footerLeftItem} onClick={() => setShowDiff(!showDiff)} title="Toggle version diff view">
+          <div style={styles.footerLeftItem} onClick={() => toggleDiffState(!showDiff)} title="Toggle version diff view">
             <Clock size={12} style={{ color: '#71717a', marginRight: '4px' }} />
             <span style={styles.footerLabel}>History:</span>
             <div style={styles.footerHistorySteps}>
@@ -1333,7 +1352,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     fontSize: '12px',
     fontWeight: '600',
-    color: '#a1a1aa',
+    color: '#38bdf8',
     flexShrink: 0,
   },
   jumpPillsGroup: {

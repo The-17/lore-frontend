@@ -20,6 +20,7 @@ export function App() {
   const [relationships, setRelationships] = useState<Relationship[]>([]);
   const [sidebarWidth, setSidebarWidth] = useState<number>(tokens.layout.defaultSidebarWidth);
   const [activeHeadingId, setActiveHeadingId] = useState<string>('some-header-text');
+  const [isDiffOpen, setIsDiffOpen] = useState(false);
 
   // Initial Load from Self-Hosted Backend or Mock Fallback
   useEffect(() => {
@@ -87,7 +88,7 @@ export function App() {
     setActiveHeadingId(headingId);
     const element = document.getElementById(headingId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
@@ -109,10 +110,11 @@ export function App() {
       {/* Main View Area: Two Column Resizable Grid */}
       {activeTab === 'workspace' && (
         <div style={styles.workspaceSplit}>
-          {/* Left Sidebar Pane with TOC and Resizable Handle */}
+          {/* Left Sidebar Pane with Dynamic TOC / Changed Sections and Resizable Handle */}
           <LeftSidebarPane
             width={sidebarWidth}
             onWidthChange={setSidebarWidth}
+            isDiffOpen={isDiffOpen}
             activeHeadingId={activeHeadingId}
             onSelectHeading={handleSelectHeading}
           />
@@ -122,6 +124,8 @@ export function App() {
             artifact={activeArtifact}
             versions={versions}
             relationships={relationships}
+            isDiffOpen={isDiffOpen}
+            onToggleDiff={setIsDiffOpen}
             onSelectWikiLink={handleWikiLinkClick}
             onApprove={handleApproveArtifact}
           />

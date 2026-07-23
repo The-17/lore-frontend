@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { List, AlignLeft } from 'lucide-react';
+import { List, AlignLeft, Compass, GitCommit } from 'lucide-react';
 import { tokens } from '../design-system/tokens';
 
 export interface TocItem {
@@ -11,6 +11,7 @@ export interface TocItem {
 interface LeftSidebarPaneProps {
   width: number;
   onWidthChange: (newWidth: number) => void;
+  isDiffOpen?: boolean;
   tocItems?: TocItem[];
   activeHeadingId?: string;
   onSelectHeading?: (id: string) => void;
@@ -19,18 +20,30 @@ interface LeftSidebarPaneProps {
 export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
   width,
   onWidthChange,
-  tocItems = [
+  isDiffOpen = false,
+  tocItems,
+  activeHeadingId = 'some-header-text',
+  onSelectHeading,
+}) => {
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // Default Document TOC items vs Changed Sections Diff items
+  const defaultDocToc: TocItem[] = [
     { id: 'some-header-text', text: 'System Architecture & Lore Contracts', level: 1 },
     { id: '1-core-architecture-flow', text: '1. Core Architecture Flow', level: 2 },
     { id: '2-backend-api-contracts--endpoints', text: '2. Backend API Contracts & Endpoints', level: 2 },
     { id: '3-subtype-matrix--governance', text: '3. Subtype Matrix & Governance', level: 2 },
     { id: '4-key-roadmap-tasks--checklists', text: '4. Key Roadmap Tasks & Checklists', level: 2 },
-    { id: '5-architectural-diagram-asset', text: '5. Architectural Diagram Asset', level: 2 },
-  ],
-  activeHeadingId = 'some-header-text',
-  onSelectHeading,
-}) => {
-  const sidebarRef = useRef<HTMLDivElement>(null);
+  ];
+
+  const defaultDiffSections: TocItem[] = [
+    { id: 'diff-chunk-1', text: '§ 1. Architectural Paradigm', level: 1 },
+    { id: 'diff-chunk-2', text: '§ 2. Mermaid Sequence Diagram', level: 1 },
+    { id: 'diff-chunk-3', text: '§ 3. Python Router API', level: 1 },
+    { id: 'diff-chunk-4', text: '§ 4. Subtype Matrix Table', level: 1 },
+  ];
+
+  const currentItems = tocItems || (isDiffOpen ? defaultDiffSections : defaultDocToc);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -69,15 +82,24 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
         width: `${width}px`,
       }}
     >
-      {/* Table of Contents Header */}
+      {/* Sidebar Header: Switches dynamically between "Table of Contents" and "Changed Sections" */}
       <div style={styles.header}>
-        <List size={16} style={{ color: tokens.colors.textSecondary, marginRight: '8px' }} />
-        <span style={styles.headerTitle}>Table of Contents</span>
+        {isDiffOpen ? (
+          <>
+            <GitCommit size={15} style={{ color: '#38bdf8', marginRight: '8px' }} />
+            <span style={{ ...styles.headerTitle, color: '#38bdf8' }}>Changed Sections</span>
+          </>
+        ) : (
+          <>
+            <List size={15} style={{ color: tokens.colors.textSecondary, marginRight: '8px' }} />
+            <span style={styles.headerTitle}>Table of Contents</span>
+          </>
+        )}
       </div>
 
-      {/* TOC Outline Tree */}
+      {/* TOC Outline Tree / Changed Sections list */}
       <div style={styles.tocList}>
-        {tocItems.map((item) => {
+        {currentItems.map((item) => {
           const isActive = activeHeadingId === item.id;
           const indent = (item.level - 1) * 14;
           return (
@@ -88,27 +110,38 @@ export const LeftSidebarPane: React.FC<LeftSidebarPaneProps> = ({
                 ...styles.tocRow,
                 paddingLeft: `${12 + indent}px`,
                 backgroundColor: isActive ? 'rgba(255, 255, 255, 0.06)' : 'transparent',
-                color: isActive ? '#ffffff' : tokens.colors.textSecondary,
+                color: isDiffOpen ? '#D4D4D4' : isActive ? '#ffffff' : tokens.colors.textSecondary,
                 fontWeight: isActive ? '600' : '400',
               }}
               title={item.text}
             >
-              <AlignLeft
-                size={13}
-                style={{
-                  marginRight: '8px',
-                  opacity: isActive ? 1 : 0.5,
-                  color: isActive ? tokens.colors.accentPrimary : tokens.colors.textDim,
-                  flexShrink: 0,
-                }}
-              />
+              {isDiffOpen ? (
+                <Compass
+                  size={13}
+                  style={{
+                    marginRight: '8px',
+                    color: '#38bdf8',
+                    flexShrink: 0,
+                  }}
+                />
+              ) : (
+                <AlignLeft
+                  size={13}
+                  style={{
+                    marginRight: '8px',
+                    opacity: isActive ? 1 : 0.5,
+                    color: isActive ? tokens.colors.accentPrimary : tokens.colors.textDim,
+                    flexShrink: 0,
+                  }}
+                />
+              )}
               <span style={styles.tocText}>{item.text}</span>
             </div>
           );
         })}
       </div>
 
-      {/* Invisible Drag-to-Resize Right Border Handle */}
+      {/* Drag-to-Resize Right Border Handle */}
       <div
         onMouseDown={handleMouseDown}
         style={styles.resizeHandle}
