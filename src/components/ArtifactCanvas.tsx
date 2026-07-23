@@ -227,6 +227,7 @@ System implementation milestones:
             <ChevronLeft size={16} />
           </button>
 
+          {/* Action Tube Pill Contains ONLY Action Controls */}
           <div style={styles.actionTube}>
             <button
               onClick={() => setIsInfoOpen(true)}
@@ -235,30 +236,6 @@ System implementation milestones:
             >
               <Info size={14} style={{ color: '#a1a1aa' }} />
             </button>
-
-            {/* ORIGINAL MONOCHROMATIC LIFECYCLE BADGE */}
-            <span
-              style={{
-                ...styles.subtleDraftBadge,
-                ...(approvalStatus === 'approved'
-                  ? styles.approvedBadge
-                  : approvalStatus === 'rejected'
-                  ? styles.rejectedBadge
-                  : styles.draftBadge),
-              }}
-            >
-              <span
-                style={{
-                  ...styles.statusDot,
-                  ...(approvalStatus === 'approved'
-                    ? { backgroundColor: '#4ade80' }
-                    : approvalStatus === 'rejected'
-                    ? { backgroundColor: '#f87171' }
-                    : { backgroundColor: '#a1a1aa' }),
-                }}
-              />
-              {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft'}
-            </span>
 
             <button
               onClick={() => setShowDiff(!showDiff)}
@@ -337,9 +314,23 @@ System implementation milestones:
             <div style={styles.canvasHeader}>
               <h1 style={styles.mainTitle}>System Architecture & Lore Contracts</h1>
 
-              {/* Quiet Single-Line Property Strip */}
+              {/* Single-Line Property Strip containing Subtype, Lifecycle State, Attribution, & ID */}
               <div style={styles.quietPropertyStrip}>
                 <span style={styles.subtypeLabel}>Decision</span>
+
+                <span style={styles.propDot}>•</span>
+                <span
+                  style={{
+                    ...styles.inlineStateChip,
+                    ...(approvalStatus === 'approved'
+                      ? styles.approvedChip
+                      : approvalStatus === 'rejected'
+                      ? styles.rejectedChip
+                      : styles.draftChip),
+                  }}
+                >
+                  {approvalStatus.toUpperCase()}
+                </span>
 
                 <span style={styles.propDot}>•</span>
                 <span style={styles.propVal}>Created by Architecture Agent</span>
@@ -583,36 +574,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '5px',
     borderRadius: '6px',
   },
-  subtleDraftBadge: {
-    fontSize: '12px',
-    fontWeight: '500',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '4px 10px',
-    borderRadius: '12px',
-  },
-  draftBadge: {
-    color: '#a1a1aa',
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-  },
-  approvedBadge: {
-    color: '#4ade80',
-    backgroundColor: 'rgba(74, 222, 128, 0.15)',
-    border: '1px solid rgba(74, 222, 128, 0.25)',
-  },
-  rejectedBadge: {
-    color: '#f87171',
-    backgroundColor: 'rgba(248, 113, 113, 0.15)',
-    border: '1px solid rgba(248, 113, 113, 0.25)',
-  },
-  statusDot: {
-    width: '6px',
-    height: '6px',
-    borderRadius: '50%',
-    display: 'inline-block',
-  },
   tubeDiffBtn: {
     background: 'none',
     border: 'none',
@@ -734,6 +695,28 @@ const styles: Record<string, React.CSSProperties> = {
   subtypeLabel: {
     color: '#a1a1aa',
     fontWeight: '500',
+  },
+  inlineStateChip: {
+    fontSize: '10px',
+    fontWeight: '700',
+    letterSpacing: '0.6px',
+    padding: '2px 6px',
+    borderRadius: '4px',
+  },
+  draftChip: {
+    color: '#a1a1aa',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+  },
+  approvedChip: {
+    color: '#4ade80',
+    backgroundColor: 'rgba(74, 222, 128, 0.12)',
+    border: '1px solid rgba(74, 222, 128, 0.25)',
+  },
+  rejectedChip: {
+    color: '#f87171',
+    backgroundColor: 'rgba(248, 113, 113, 0.12)',
+    border: '1px solid rgba(248, 113, 113, 0.25)',
   },
   propVal: {
     color: '#71717a',
