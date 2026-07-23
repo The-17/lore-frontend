@@ -162,21 +162,41 @@ export const ArtifactInfoModal: React.FC<ArtifactInfoModalProps> = ({
             </div>
           )}
 
-          {/* TAB 3: ACTIVITY & METRICS */}
+          {/* TAB 3: ACTIVITY & METRICS (RESTORED METRICS GRID + DETAILED VERSION TIMELINE) */}
           {activeTab === 'activity' && (
             <div style={styles.contentGroupStack}>
+              
+              {/* Metrics Card Grid */}
               <div style={styles.sectionBlock}>
-                <span style={styles.sectionLabel}>Object UUID</span>
-                <div style={styles.infoTextCode}>7087ed86-1490-4bd6-8a63-bcc62654ddcd</div>
+                <span style={styles.sectionLabel}>System Metrics</span>
+                <div style={styles.metricsGrid}>
+                  <div style={styles.metricCard}>
+                    <span style={styles.metricVal}>26</span>
+                    <span style={styles.metricLabel}>Total Relationships</span>
+                  </div>
+                  <div style={styles.metricCard}>
+                    <span style={styles.metricVal}>14</span>
+                    <span style={styles.metricLabel}>Incoming Links</span>
+                  </div>
+                  <div style={styles.metricCard}>
+                    <span style={styles.metricVal}>12</span>
+                    <span style={styles.metricLabel}>Outgoing References</span>
+                  </div>
+                  <div style={styles.metricCard}>
+                    <span style={styles.metricVal}>8</span>
+                    <span style={styles.metricLabel}>Referencing Artifacts</span>
+                  </div>
+                </div>
               </div>
 
+              {/* Version Evolution History List */}
               <div style={styles.sectionBlock}>
                 <span style={styles.sectionLabel}>Evolution History</span>
                 <div style={styles.historyStack}>
                   <div style={styles.historyRowItem}>
                     <Clock size={12} style={{ color: '#71717a', marginRight: '6px' }} />
                     <span style={{ color: '#D4D4D4', fontWeight: '500' }}>v3 (Current)</span>
-                    <span style={{ marginLeft: 'auto', color: '#71717a', fontSize: '12px' }}>+12 / -3</span>
+                    <span style={{ marginLeft: 'auto', color: '#71717a', fontSize: '12px' }}>10 mins ago (+12 / -3)</span>
                   </div>
                   <div style={styles.historyRowItem}>
                     <Clock size={12} style={{ color: '#71717a', marginRight: '6px' }} />
@@ -185,11 +205,12 @@ export const ArtifactInfoModal: React.FC<ArtifactInfoModalProps> = ({
                   </div>
                   <div style={styles.historyRowItem}>
                     <Clock size={12} style={{ color: '#71717a', marginRight: '6px' }} />
-                    <span style={{ color: '#a1a1aa' }}>v1</span>
+                    <span style={{ color: '#a1a1aa' }}>v1 (Initial Draft)</span>
                     <span style={{ marginLeft: 'auto', color: '#71717a', fontSize: '12px' }}>3 days ago</span>
                   </div>
                 </div>
               </div>
+
             </div>
           )}
 
@@ -219,7 +240,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     width: '740px',
     maxWidth: '92vw',
-    minHeight: '380px',
+    minHeight: '400px',
     backgroundColor: '#242424',
     border: '1px solid #333333',
     borderRadius: '16px',
@@ -270,6 +291,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
+    overflowY: 'auto',
   },
   closeBtn: {
     position: 'absolute',
@@ -288,7 +310,7 @@ const styles: Record<string, React.CSSProperties> = {
   contentGroupStack: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '28px',
+    gap: '24px',
   },
   collectionSection: {
     display: 'flex',
@@ -338,11 +360,6 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '14px',
     color: '#D4D4D4',
   },
-  infoTextCode: {
-    fontSize: '13px',
-    fontFamily: 'monospace',
-    color: '#a1a1aa',
-  },
   policyStack: {
     display: 'flex',
     flexDirection: 'column',
@@ -353,6 +370,29 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     fontSize: '13px',
     color: '#D4D4D4',
+  },
+  metricsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: '10px',
+  },
+  metricCard: {
+    backgroundColor: '#202020',
+    border: '1px solid #303030',
+    borderRadius: '8px',
+    padding: '12px 14px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2px',
+  },
+  metricVal: {
+    fontSize: '20px',
+    fontWeight: '600',
+    color: '#D4D4D4',
+  },
+  metricLabel: {
+    fontSize: '11px',
+    color: '#7c7c80',
   },
   historyStack: {
     display: 'flex',
