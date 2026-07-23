@@ -87,9 +87,11 @@ export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({ onSelectWikiLink
     setTimeout(() => setCopiedCodeIndex(null), 2000);
   };
 
-  const markdownText = `Lorem ipsum dolor sit amet, **consectetur adipiscing elit**. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. See [[Django Ninja Patterns]] for API schemas, ==zero-trust token authentication==, and [[Agent Token Security]] for auth headers.
+  const markdownText = `Lore operates on a fundamental architectural paradigm known as the **Artifact Plane**. Unlike conventional document editors or unstructured knowledge bases, an artifact in Lore is a durable, immutable, version-controlled entity equipped with cryptographic attribution, explicit dependency lineage, and deterministic state transitions. Every modification created by either human principals or autonomous AI coding agents produces an incremental state snapshot, preventing silent regressions and guaranteeing long-term system auditability across complex multi-agent engineering workflows.
 
-> Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, ==semantic vector search==, and human-in-the-loop governance.
+By decoupling the high-frequency execution context of autonomous AI agents from the persistent governing state of the codebase, Lore ensures that architectural decisions, reusable execution tools, and system contracts remain pristine. When an agent proposes structural changes to system endpoints or security protocols, those modifications are wrapped as draft artifacts, enqueued for peer inspection, and governed through explicit human-in-the-loop review cycles before hitting production environments. See [[Django Ninja Patterns]] for API schemas, ==zero-trust token authentication==, and [[Agent Token Security]] for auth headers.
+
+> Lore serves as the Artifact Plane for Humans and AI Agents, unifying persistent storage, ==semantic vector search==, and human-in-the-loop governance across distributed development teams.
 
 ---
 
@@ -136,7 +138,7 @@ sequenceDiagram
 
 ## 2. Backend API Contracts & Endpoints
 
-Here is an example of the Django Ninja API endpoint contract with type hints and OpenAPI schemas:
+The core integration layer communicates over strict, typed HTTP interfaces backed by Django Ninja schemas. This architecture enables low-latency streaming of real-time SSE collaboration events, allowing human developers and background agent workers to observe state updates synchronously without long-polling overhead or race conditions:
 
 \`\`\`python
 from ninja import Router
@@ -151,6 +153,8 @@ def get_artifact(request, artifact_id: UUID):
     artifact = get_object_or_404(Artifact, id=artifact_id)
     return artifact
 \`\`\`
+
+System persistence relies on relational graph storage wherein every artifact maintains explicit outgoing and incoming references. When an artifact is updated or superseded by a newer version, the lineage graph automatically re-links descendant objects, maintaining complete historical tracebacks and preventing orphaned knowledge nodes.
 
 ---
 
