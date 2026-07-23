@@ -219,94 +219,91 @@ System implementation milestones:
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
-        
-        {/* TRANSPARENT FLOATING TOP BAR — NO FULL WIDTH BG */}
-        <div style={styles.calmTopBar}>
-          <button style={styles.backChevronBtn} title="Back">
-            <ChevronLeft size={16} />
-          </button>
+      {/* FLOATING SEPARATE BACK BUTTON */}
+      <button style={styles.floatingBackBtn} title="Back">
+        <ChevronLeft size={16} />
+      </button>
 
-          {/* Action Tube Pill Contains ONLY Action Controls */}
-          <div style={styles.actionTube}>
+      {/* FLOATING SEPARATE ACTION TUBE PILL */}
+      <div style={styles.floatingActionTube}>
+        <button
+          onClick={() => setIsInfoOpen(true)}
+          style={styles.infoPillBtn}
+          title="Inspect Artifact Object Details"
+        >
+          <Info size={14} style={{ color: '#a1a1aa' }} />
+        </button>
+
+        <button
+          onClick={() => setShowDiff(!showDiff)}
+          style={styles.tubeDiffBtn}
+          title="Toggle Line Diffs"
+        >
+          <GitCommit size={13} style={{ color: '#a1a1aa', marginRight: '3px' }} />
+          <span style={{ color: '#a1a1aa', fontSize: '12px', fontWeight: '500' }}>v3</span>
+          <span style={styles.addStatBadge}>+12</span>
+          <span style={styles.delStatBadge}>-3</span>
+        </button>
+
+        {approvalStatus === 'draft' && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <button
-              onClick={() => setIsInfoOpen(true)}
-              style={styles.infoPillBtn}
-              title="Inspect Artifact Object Details"
+              onClick={() => setApprovalStatus('rejected')}
+              onMouseEnter={() => setIsRejectHovered(true)}
+              onMouseLeave={() => setIsRejectHovered(false)}
+              style={{
+                ...styles.bubblyActionBtn,
+                ...(isRejectHovered ? styles.hoveredRejectBtn : styles.restActionBtn),
+              }}
+              title="Reject artifact changes"
             >
-              <Info size={14} style={{ color: '#a1a1aa' }} />
-            </button>
-
-            <button
-              onClick={() => setShowDiff(!showDiff)}
-              style={styles.tubeDiffBtn}
-              title="Toggle Line Diffs"
-            >
-              <GitCommit size={13} style={{ color: '#a1a1aa', marginRight: '3px' }} />
-              <span style={{ color: '#a1a1aa', fontSize: '12px', fontWeight: '500' }}>v3</span>
-              <span style={styles.addStatBadge}>+12</span>
-              <span style={styles.delStatBadge}>-3</span>
-            </button>
-
-            {approvalStatus === 'draft' && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <button
-                  onClick={() => setApprovalStatus('rejected')}
-                  onMouseEnter={() => setIsRejectHovered(true)}
-                  onMouseLeave={() => setIsRejectHovered(false)}
-                  style={{
-                    ...styles.bubblyActionBtn,
-                    ...(isRejectHovered ? styles.hoveredRejectBtn : styles.restActionBtn),
-                  }}
-                  title="Reject artifact changes"
-                >
-                  <X size={14} style={{ flexShrink: 0 }} />
-                  <span
-                    style={{
-                      ...styles.bubblyText,
-                      ...(isRejectHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
-                    }}
-                  >
-                    Reject
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setApprovalStatus('approved')}
-                  onMouseEnter={() => setIsApproveHovered(true)}
-                  onMouseLeave={() => setIsApproveHovered(false)}
-                  style={{
-                    ...styles.bubblyActionBtn,
-                    ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
-                  }}
-                  title="Approve artifact changes"
-                >
-                  <Check size={14} style={{ flexShrink: 0 }} />
-                  <span
-                    style={{
-                      ...styles.bubblyText,
-                      ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
-                    }}
-                  >
-                    Approve changes
-                  </span>
-                </button>
-              </div>
-            )}
-
-            {approvalStatus !== 'draft' && (
-              <button
-                onClick={() => setApprovalStatus('draft')}
-                style={styles.tubeResetBtn}
-                title="Reset approval state back to Draft"
+              <X size={14} style={{ flexShrink: 0 }} />
+              <span
+                style={{
+                  ...styles.bubblyText,
+                  ...(isRejectHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                }}
               >
-                Reopen review
-              </button>
-            )}
-          </div>
-        </div>
+                Reject
+              </span>
+            </button>
 
-        {/* Centered Reading Column — Artifact Breathes */}
+            <button
+              onClick={() => setApprovalStatus('approved')}
+              onMouseEnter={() => setIsApproveHovered(true)}
+              onMouseLeave={() => setIsApproveHovered(false)}
+              style={{
+                ...styles.bubblyActionBtn,
+                ...(isApproveHovered ? styles.hoveredApproveBtn : styles.restActionBtn),
+              }}
+              title="Approve artifact changes"
+            >
+              <Check size={14} style={{ flexShrink: 0 }} />
+              <span
+                style={{
+                  ...styles.bubblyText,
+                  ...(isApproveHovered ? styles.bubblyTextVisible : styles.bubblyTextHidden),
+                }}
+              >
+                Approve changes
+              </span>
+            </button>
+          </div>
+        )}
+
+        {approvalStatus !== 'draft' && (
+          <button
+            onClick={() => setApprovalStatus('draft')}
+            style={styles.tubeResetBtn}
+            title="Reset approval state back to Draft"
+          >
+            Reopen review
+          </button>
+        )}
+      </div>
+
+      {/* FULL CANVAS READING AREA — SCROLLS FROM VERY TOP WITHOUT FULL-WIDTH HEADER CUTOFF */}
+      <div style={styles.fullCanvasScrollArea}>
         <div style={styles.centerColumn}>
           <div style={styles.body}>
             
@@ -519,43 +516,30 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     padding: 0,
     margin: 0,
-    display: 'flex',
-    overflow: 'hidden',
-    backgroundColor: '#242424',
-  },
-  card: {
-    width: '100%',
-    height: '100vh',
-    backgroundColor: '#242424',
-    borderRadius: '0px',
-    border: 'none',
-    padding: '16px 48px 16px 48px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    overflow: 'hidden',
-    margin: 0,
     position: 'relative',
+    overflow: 'hidden',
+    backgroundColor: '#242424',
   },
-  calmTopBar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: '4px',
-    flexShrink: 0,
-    backgroundColor: 'transparent',
-  },
-  backChevronBtn: {
+  floatingBackBtn: {
+    position: 'absolute',
+    top: '20px',
+    left: '32px',
+    zIndex: 20,
     background: 'none',
     border: 'none',
     color: '#71717a',
     cursor: 'pointer',
-    padding: '4px',
+    padding: '6px',
+    borderRadius: '6px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  actionTube: {
+  floatingActionTube: {
+    position: 'absolute',
+    top: '20px',
+    right: '32px',
+    zIndex: 20,
     backgroundColor: '#18181b',
     border: '1px solid #27272a',
     borderRadius: '20px',
@@ -563,7 +547,6 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    marginLeft: 'auto',
   },
   infoPillBtn: {
     background: 'none',
@@ -659,6 +642,16 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '500',
     cursor: 'pointer',
   },
+  fullCanvasScrollArea: {
+    width: '100%',
+    height: '100vh',
+    padding: '24px 48px 16px 48px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    overflow: 'hidden',
+    backgroundColor: '#242424',
+  },
   centerColumn: {
     flex: 1,
     maxWidth: '720px',
@@ -674,7 +667,7 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '16px',
+    paddingTop: '24px',
   },
   canvasHeader: {
     marginBottom: '32px',
