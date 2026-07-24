@@ -75,6 +75,45 @@ const renderSyntaxHighlightedCode = (rawCode: string, lang: string) => {
   });
 };
 
+// Interactive Task Checkbox Component for Markdown Checklists
+const TaskCheckbox: React.FC<{ checked?: boolean }> = ({ checked: initialChecked }) => {
+  const [isChecked, setIsChecked] = useState(initialChecked || false);
+
+  useEffect(() => {
+    setIsChecked(initialChecked || false);
+  }, [initialChecked]);
+
+  return (
+    <span
+      onClick={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        setIsChecked(!isChecked);
+      }}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '15px',
+        height: '15px',
+        borderRadius: '4px',
+        border: isChecked ? '1px solid #4ade80' : '1px solid #71717a',
+        backgroundColor: isChecked ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255, 255, 255, 0.04)',
+        cursor: 'pointer',
+        marginRight: '8px',
+        verticalAlign: 'middle',
+        userSelect: 'none',
+        transition: 'all 0.15s ease',
+        flexShrink: 0,
+      }}
+      role="checkbox"
+      aria-checked={isChecked}
+    >
+      {isChecked && <Check size={10} style={{ color: '#4ade80', strokeWidth: 3 }} />}
+    </span>
+  );
+};
+
 export const ArtifactCanvas: React.FC<ArtifactCanvasProps> = ({
   isDiffOpen: propIsDiffOpen,
   onToggleDiff,
@@ -695,13 +734,27 @@ System implementation milestones:
                   hr: () => <hr style={styles.hr} />,
                   ul: ({ children }) => <ul style={styles.ul}>{children}</ul>,
                   ol: ({ children }) => <ol style={styles.ol}>{children}</ol>,
-                  li: ({ children }) => (
-                    <li style={styles.li}>
-                      {React.Children.map(children, (child) =>
-                        typeof child === 'string' ? parseRichInlineMarkdown(child) : child
-                      )}
-                    </li>
-                  ),
+                  input: ({ type, checked }: any) => {
+                    if (type === 'checkbox') {
+                      return <TaskCheckbox checked={checked} />;
+                    }
+                    return <input type={type} checked={checked} readOnly />;
+                  },
+                  li: ({ className, children }: any) => {
+                    const isTask = className?.includes('task-list-item');
+                    return (
+                      <li
+                        style={{
+                          ...styles.li,
+                          ...(isTask ? { listStyleType: 'none', marginLeft: '-20px' } : {}),
+                        }}
+                      >
+                        {React.Children.map(children, (child) =>
+                          typeof child === 'string' ? parseRichInlineMarkdown(child) : child
+                        )}
+                      </li>
+                    );
+                  },
                   code: ({ inline, className, children }: any) => {
                     const match = /language-(\w+)/.exec(className || '');
                     const lang = match ? match[1] : '';
@@ -956,7 +1009,7 @@ const styles: Record<string, React.CSSProperties> = {
   fullCanvasScrollArea: {
     width: '100%',
     height: '100vh',
-    padding: '0px 48px 16px 48px',
+    padding: '0px 48px 8px 48px',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -978,7 +1031,8 @@ const styles: Record<string, React.CSSProperties> = {
     flex: 1,
     overflowY: 'auto',
     paddingRight: '4px',
-    paddingTop: '88px',
+    paddingTop: '44px',
+    paddingBottom: '16px',
   },
   canvasHeader: {
     marginBottom: '36px',
@@ -1115,17 +1169,19 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '13px',
   },
   codeContainer: {
-    backgroundColor: '#202020',
-    borderRadius: '8px',
-    marginBottom: '28px',
-    overflow: 'hidden',
+    backgroundColor: 'transparent',
+    border: 'none',
+    paddingLeft: 0,
+    marginTop: '16px',
+    marginBottom: '24px',
   },
   codeHeader: {
-    backgroundColor: '#272727',
-    padding: '8px 14px',
+    backgroundColor: 'transparent',
+    padding: '4px 0 8px 0',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: '4px',
   },
   codeLangBadge: {
     display: 'flex',
@@ -1133,7 +1189,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: '8px',
     fontSize: '11px',
     fontWeight: '600',
-    color: '#a1a1aa',
+    color: '#71717a',
     textTransform: 'uppercase',
     letterSpacing: '0.8px',
   },
@@ -1141,27 +1197,30 @@ const styles: Record<string, React.CSSProperties> = {
     width: '6px',
     height: '6px',
     borderRadius: '50%',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#71717a',
   },
   copyBtn: {
-    background: 'none',
-    border: 'none',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
     color: '#a1a1aa',
-    fontSize: '12px',
+    fontSize: '11px',
+    fontWeight: '500',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
-    padding: '4px 8px',
-    borderRadius: '4px',
+    padding: '3px 9px',
+    borderRadius: '6px',
+    transition: 'all 0.15s ease',
   },
   codeBlock: {
-    padding: '14px 16px',
+    padding: '6px 0 6px 0',
     fontFamily: "'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Consolas, monospace",
     fontSize: '13px',
     lineHeight: '1.65',
-    color: '#D4D4D4',
+    color: '#e4e4e7',
     overflowX: 'auto',
     margin: 0,
+    backgroundColor: 'transparent',
   },
   tableWrapper: {
     backgroundColor: '#202020',
@@ -1460,8 +1519,8 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     fontSize: tokens.typography.caption.fontSize,
-    paddingTop: '12px',
-    paddingBottom: '4px',
+    paddingTop: '6px',
+    paddingBottom: '6px',
     position: 'relative',
     flexShrink: 0,
     width: '100%',
