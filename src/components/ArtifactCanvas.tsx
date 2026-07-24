@@ -440,54 +440,58 @@ System implementation milestones:
               /* DIRECT-ON-CANVAS REVIEW FLOW (SEAMLESS UNWRAPPED CANVAS EXPERIENCE) */
               <div style={styles.canvasDiffFlowContainer}>
                 
-                {/* HEADER METADATA DIFF SECTION (DIRECT ON CANVAS, NO OUTER BOX) */}
+                {/* HEADER METADATA DIFF SECTION (UNIFIED TOOLBAR CARD) */}
                 <div style={styles.diffMetadataBanner}>
                   <div style={styles.diffBannerTitleRow}>
-                    <div style={styles.versionJumpBadge}>
-                      <Clock size={13} style={{ color: '#7c7c80', marginRight: '6px' }} />
-                      <span style={{ color: '#a1a1aa' }}>v2</span>
-                      <span style={{ color: '#52525b', margin: '0 6px' }}>→</span>
-                      <span style={{ color: '#D4D4D4', fontWeight: '600' }}>v3 (Current)</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                      <div style={styles.versionJumpBadge}>
+                        <Clock size={13} style={{ color: '#71717a', marginRight: '6px' }} />
+                        <span style={{ color: '#a1a1aa' }}>v2</span>
+                        <span style={{ color: '#52525b', margin: '0 6px' }}>→</span>
+                        <span style={{ color: '#e4e4e7', fontWeight: '600' }}>v3 (Current)</span>
+                      </div>
+
+                      {/* DYNAMIC STATE TRANSITION BADGE */}
+                      <div style={styles.stateTransitionBadge}>
+                        <span style={styles.stateFromLabel}>Draft</span>
+                        <span style={styles.stateArrow}>→</span>
+                        <span
+                          style={{
+                            ...styles.stateToLabel,
+                            color: approvalStatus === 'approved' ? '#4ade80' : approvalStatus === 'rejected' ? '#f87171' : '#a1a1aa',
+                          }}
+                        >
+                          {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft Proposal'}
+                        </span>
+                      </div>
+
+                      <div style={styles.diffStatsSummary}>
+                        <span style={styles.addStatBadge}>+12</span>
+                        <span style={styles.delStatBadge}>-3</span>
+                      </div>
                     </div>
 
-                    {/* DYNAMIC STATE TRANSITION BADGE */}
-                    <div style={styles.stateTransitionBadge}>
-                      <span style={styles.stateFromLabel}>Draft</span>
-                      <span style={styles.stateArrow}>→</span>
-                      <span
-                        style={{
-                          ...styles.stateToLabel,
-                          color: approvalStatus === 'approved' ? '#4ade80' : approvalStatus === 'rejected' ? '#f87171' : '#a1a1aa',
-                        }}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+                      <button
+                        onClick={() => handleRevertVersion('v2')}
+                        style={styles.restoreBtn}
+                        title="Revert snapshot to v2 (appends new forward draft snapshot v4)"
                       >
-                        {approvalStatus === 'approved' ? 'Approved' : approvalStatus === 'rejected' ? 'Rejected' : 'Draft Proposal'}
-                      </span>
+                        <RotateCcw size={12} style={{ marginRight: '5px' }} />
+                        <span>Revert to v2</span>
+                      </button>
+
+                      <button onClick={() => toggleDiffState(false)} style={styles.backToDocBtn}>
+                        <ArrowLeft size={14} style={{ marginRight: '5px' }} /> Exit Review
+                      </button>
                     </div>
-
-                    <div style={styles.diffStatsSummary}>
-                      <span style={styles.addStatBadge}>+12</span>
-                      <span style={styles.delStatBadge}>-3</span>
-                    </div>
-
-                    <button
-                      onClick={() => handleRevertVersion('v2')}
-                      style={styles.restoreBtn}
-                      title="Revert snapshot to v2 (appends new forward draft snapshot v4)"
-                    >
-                      <RotateCcw size={12} style={{ marginRight: '5px' }} />
-                      <span>Revert to v2</span>
-                    </button>
-
-                    <button onClick={() => toggleDiffState(false)} style={styles.backToDocBtn}>
-                      <ArrowLeft size={14} style={{ marginRight: '6px' }} /> Exit Review
-                    </button>
                   </div>
 
-                  {/* LORE GRAPH DEPENDENCY CONTEXT (AFFECTED ARTIFACTS) */}
+                  {/* LORE GRAPH DEPENDENCY CONTEXT & VIEW MODE SWITCHER */}
                   <div style={styles.diffBannerSubRow}>
                     <div style={styles.affectedArtifactsGroup}>
-                      <Network size={12} style={{ color: '#38bdf8', marginRight: '4px' }} />
-                      <span style={{ color: '#7c7c80', fontSize: '12px', marginRight: '6px' }}>
+                      <Network size={12} style={{ color: '#71717a', marginRight: '4px' }} />
+                      <span style={{ color: '#71717a', fontSize: '12px', marginRight: '4px' }}>
                         Derived & Affected (3):
                       </span>
                       <span
@@ -514,20 +518,14 @@ System implementation milestones:
                     <div style={styles.modeToggleGroup}>
                       <button
                         onClick={() => setDiffMode('unified')}
-                        style={{
-                          ...styles.toggleBtn,
-                          ...(diffMode === 'unified' ? styles.activeToggleBtn : {}),
-                        }}
+                        className={`ag-diff-toggle-btn ${diffMode === 'unified' ? 'active' : ''}`}
                       >
                         <AlignLeft size={12} style={{ marginRight: '4px' }} />
                         Unified
                       </button>
                       <button
                         onClick={() => setDiffMode('split')}
-                        style={{
-                          ...styles.toggleBtn,
-                          ...(diffMode === 'split' ? styles.activeToggleBtn : {}),
-                        }}
+                        className={`ag-diff-toggle-btn ${diffMode === 'split' ? 'active' : ''}`}
                       >
                         <Columns size={12} style={{ marginRight: '4px' }} />
                         Split
@@ -872,19 +870,15 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '4px',
   },
   addStatBadge: {
+    backgroundColor: 'transparent',
     color: '#4ade80',
-    backgroundColor: 'rgba(74, 222, 128, 0.12)',
-    padding: '2px 5px',
-    borderRadius: '3px',
-    fontSize: '11px',
+    fontSize: '12px',
     fontWeight: '600',
   },
   delStatBadge: {
+    backgroundColor: 'transparent',
     color: '#f87171',
-    backgroundColor: 'rgba(248, 113, 113, 0.12)',
-    padding: '2px 5px',
-    borderRadius: '3px',
-    fontSize: '11px',
+    fontSize: '12px',
     fontWeight: '600',
   },
   bubblyActionBtn: {
@@ -1207,15 +1201,19 @@ const styles: Record<string, React.CSSProperties> = {
   diffMetadataBanner: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
-    paddingBottom: '24px',
-    borderBottom: '1px solid #353535',
+    gap: '12px',
+    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(255, 255, 255, 0.07)',
+    borderRadius: '12px',
+    padding: '14px 18px',
+    marginBottom: '8px',
   },
   diffBannerTitleRow: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: '14px',
-    flexWrap: 'wrap',
+    width: '100%',
   },
   versionJumpBadge: {
     display: 'inline-flex',
@@ -1223,7 +1221,8 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '13px',
   },
   stateTransitionBadge: {
-    backgroundColor: '#202020',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
     borderRadius: '6px',
     padding: '3px 10px',
     fontSize: '12px',
@@ -1246,9 +1245,10 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     gap: '6px',
   },
+
   restoreBtn: {
-    backgroundColor: '#202020',
-    border: 'none',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     color: '#D4D4D4',
     padding: '5px 12px',
     borderRadius: '6px',
@@ -1257,7 +1257,7 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
-    marginLeft: 'auto',
+    transition: 'all 0.15s ease',
   },
   backToDocBtn: {
     background: 'none',
@@ -1268,12 +1268,16 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: '500',
     display: 'inline-flex',
     alignItems: 'center',
+    padding: '5px 8px',
+    borderRadius: '6px',
+    transition: 'all 0.15s ease',
   },
   diffBannerSubRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: '4px',
+    paddingTop: '10px',
+    borderTop: '1px solid rgba(255, 255, 255, 0.05)',
   },
   affectedArtifactsGroup: {
     display: 'inline-flex',
@@ -1282,37 +1286,44 @@ const styles: Record<string, React.CSSProperties> = {
     flexWrap: 'wrap',
   },
   affectedChip: {
-    backgroundColor: '#202020',
-    borderRadius: '4px',
-    padding: '3px 8px',
-    color: '#38bdf8',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    border: '1px solid rgba(255, 255, 255, 0.07)',
+    borderRadius: '6px',
+    padding: '3px 9px',
+    color: '#a1a1aa',
     fontSize: '12px',
     fontWeight: '400',
     cursor: 'pointer',
+    transition: 'all 0.15s ease',
   },
   modeToggleGroup: {
     display: 'inline-flex',
-    backgroundColor: '#202020',
-    borderRadius: '6px',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: '7px',
     padding: '2px',
     gap: '2px',
     marginLeft: 'auto',
   },
   toggleBtn: {
     background: 'none',
-    border: 'none',
+    border: '1px solid transparent',
     color: '#71717a',
     fontSize: '12px',
     fontWeight: '500',
-    padding: '4px 10px',
-    borderRadius: '4px',
+    padding: '4px 12px',
+    borderRadius: '5px',
     cursor: 'pointer',
     display: 'inline-flex',
     alignItems: 'center',
+    transition: 'all 0.15s ease',
   },
   activeToggleBtn: {
-    backgroundColor: '#272727',
-    color: '#D4D4D4',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    color: '#ffffff',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)',
+    fontWeight: '600',
   },
   diagramDiffAccordion: {
     display: 'flex',

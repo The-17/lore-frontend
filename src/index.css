@@ -95,3 +95,51 @@ body {
   text-decoration: none !important;
   background-color: rgba(56, 189, 248, 0.2);
 }
+
+/* Button Focus & Active State Reset to prevent stark white browser flashes */
+button {
+  font-family: inherit;
+  outline: none;
+  border: none;
+}
+
+button:focus,
+button:focus-visible,
+button:active {
+  outline: none !important;
+  box-shadow: none;
+}
+
+.ag-diff-toggle-btn {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #71717a !important;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.15s ease;
+  outline: none !important;
+}
+
+.ag-diff-toggle-btn:hover {
+  color: #a1a1aa !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.ag-diff-toggle-btn.active {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+  font-weight: 600 !important;
+}
+
+.ag-diff-toggle-btn:focus,
+.ag-diff-toggle-btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
